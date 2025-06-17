@@ -21,6 +21,14 @@ const popularSalons = [
   { name: '스타일리스트 E', location: '잠실', desc: '합리적 가격, 최신 트렌드', href: '#' },
 ];
 
+const reviewedSalons = [
+  { name: '뷰티살롱 A', location: '강남', desc: '리뷰 1,234개', href: '/haircut' },
+  { name: '헤어스튜디오 B', location: '홍대', desc: '리뷰 987개', href: '/coloring' },
+  { name: '미용실 C', location: '신촌', desc: '리뷰 856개', href: '/perm' },
+  { name: '헤어살롱 D', location: '건대', desc: '리뷰 743개', href: '#' },
+  { name: '뷰티샵 E', location: '잠실', desc: '리뷰 632개', href: '#' },
+];
+
 const menuWithSub = [
   {
     name: '헤어', href: '/hair', icon: '💇‍♂️',
@@ -56,17 +64,25 @@ export default function Home() {
   const visibleCount = 5;
   const slideLen = popularSalons.length;
   let slideCards: typeof popularSalons = [];
+  let reviewSlideCards: typeof reviewedSalons = [];
+  
   if (slideLen === 0) {
     slideCards = [];
+    reviewSlideCards = [];
   } else {
     // 현재 있는 카드만 반복해서 5*3개 이상으로 복제
     while (slideCards.length < visibleCount * 3) {
       slideCards = slideCards.concat(popularSalons);
     }
+    while (reviewSlideCards.length < visibleCount * 3) {
+      reviewSlideCards = reviewSlideCards.concat(reviewedSalons);
+    }
   }
   const [slideIdx, setSlideIdx] = useState(slideLen); // 중간에서 시작
+  const [reviewSlideIdx, setReviewSlideIdx] = useState(slideLen); // 중간에서 시작
   const [isTransition, setIsTransition] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
+  const [isReviewPaused, setIsReviewPaused] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -91,17 +107,24 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [slideCards.length, isPaused]);
 
+  useEffect(() => {
+    if (reviewSlideCards.length === 0 || isReviewPaused) return;
+    const timer = setInterval(() => {
+      setReviewSlideIdx((prev) => prev + 1);
+      setIsTransition(true);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [reviewSlideCards.length, isReviewPaused]);
+
   // 무한루프 효과
   useEffect(() => {
     if (slideIdx === slideCards.length - visibleCount + 1) {
-      // transition 끝난 뒤 바로 원본 구간으로 점프 (transition 없이)
       const timeout = setTimeout(() => {
         setIsTransition(false);
         setSlideIdx(slideLen);
       }, 500);
       return () => clearTimeout(timeout);
     } else if (slideIdx === 0) {
-      // transition 끝난 뒤 바로 원본 구간 끝으로 점프 (transition 없이)
       const timeout = setTimeout(() => {
         setIsTransition(false);
         setSlideIdx(slideCards.length - visibleCount * 2);
@@ -112,12 +135,38 @@ export default function Home() {
     }
   }, [slideIdx, slideLen, slideCards.length]);
 
+  useEffect(() => {
+    if (reviewSlideIdx === reviewSlideCards.length - visibleCount + 1) {
+      const timeout = setTimeout(() => {
+        setIsTransition(false);
+        setReviewSlideIdx(slideLen);
+      }, 500);
+      return () => clearTimeout(timeout);
+    } else if (reviewSlideIdx === 0) {
+      const timeout = setTimeout(() => {
+        setIsTransition(false);
+        setReviewSlideIdx(reviewSlideCards.length - visibleCount * 2);
+      }, 500);
+      return () => clearTimeout(timeout);
+    } else {
+      setIsTransition(true);
+    }
+  }, [reviewSlideIdx, slideLen, reviewSlideCards.length]);
+
   const goNext = () => {
     setSlideIdx((prev) => prev + 1);
     setIsTransition(true);
   };
   const goPrev = () => {
     setSlideIdx((prev) => prev - 1);
+    setIsTransition(true);
+  };
+  const goReviewNext = () => {
+    setReviewSlideIdx((prev) => prev + 1);
+    setIsTransition(true);
+  };
+  const goReviewPrev = () => {
+    setReviewSlideIdx((prev) => prev - 1);
     setIsTransition(true);
   };
 
@@ -185,7 +234,9 @@ export default function Home() {
 
       {/* 인기 미용실 슬라이더 */}
       <section className="container mx-auto px-4 py-8">
-        <h3 className="text-xl font-bold text-gray-800 w-[1200px] mx-auto mb-4 text-center">라뷰에서 인기 있는 업체</h3>
+        <div className="w-[1200px] mx-auto">
+          <h3 className="text-xl font-bold text-gray-800 text-left mb-5">라뷰에서 인기 있는 업체</h3>
+        </div>
         {slideCards.length === 0 ? (
           <div className="w-full text-center text-gray-400 py-20 text-lg">등록된 업체가 없습니다.</div>
         ) : (
@@ -213,28 +264,32 @@ export default function Home() {
                   <Link
                     key={salon.name + idx}
                     href={salon.href}
-                    className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg p-4 transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
+                    className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
                   >
                     {/* 오버레이 */}
-                    <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg z-0" />
-                    <div className="relative z-10">
-                      <div className="w-48 h-48 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                    <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
+                    <div className="relative h-full">
+                      {/* 이미지 섹션 */}
+                      <div className="w-full h-[200px] overflow-hidden">
                         <img src={
                           idx % slideLen === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
                           : idx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
                           : idx % slideLen === 2 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
                           : idx % slideLen === 3 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
                           : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340"
-                        } alt={salon.name} className="object-cover w-full h-full" />
+                        } alt={salon.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="font-semibold text-gray-700 text-center group-hover:text-gray-800 transition-colors duration-300">
-                        {salon.name}
-                      </div>
-                      <div className="text-xs text-gray-500 text-center group-hover:text-gray-800 transition-colors duration-300">
-                        {salon.location}
-                      </div>
-                      <div className="text-xs text-pink-500 mt-1 text-center group-hover:text-gray-800 transition-colors duration-300">
-                        {salon.desc}
+                      {/* 텍스트 섹션 */}
+                      <div className="p-4">
+                        <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
+                          {salon.name}
+                        </div>
+                        <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
+                          {salon.location}
+                        </div>
+                        <div className="text-sm text-pink-500 group-hover:text-pink-600 transition-colors duration-300">
+                          {salon.desc}
+                        </div>
                       </div>
                     </div>
                   </Link>
@@ -244,6 +299,83 @@ export default function Home() {
             {/* 오른쪽 버튼 */}
             <button
               onClick={goNext}
+              className="absolute right-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              aria-label="다음"
+            >
+              <span className="text-2xl">{'>'}</span>
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* 최근 리뷰가 많은 업체 슬라이더 */}
+      <section className="container mx-auto px-4 py-8">
+        <div className="w-[1200px] mx-auto">
+          <h3 className="text-xl font-bold text-gray-800 text-left mb-5">최근 리뷰가 많은 업체</h3>
+        </div>
+        {reviewSlideCards.length === 0 ? (
+          <div className="w-full text-center text-gray-400 py-20 text-lg">등록된 업체가 없습니다.</div>
+        ) : (
+          <div className="w-[1280px] mx-auto flex items-center justify-center relative">
+            {/* 왼쪽 버튼 */}
+            <button
+              onClick={goReviewPrev}
+              className="absolute left-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              aria-label="이전"
+            >
+              <span className="text-2xl">{'<'}</span>
+            </button>
+            {/* 카드 슬라이드 */}
+            <div
+              className="w-[1200px] overflow-hidden rounded-xl"
+              onMouseEnter={() => setIsReviewPaused(true)}
+              onMouseLeave={() => setIsReviewPaused(false)}
+            >
+              <div
+                className={`flex ${isTransition ? 'transition-transform duration-500' : ''}`}
+                style={{ width: `${reviewSlideCards.length * 240}px`, transform: `translateX(-${reviewSlideIdx * 240}px)` }}
+              >
+                {reviewSlideCards.map((salon, idx) => (
+                  <Link
+                    key={salon.name + idx}
+                    href={salon.href}
+                    className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
+                  >
+                    {/* 오버레이 */}
+                    <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
+                    <div className="relative h-full">
+                      {/* 이미지 섹션 */}
+                      <div className="w-full h-[200px] overflow-hidden">
+                        <img src={
+                          idx % slideLen === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
+                          : idx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
+                          : idx % slideLen === 2 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
+                          : idx % slideLen === 3 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
+                          : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340"
+                        } alt={salon.name} className="w-full h-full object-cover" />
+                      </div>
+                      {/* 텍스트 섹션 */}
+                      <div className="p-4">
+                        <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
+                          {salon.name}
+                        </div>
+                        <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
+                          {salon.location}
+                        </div>
+                        <div className="text-sm text-pink-500 group-hover:text-pink-600 transition-colors duration-300">
+                          {salon.desc}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            {/* 오른쪽 버튼 */}
+            <button
+              onClick={goReviewNext}
               className="absolute right-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
               style={{ top: '50%', transform: 'translateY(-50%)' }}
               aria-label="다음"
