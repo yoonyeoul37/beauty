@@ -1,6 +1,12 @@
 "use client";
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-regular-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+// FontAwesome 라이브러리에 아이콘 추가
+library.add(faBell);
 
 const categories = [
   { name: '커트', href: '/haircut', icon: '💇‍♂️' },
@@ -235,7 +241,17 @@ export default function Home() {
       {/* 인기 미용실 슬라이더 */}
       <section className="container mx-auto px-4 py-8">
         <div className="w-[1200px] mx-auto">
-          <h3 className="text-xl font-bold text-gray-800 text-left mb-5">라뷰에서 인기 있는 업체</h3>
+          <h3 className="text-left mb-5 flex items-center gap-3">
+            <FontAwesomeIcon icon={faBell} className="text-pink-500 animate-pulse text-2xl" />
+            <div className="flex items-center">
+              <span className="text-2xl font-extrabold bg-gradient-to-r from-pink-500 to-purple-500 text-transparent bg-clip-text">타임특가</span>
+              <div className="ml-3 flex items-center">
+                <span className="text-sm font-medium text-gray-600 bg-gradient-to-r from-pink-100 to-purple-100 px-3 py-1 rounded-full">
+                  시간 놓치면 끝! 지금만 가능한 혜택
+                </span>
+              </div>
+            </div>
+          </h3>
         </div>
         {slideCards.length === 0 ? (
           <div className="w-full text-center text-gray-400 py-20 text-lg">등록된 업체가 없습니다.</div>
@@ -270,7 +286,7 @@ export default function Home() {
                     <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
                     <div className="relative h-full">
                       {/* 이미지 섹션 */}
-                      <div className="w-full h-[200px] overflow-hidden">
+                      <div className="w-full h-[240px] overflow-hidden">
                         <img src={
                           idx % slideLen === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
                           : idx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
@@ -280,7 +296,7 @@ export default function Home() {
                         } alt={salon.name} className="w-full h-full object-cover" />
                       </div>
                       {/* 텍스트 섹션 */}
-                      <div className="p-4">
+                      <div className="p-4 text-center">
                         <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
                           {salon.name}
                         </div>
@@ -347,7 +363,7 @@ export default function Home() {
                     <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
                     <div className="relative h-full">
                       {/* 이미지 섹션 */}
-                      <div className="w-full h-[200px] overflow-hidden">
+                      <div className="w-full h-[240px] overflow-hidden">
                         <img src={
                           idx % slideLen === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
                           : idx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
@@ -357,7 +373,7 @@ export default function Home() {
                         } alt={salon.name} className="w-full h-full object-cover" />
                       </div>
                       {/* 텍스트 섹션 */}
-                      <div className="p-4">
+                      <div className="p-4 text-center">
                         <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
                           {salon.name}
                         </div>
