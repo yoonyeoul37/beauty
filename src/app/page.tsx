@@ -64,14 +64,30 @@ export default function Home() {
 
       {/* 인기 미용실 */}
       <section className="container mx-auto px-4 py-8">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">라뷰에서 인기 있는 업체</h3>
+        <h3 className="text-xl font-bold text-gray-800 w-[1280px] mx-auto mb-4">라뷰에서 인기 있는 업체</h3>
         <div className="w-[1280px] mx-auto grid grid-cols-5 gap-6">
-          {popularSalons.map((salon) => (
-            <Link key={salon.name} href={salon.href} className="block bg-white rounded-lg shadow hover:shadow-lg p-4 transition w-[240px] h-[360px]">
-              <div className="w-full h-24 bg-gray-100 rounded mb-2 flex items-center justify-center text-3xl">🏢</div>
-              <div className="font-semibold text-gray-700">{salon.name}</div>
-              <div className="text-xs text-gray-500">{salon.location}</div>
-              <div className="text-xs text-pink-500 mt-1">{salon.desc}</div>
+          {popularSalons.map((salon, idx) => (
+            <Link key={salon.name} href={salon.href} className="block bg-white rounded-lg shadow hover:shadow-lg p-4 transition w-[240px] h-[360px] hover:bg-[#dfe9fd]">
+              <div className="w-48 h-48 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                {idx === 0 && (
+                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340" alt="업체1" className="object-cover w-full h-full" />
+                )}
+                {idx === 1 && (
+                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340" alt="업체2" className="object-cover w-full h-full" />
+                )}
+                {idx === 2 && (
+                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340" alt="업체3" className="object-cover w-full h-full" />
+                )}
+                {idx === 3 && (
+                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340" alt="업체4" className="object-cover w-full h-full" />
+                )}
+                {idx === 4 && (
+                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340" alt="업체5" className="object-cover w-full h-full" />
+                )}
+              </div>
+              <div className="font-semibold text-gray-700 text-center">{salon.name}</div>
+              <div className="text-xs text-gray-500 text-center">{salon.location}</div>
+              <div className="text-xs text-pink-500 mt-1 text-center">{salon.desc}</div>
             </Link>
           ))}
         </div>
