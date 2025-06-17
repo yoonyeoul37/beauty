@@ -1,4 +1,6 @@
+"use client";
 import Link from 'next/link'
+import { useState } from 'react';
 
 const categories = [
   { name: '커트', href: '/haircut', icon: '💇‍♂️' },
@@ -19,32 +21,73 @@ const popularSalons = [
   { name: '스타일리스트 E', location: '잠실', desc: '합리적 가격, 최신 트렌드', href: '#' },
 ];
 
+const menuWithSub = [
+  {
+    name: '헤어', href: '/hair', icon: '💇‍♂️',
+    submenu: ['커트', '염색', '펌', '헤어 클리닉', '헤드 스파']
+  },
+  {
+    name: '네일아트', href: '/nailart', icon: '💅',
+    submenu: ['젤 네일', '아트 네일', '케어']
+  },
+  {
+    name: '메이크업', href: '/makeup', icon: '💄',
+    submenu: ['데일리 메이크업', '특별 메이크업', '메이크업 클래스']
+  },
+  {
+    name: '피부관리', href: '/skincare', icon: '✨',
+    submenu: ['기본 관리', '특수 관리', '안티에이징']
+  },
+  {
+    name: '마사지&스파', href: '/massage', icon: '💆‍♀️',
+    submenu: ['전신 마사지', '발 마사지', '스파 트리트먼트']
+  },
+  {
+    name: '기타 뷰티 서비스', href: '/other', icon: '🧴',
+    submenu: ['속눈썹', '왁싱']
+  },
+];
+
 export default function Home() {
+  const [openMenu, setOpenMenu] = useState<number | null>(null);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col">
       {/* 헤더 */}
       <header className="w-full" style={{ height: 100, minHeight: 100 }}>
-        <div className="h-full flex items-center justify-between px-4 bg-[#800020] shadow">
-          <div className="flex items-center gap-2" style={{ marginLeft: 120 }}>
+        <div className="h-full flex items-center px-4 bg-[#800020] shadow">
+          <div className="flex items-center gap-8" style={{ marginLeft: 120 }}>
             <span className="text-3xl font-extrabold text-white tracking-wide">라뷰</span>
-          </div>
-          <div className="flex-1 mx-4 max-w-xl">
             <input
               type="text"
               placeholder=""
-              className="w-full rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
+              className="w-[580px] h-[60px] rounded-full px-8 py-4 text-lg shadow focus:outline-none focus:ring-2 focus:ring-pink-300 border border-gray-200 bg-white placeholder-gray-400"
             />
           </div>
         </div>
       </header>
 
       {/* 카테고리 */}
-      <nav className="w-full bg-white shadow-sm py-3 px-2 flex flex-wrap justify-center gap-4">
-        {categories.map((cat) => (
-          <Link key={cat.name} href={cat.href} className="flex flex-col items-center w-16 hover:text-pink-500">
-            <span className="text-2xl mb-1">{cat.icon}</span>
-            <span className="text-xs font-medium">{cat.name}</span>
-          </Link>
+      <nav className="w-full bg-white shadow-sm py-3 px-2 flex flex-wrap justify-center gap-4 relative">
+        {menuWithSub.map((cat, idx) => (
+          <div key={cat.name} className="relative flex flex-col items-center w-24">
+            <button
+              className="flex flex-col items-center w-full hover:text-pink-500 focus:outline-none"
+              onClick={() => setOpenMenu(openMenu === idx ? null : idx)}
+              type="button"
+            >
+              <span className="text-2xl mb-1">{cat.icon}</span>
+              <span className="text-xs font-medium">{cat.name}</span>
+            </button>
+            {/* 아코디언 서브메뉴: 모든 메뉴에 적용 */}
+            {openMenu === idx && (
+              <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-white border rounded-lg shadow-md z-10 w-32 animate-fadeIn">
+                {cat.submenu.map((sub, i) => (
+                  <div key={sub} className="px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 cursor-pointer">{sub}</div>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </nav>
 
