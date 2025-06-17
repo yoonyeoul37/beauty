@@ -305,20 +305,6 @@ export default function Home() {
         ))}
       </nav>
 
-      {/* 추천 배너 */}
-      <section className="w-full flex justify-center py-6 bg-gradient-to-r from-pink-100 to-blue-100">
-        <div className="w-full max-w-2xl rounded-xl bg-white shadow p-6 flex flex-col md:flex-row items-center gap-4">
-          <div className="flex-1">
-            <h2 className="text-lg font-bold text-pink-600 mb-2">WELL&COME 이벤트</h2>
-            <p className="text-gray-600 text-sm mb-2">신규 회원 최대 50% 할인 쿠폰 증정!</p>
-            <button className="bg-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-pink-600 transition">이벤트 보기</button>
-          </div>
-          <div className="flex-1 flex justify-center">
-            <div className="w-32 h-20 bg-pink-200 rounded-lg flex items-center justify-center text-3xl">🎁</div>
-          </div>
-        </div>
-      </section>
-
       {/* 인기 미용실 슬라이더 */}
       <section className="container mx-auto px-4 py-8">
         <div className="w-[1200px] mx-auto">
@@ -465,8 +451,8 @@ export default function Home() {
                     {showToast[reviewedSalons[bigCardIdx].name + bigCardIdx] && (
                       <div className={`absolute left-1/2 -translate-x-1/2 top-8 z-30 px-4 py-2 rounded-2xl shadow-lg text-white text-sm font-semibold transition-all duration-500 bg-pink-500/90 animate-fade-in-out`}
                         style={{ pointerEvents: 'none' }}>
-                        {toastMsg[reviewedSalons[bigCardIdx].name + bigCardIdx]}
-                      </div>
+                          {toastMsg[reviewedSalons[bigCardIdx].name + bigCardIdx]}
+                        </div>
                     )}
                     {/* 이미지만 Link */}
                     <Link href={reviewedSalons[bigCardIdx].href} className="block w-full h-[240px] overflow-hidden">
