@@ -334,70 +334,100 @@ export default function Home() {
           <div className="w-full text-center text-gray-400 py-20 text-lg">등록된 업체가 없습니다.</div>
         ) : (
           <div className="w-[1280px] mx-auto flex items-center justify-center relative">
-            {/* 왼쪽 버튼 */}
-            <button
-              onClick={goReviewPrev}
-              className="absolute left-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-              aria-label="이전"
-            >
-              <span className="text-2xl">{'<'}</span>
-            </button>
-            {/* 카드 슬라이드 */}
-            <div
-              className="w-[1200px] overflow-hidden rounded-xl"
-              onMouseEnter={() => setIsReviewPaused(true)}
-              onMouseLeave={() => setIsReviewPaused(false)}
-            >
-              <div
-                className={`flex ${isTransition ? 'transition-transform duration-500' : ''}`}
-                style={{ width: `${reviewSlideCards.length * 240}px`, transform: `translateX(-${reviewSlideIdx * 240}px)` }}
+            {/* 왼쪽에 고정된 큰 카드 */}
+            <div className="w-[480px] mr-4">
+              <Link
+                href={reviewedSalons[0].href}
+                className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 w-[480px] h-[360px] relative overflow-hidden"
               >
-                {reviewSlideCards.map((salon, idx) => (
-                  <Link
-                    key={salon.name + idx}
-                    href={salon.href}
-                    className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
-                  >
-                    {/* 오버레이 */}
-                    <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
-                    <div className="relative h-full">
-                      {/* 이미지 섹션 */}
-                      <div className="w-full h-[240px] overflow-hidden">
-                        <img src={
-                          idx % slideLen === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
-                          : idx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
-                          : idx % slideLen === 2 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
-                          : idx % slideLen === 3 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
-                          : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340"
-                        } alt={salon.name} className="w-full h-full object-cover" />
-                      </div>
-                      {/* 텍스트 섹션 */}
-                      <div className="p-4 text-center">
-                        <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
-                          {salon.name}
-                        </div>
-                        <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
-                          {salon.location}
-                        </div>
-                        <div className="text-sm text-pink-500 group-hover:text-pink-600 transition-colors duration-300">
-                          {salon.desc}
-                        </div>
-                      </div>
+                <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
+                <div className="relative h-full">
+                  <div className="w-[480px] h-[240px] overflow-hidden">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340" 
+                      alt={reviewedSalons[0].name} 
+                      className="w-[480px] h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 text-center">
+                    <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
+                      {reviewedSalons[0].name}
                     </div>
-                  </Link>
-                ))}
-              </div>
+                    <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
+                      {reviewedSalons[0].location}
+                    </div>
+                    <div className="text-sm text-pink-500 group-hover:text-pink-600 transition-colors duration-300">
+                      {reviewedSalons[0].desc}
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </div>
-            {/* 오른쪽 버튼 */}
-            <button
-              onClick={goReviewNext}
-              className="absolute right-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-              aria-label="다음"
-            >
-              <span className="text-2xl">{'>'}</span>
-            </button>
+
+            {/* 슬라이딩되는 작은 카드들 */}
+            <div className="w-[720px] relative">
+              {/* 왼쪽 버튼 */}
+              <button
+                onClick={goReviewPrev}
+                className="absolute left-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
+                style={{ top: '50%', transform: 'translateY(-50%)' }}
+                aria-label="이전"
+              >
+                <span className="text-2xl">{'<'}</span>
+              </button>
+
+              {/* 카드 슬라이드 */}
+              <div
+                className="overflow-hidden"
+                onMouseEnter={() => setIsReviewPaused(true)}
+                onMouseLeave={() => setIsReviewPaused(false)}
+              >
+                <div
+                  className={`flex ${isTransition ? 'transition-transform duration-500' : ''}`}
+                  style={{ width: `${(reviewSlideCards.length - 1) * 240}px`, transform: `translateX(-${reviewSlideIdx * 240}px)` }}
+                >
+                  {reviewSlideCards.slice(1).map((salon, idx) => (
+                    <Link
+                      key={salon.name + idx}
+                      href={salon.href}
+                      className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
+                    >
+                      <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
+                      <div className="relative h-full">
+                        <div className="w-full h-[240px] overflow-hidden">
+                          <img src={
+                            idx % (slideLen-1) === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
+                            : idx % (slideLen-1) === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
+                            : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
+                          } alt={salon.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="p-4 text-center">
+                          <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
+                            {salon.name}
+                          </div>
+                          <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
+                            {salon.location}
+                          </div>
+                          <div className="text-sm text-pink-500 group-hover:text-pink-600 transition-colors duration-300">
+                            {salon.desc}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* 오른쪽 버튼 */}
+              <button
+                onClick={goReviewNext}
+                className="absolute right-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
+                style={{ top: '50%', transform: 'translateY(-50%)' }}
+                aria-label="다음"
+              >
+                <span className="text-2xl">{'>'}</span>
+              </button>
+            </div>
           </div>
         )}
       </section>
