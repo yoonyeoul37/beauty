@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link'
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const categories = [
   { name: '커트', href: '/haircut', icon: '💇‍♂️' },
@@ -50,6 +50,21 @@ const menuWithSub = [
 
 export default function Home() {
   const [openMenu, setOpenMenu] = useState<number | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenMenu(null);
+      }
+    }
+    if (openMenu !== null) {
+      window.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openMenu]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col">
@@ -68,22 +83,30 @@ export default function Home() {
       </header>
 
       {/* 카테고리 */}
-      <nav className="w-full bg-white shadow-sm py-3 px-2 flex flex-wrap justify-center gap-4 relative">
+      <nav ref={navRef} className="w-full bg-white shadow-sm py-3 px-2 flex flex-wrap justify-center gap-4 relative">
         {menuWithSub.map((cat, idx) => (
-          <div key={cat.name} className="relative flex flex-col items-center w-24">
+          <div key={cat.name} className="relative flex flex-col items-center w-28">
             <button
-              className="flex flex-col items-center w-full hover:text-pink-500 focus:outline-none"
+              className="flex flex-col items-center w-full hover:text-pink-600 focus:outline-none transition-colors duration-200"
               onClick={() => setOpenMenu(openMenu === idx ? null : idx)}
               type="button"
             >
               <span className="text-2xl mb-1">{cat.icon}</span>
-              <span className="text-xs font-medium">{cat.name}</span>
+              <span className="text-xs font-semibold tracking-wide flex items-center gap-1">
+                {cat.name}
+                <span className="ml-1 text-[10px]">{openMenu === idx ? '▲' : '▼'}</span>
+              </span>
             </button>
-            {/* 아코디언 서브메뉴: 모든 메뉴에 적용 */}
+            {/* 아코디언 서브메뉴: 모든 메뉴에 적용, 디자인 개선 */}
             {openMenu === idx && (
-              <div className="absolute top-14 left-1/2 -translate-x-1/2 bg-white border rounded-lg shadow-md z-10 w-32 animate-fadeIn">
+              <div className="absolute top-16 left-1/2 -translate-x-1/2 bg-white border border-pink-100 rounded-2xl shadow-xl z-20 w-44 py-2 animate-fadeIn flex flex-col gap-1">
                 {cat.submenu.map((sub, i) => (
-                  <div key={sub} className="px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 cursor-pointer">{sub}</div>
+                  <div
+                    key={sub}
+                    className="flex items-center gap-2 px-5 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded-xl cursor-pointer transition-colors duration-150"
+                  >
+                    <span className="text-pink-400 text-xs">●</span> {sub}
+                  </div>
                 ))}
               </div>
             )}
@@ -110,27 +133,41 @@ export default function Home() {
         <h3 className="text-xl font-bold text-gray-800 w-[1280px] mx-auto mb-4">라뷰에서 인기 있는 업체</h3>
         <div className="w-[1280px] mx-auto grid grid-cols-5 gap-6">
           {popularSalons.map((salon, idx) => (
-            <Link key={salon.name} href={salon.href} className="block bg-white rounded-lg shadow hover:shadow-lg p-4 transition w-[240px] h-[360px] hover:bg-[#dfe9fd]">
-              <div className="w-48 h-48 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
-                {idx === 0 && (
-                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340" alt="업체1" className="object-cover w-full h-full" />
-                )}
-                {idx === 1 && (
-                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340" alt="업체2" className="object-cover w-full h-full" />
-                )}
-                {idx === 2 && (
-                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340" alt="업체3" className="object-cover w-full h-full" />
-                )}
-                {idx === 3 && (
-                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340" alt="업체4" className="object-cover w-full h-full" />
-                )}
-                {idx === 4 && (
-                  <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340" alt="업체5" className="object-cover w-full h-full" />
-                )}
+            <Link
+              key={salon.name}
+              href={salon.href}
+              className="group block bg-white rounded-lg shadow hover:shadow-lg p-4 transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden"
+            >
+              {/* 오버레이 */}
+              <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg z-0" />
+              <div className="relative z-10">
+                <div className="w-48 h-48 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  {idx === 0 && (
+                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340" alt="업체1" className="object-cover w-full h-full" />
+                  )}
+                  {idx === 1 && (
+                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340" alt="업체2" className="object-cover w-full h-full" />
+                  )}
+                  {idx === 2 && (
+                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340" alt="업체3" className="object-cover w-full h-full" />
+                  )}
+                  {idx === 3 && (
+                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340" alt="업체4" className="object-cover w-full h-full" />
+                  )}
+                  {idx === 4 && (
+                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340" alt="업체5" className="object-cover w-full h-full" />
+                  )}
+                </div>
+                <div className="font-semibold text-gray-700 text-center group-hover:text-gray-800 transition-colors duration-300">
+                  {salon.name}
+                </div>
+                <div className="text-xs text-gray-500 text-center group-hover:text-gray-800 transition-colors duration-300">
+                  {salon.location}
+                </div>
+                <div className="text-xs text-pink-500 mt-1 text-center group-hover:text-gray-800 transition-colors duration-300">
+                  {salon.desc}
+                </div>
               </div>
-              <div className="font-semibold text-gray-700 text-center">{salon.name}</div>
-              <div className="text-xs text-gray-500 text-center">{salon.location}</div>
-              <div className="text-xs text-pink-500 mt-1 text-center">{salon.desc}</div>
             </Link>
           ))}
         </div>
