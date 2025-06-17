@@ -366,7 +366,7 @@ export default function Home() {
       </section>
 
       {/* 최근 리뷰가 많은 업체 슬라이더 */}
-      <section className="container mx-auto px-4 py-8">
+      <section className="container mx-auto px-4 py-8 -mt-[25px]">
         <div className="w-[1200px] mx-auto">
           <h3 className="text-xl font-bold text-gray-800 text-left mb-5">최근 리뷰가 많은 업체</h3>
         </div>
