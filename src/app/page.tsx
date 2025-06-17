@@ -16,6 +16,7 @@ const popularSalons = [
   { name: '스타일리스트 B', location: '홍대', desc: '트렌디한 스타일', href: '/coloring' },
   { name: '스타일리스트 C', location: '신촌', desc: '친절한 서비스', href: '/perm' },
   { name: '스타일리스트 D', location: '건대', desc: '예약 필수 인기샵', href: '#' },
+  { name: '스타일리스트 E', location: '잠실', desc: '합리적 가격, 최신 트렌드', href: '#' },
 ];
 
 export default function Home() {
@@ -64,9 +65,9 @@ export default function Home() {
       {/* 인기 미용실 */}
       <section className="container mx-auto px-4 py-8">
         <h3 className="text-xl font-bold text-gray-800 mb-4">라뷰에서 인기 있는 업체</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="w-[1280px] mx-auto grid grid-cols-5 gap-6">
           {popularSalons.map((salon) => (
-            <Link key={salon.name} href={salon.href} className="block bg-white rounded-lg shadow hover:shadow-lg p-4 transition">
+            <Link key={salon.name} href={salon.href} className="block bg-white rounded-lg shadow hover:shadow-lg p-4 transition w-[240px] h-[360px]">
               <div className="w-full h-24 bg-gray-100 rounded mb-2 flex items-center justify-center text-3xl">🏢</div>
               <div className="font-semibold text-gray-700">{salon.name}</div>
               <div className="text-xs text-gray-500">{salon.location}</div>
