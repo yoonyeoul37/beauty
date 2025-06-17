@@ -6,6 +6,8 @@ import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { faTrainSubway } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
 // FontAwesome 라이브러리에 아이콘 추가
@@ -123,6 +125,22 @@ export default function Home() {
   const [isTransition, setIsTransition] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const [isReviewPaused, setIsReviewPaused] = useState(false);
+
+  const [liked, setLiked] = useState<{ [key: string]: boolean }>({});
+  const [bounce, setBounce] = useState<{ [key: string]: boolean }>({});
+  const [showToast, setShowToast] = useState<{ [key: string]: boolean }>({});
+  const [toastMsg, setToastMsg] = useState<{ [key: string]: string }>({});
+  const handleLike = (key: string) => {
+    setLiked((prev) => ({ ...prev, [key]: !prev[key] }));
+    setBounce((prev) => ({ ...prev, [key]: true }));
+    setToastMsg((prev) => ({
+      ...prev,
+      [key]: liked[key] ? '찜을 취소했어요' : '관심 매장으로 등록!'
+    }));
+    setShowToast((prev) => ({ ...prev, [key]: true }));
+    setTimeout(() => setBounce((prev) => ({ ...prev, [key]: false })), 500);
+    setTimeout(() => setShowToast((prev) => ({ ...prev, [key]: false })), 2000);
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -346,6 +364,24 @@ export default function Home() {
                   >
                     <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
                     <div className="relative h-full">
+                      {/* 하트 버튼 */}
+                      <button
+                        onClick={() => handleLike(salon.name + idx)}
+                        className={`absolute top-2 right-2 z-20 group transition-transform duration-300 ${bounce[salon.name + idx] ? 'animate-bounce-heart' : ''}`}
+                        aria-label="찜하기"
+                        type="button"
+                      >
+                        <FontAwesomeIcon
+                          icon={liked[salon.name + idx] ? faHeartSolid : faHeartRegular}
+                          className={`text-xl transition-colors duration-200 ${liked[salon.name + idx] ? 'text-pink-500' : 'text-gray-300'}`}
+                        />
+                      </button>
+                      {showToast[salon.name + idx] && (
+                        <div className={`absolute left-1/2 -translate-x-1/2 top-8 z-30 px-4 py-2 rounded-2xl shadow-lg text-white text-sm font-semibold transition-all duration-500 bg-pink-500/90 animate-fade-in-out`}
+                          style={{ pointerEvents: 'none' }}>
+                          {toastMsg[salon.name + idx]}
+                        </div>
+                      )}
                       {/* 이미지만 Link */}
                       <Link href={salon.href} className="block w-full h-[240px] overflow-hidden">
                         <img
@@ -414,6 +450,24 @@ export default function Home() {
                 <div className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 w-[480px] h-[360px] relative overflow-hidden mx-2">
                   <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
                   <div className="relative h-full">
+                    {/* 하트 버튼 */}
+                    <button
+                      onClick={() => handleLike(reviewedSalons[bigCardIdx].name + bigCardIdx)}
+                      className={`absolute top-2 right-2 z-20 group transition-transform duration-300 ${bounce[reviewedSalons[bigCardIdx].name + bigCardIdx] ? 'animate-bounce-heart' : ''}`}
+                      aria-label="찜하기"
+                      type="button"
+                    >
+                      <FontAwesomeIcon
+                        icon={liked[reviewedSalons[bigCardIdx].name + bigCardIdx] ? faHeartSolid : faHeartRegular}
+                        className={`text-xl transition-colors duration-200 ${liked[reviewedSalons[bigCardIdx].name + bigCardIdx] ? 'text-pink-500' : 'text-gray-300'}`}
+                      />
+                    </button>
+                    {showToast[reviewedSalons[bigCardIdx].name + bigCardIdx] && (
+                      <div className={`absolute left-1/2 -translate-x-1/2 top-8 z-30 px-4 py-2 rounded-2xl shadow-lg text-white text-sm font-semibold transition-all duration-500 bg-pink-500/90 animate-fade-in-out`}
+                        style={{ pointerEvents: 'none' }}>
+                        {toastMsg[reviewedSalons[bigCardIdx].name + bigCardIdx]}
+                      </div>
+                    )}
                     {/* 이미지만 Link */}
                     <Link href={reviewedSalons[bigCardIdx].href} className="block w-full h-[240px] overflow-hidden">
                       <img
@@ -456,6 +510,24 @@ export default function Home() {
                   >
                     <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
                     <div className="relative h-full">
+                      {/* 하트 버튼 */}
+                      <button
+                        onClick={() => handleLike(salon.name + idx)}
+                        className={`absolute top-2 right-2 z-20 group transition-transform duration-300 ${bounce[salon.name + idx] ? 'animate-bounce-heart' : ''}`}
+                        aria-label="찜하기"
+                        type="button"
+                      >
+                        <FontAwesomeIcon
+                          icon={liked[salon.name + idx] ? faHeartSolid : faHeartRegular}
+                          className={`text-xl transition-colors duration-200 ${liked[salon.name + idx] ? 'text-pink-500' : 'text-gray-300'}`}
+                        />
+                      </button>
+                      {showToast[salon.name + idx] && (
+                        <div className={`absolute left-1/2 -translate-x-1/2 top-8 z-30 px-4 py-2 rounded-2xl shadow-lg text-white text-sm font-semibold transition-all duration-500 bg-pink-500/90 animate-fade-in-out`}
+                          style={{ pointerEvents: 'none' }}>
+                          {toastMsg[salon.name + idx]}
+                        </div>
+                      )}
                       {/* 이미지만 Link */}
                       <Link href={salon.href} className="block w-full h-[240px] overflow-hidden">
                         <img
@@ -514,6 +586,27 @@ export default function Home() {
           </filter>
         </defs>
       </svg>
+
+      <style jsx global>{`
+      @keyframes bounce-heart {
+        0% { transform: translateY(0) scale(1); }
+        30% { transform: translateY(-12px) scale(1.2); }
+        60% { transform: translateY(0) scale(1); }
+        100% { transform: translateY(0) scale(1); }
+      }
+      .animate-bounce-heart {
+        animation: bounce-heart 0.5s;
+      }
+      @keyframes fade-in-out {
+        0% { opacity: 0; transform: translateY(-10px); }
+        10% { opacity: 1; transform: translateY(0); }
+        90% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-10px); }
+      }
+      .animate-fade-in-out {
+        animation: fade-in-out 2s;
+      }
+      `}</style>
     </div>
   )
 }
