@@ -52,6 +52,21 @@ export default function Home() {
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
+  // 슬라이더 상태
+  const visibleCount = 5;
+  const slideLen = popularSalons.length;
+  let slideCards: typeof popularSalons = [];
+  if (slideLen === 0) {
+    slideCards = [];
+  } else {
+    // 5*3개 이상이 될 때까지 반복
+    while (slideCards.length < visibleCount * 3) {
+      slideCards = slideCards.concat(popularSalons);
+    }
+  }
+  const [slideIdx, setSlideIdx] = useState(slideLen); // 중간에서 시작
+  const [isTransition, setIsTransition] = useState(true);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -65,6 +80,45 @@ export default function Home() {
       window.removeEventListener('mousedown', handleClickOutside);
     };
   }, [openMenu]);
+
+  useEffect(() => {
+    if (slideCards.length === 0) return;
+    const timer = setInterval(() => {
+      setSlideIdx((prev) => prev + 1);
+      setIsTransition(true);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [slideCards.length]);
+
+  // 무한루프 효과
+  useEffect(() => {
+    if (slideIdx === slideCards.length - visibleCount + 1) {
+      // transition 끝난 뒤 바로 원본 구간으로 점프 (transition 없이)
+      const timeout = setTimeout(() => {
+        setIsTransition(false);
+        setSlideIdx(slideLen);
+      }, 500);
+      return () => clearTimeout(timeout);
+    } else if (slideIdx === 0) {
+      // transition 끝난 뒤 바로 원본 구간 끝으로 점프 (transition 없이)
+      const timeout = setTimeout(() => {
+        setIsTransition(false);
+        setSlideIdx(slideCards.length - visibleCount * 2);
+      }, 500);
+      return () => clearTimeout(timeout);
+    } else {
+      setIsTransition(true);
+    }
+  }, [slideIdx, slideLen, slideCards.length]);
+
+  const goNext = () => {
+    setSlideIdx((prev) => prev + 1);
+    setIsTransition(true);
+  };
+  const goPrev = () => {
+    setSlideIdx((prev) => prev - 1);
+    setIsTransition(true);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col">
@@ -128,49 +182,71 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 인기 미용실 */}
+      {/* 인기 미용실 슬라이더 */}
       <section className="container mx-auto px-4 py-8">
-        <h3 className="text-xl font-bold text-gray-800 w-[1280px] mx-auto mb-4">라뷰에서 인기 있는 업체</h3>
-        <div className="w-[1280px] mx-auto grid grid-cols-5 gap-6">
-          {popularSalons.map((salon, idx) => (
-            <Link
-              key={salon.name}
-              href={salon.href}
-              className="group block bg-white rounded-lg shadow hover:shadow-lg p-4 transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden"
+        <h3 className="text-xl font-bold text-gray-800 w-[1200px] mx-auto mb-4 text-center">라뷰에서 인기 있는 업체</h3>
+        {slideCards.length === 0 ? (
+          <div className="w-full text-center text-gray-400 py-20 text-lg">등록된 업체가 없습니다.</div>
+        ) : (
+          <div className="w-[1280px] mx-auto flex items-center justify-center relative">
+            {/* 왼쪽 버튼 */}
+            <button
+              onClick={goPrev}
+              className="absolute left-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              aria-label="이전"
             >
-              {/* 오버레이 */}
-              <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg z-0" />
-              <div className="relative z-10">
-                <div className="w-48 h-48 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
-                  {idx === 0 && (
-                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340" alt="업체1" className="object-cover w-full h-full" />
-                  )}
-                  {idx === 1 && (
-                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340" alt="업체2" className="object-cover w-full h-full" />
-                  )}
-                  {idx === 2 && (
-                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340" alt="업체3" className="object-cover w-full h-full" />
-                  )}
-                  {idx === 3 && (
-                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340" alt="업체4" className="object-cover w-full h-full" />
-                  )}
-                  {idx === 4 && (
-                    <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340" alt="업체5" className="object-cover w-full h-full" />
-                  )}
-                </div>
-                <div className="font-semibold text-gray-700 text-center group-hover:text-gray-800 transition-colors duration-300">
-                  {salon.name}
-                </div>
-                <div className="text-xs text-gray-500 text-center group-hover:text-gray-800 transition-colors duration-300">
-                  {salon.location}
-                </div>
-                <div className="text-xs text-pink-500 mt-1 text-center group-hover:text-gray-800 transition-colors duration-300">
-                  {salon.desc}
-                </div>
+              <span className="text-2xl">{'<'}</span>
+            </button>
+            {/* 카드 슬라이드 */}
+            <div className="w-[1200px] overflow-hidden rounded-xl">
+              <div
+                className={`flex ${isTransition ? 'transition-transform duration-500' : ''}`}
+                style={{ width: `${slideCards.length * 240}px`, transform: `translateX(-${slideIdx * 240}px)` }}
+              >
+                {slideCards.map((salon, idx) => (
+                  <Link
+                    key={salon.name + idx}
+                    href={salon.href}
+                    className="group block bg-white rounded-lg shadow hover:shadow-lg p-4 transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
+                  >
+                    {/* 오버레이 */}
+                    <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg z-0" />
+                    <div className="relative z-10">
+                      <div className="w-48 h-48 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                        <img src={
+                          idx % slideLen === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
+                          : idx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
+                          : idx % slideLen === 2 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
+                          : idx % slideLen === 3 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
+                          : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340"
+                        } alt={salon.name} className="object-cover w-full h-full" />
+                      </div>
+                      <div className="font-semibold text-gray-700 text-center group-hover:text-gray-800 transition-colors duration-300">
+                        {salon.name}
+                      </div>
+                      <div className="text-xs text-gray-500 text-center group-hover:text-gray-800 transition-colors duration-300">
+                        {salon.location}
+                      </div>
+                      <div className="text-xs text-pink-500 mt-1 text-center group-hover:text-gray-800 transition-colors duration-300">
+                        {salon.desc}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            </Link>
-          ))}
-        </div>
+            </div>
+            {/* 오른쪽 버튼 */}
+            <button
+              onClick={goNext}
+              className="absolute right-[-48px] z-20 w-10 h-10 bg-white rounded-xl shadow flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition border border-gray-200"
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              aria-label="다음"
+            >
+              <span className="text-2xl">{'>'}</span>
+            </button>
+          </div>
+        )}
       </section>
 
       {/* 더 많은 섹션/이벤트/추천 등은 필요에 따라 추가 가능 */}
