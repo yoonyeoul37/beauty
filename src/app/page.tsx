@@ -59,13 +59,14 @@ export default function Home() {
   if (slideLen === 0) {
     slideCards = [];
   } else {
-    // 5*3개 이상이 될 때까지 반복
+    // 현재 있는 카드만 반복해서 5*3개 이상으로 복제
     while (slideCards.length < visibleCount * 3) {
       slideCards = slideCards.concat(popularSalons);
     }
   }
   const [slideIdx, setSlideIdx] = useState(slideLen); // 중간에서 시작
   const [isTransition, setIsTransition] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -82,13 +83,13 @@ export default function Home() {
   }, [openMenu]);
 
   useEffect(() => {
-    if (slideCards.length === 0) return;
+    if (slideCards.length === 0 || isPaused) return;
     const timer = setInterval(() => {
       setSlideIdx((prev) => prev + 1);
       setIsTransition(true);
     }, 5000);
     return () => clearInterval(timer);
-  }, [slideCards.length]);
+  }, [slideCards.length, isPaused]);
 
   // 무한루프 효과
   useEffect(() => {
@@ -199,7 +200,11 @@ export default function Home() {
               <span className="text-2xl">{'<'}</span>
             </button>
             {/* 카드 슬라이드 */}
-            <div className="w-[1200px] overflow-hidden rounded-xl">
+            <div
+              className="w-[1200px] overflow-hidden rounded-xl"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
               <div
                 className={`flex ${isTransition ? 'transition-transform duration-500' : ''}`}
                 style={{ width: `${slideCards.length * 240}px`, transform: `translateX(-${slideIdx * 240}px)` }}
@@ -208,7 +213,7 @@ export default function Home() {
                   <Link
                     key={salon.name + idx}
                     href={salon.href}
-                    className="group block bg-white rounded-lg shadow hover:shadow-lg p-4 transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
+                    className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg p-4 transition-all duration-300 w-[240px] h-[360px] relative overflow-hidden mx-2"
                   >
                     {/* 오버레이 */}
                     <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg z-0" />
