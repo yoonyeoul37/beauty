@@ -331,10 +331,8 @@ export default function Home() {
                         {/* 별점과 리뷰 수 추가 */}
                         <div className="flex items-center justify-center gap-2 mb-2 -mt-[13px]">
                           <StarRating rating={salon.rating} />
-                          <Link href={`/review?shop=${encodeURIComponent(salon.name)}`} legacyBehavior>
-                            <a className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
-                              ({salon.reviewCount.toLocaleString()})
-                            </a>
+                          <Link href={`/review?shop=${encodeURIComponent(salon.name)}`} className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
+                            ({salon.reviewCount.toLocaleString()})
                           </Link>
                         </div>
                         <div className="font-semibold text-gray-700 text-lg -mt-[10px] group-hover:text-gray-800 transition-colors duration-300">
@@ -399,10 +397,8 @@ export default function Home() {
                     {/* 별점과 리뷰 수 추가 */}
                     <div className="flex items-center justify-center gap-2 mb-2 -mt-[13px]">
                       <StarRating rating={reviewedSalons[randomSalonIndex % reviewedSalons.length].rating} />
-                      <Link href={`/review?shop=${encodeURIComponent(reviewedSalons[randomSalonIndex % reviewedSalons.length].name)}`} legacyBehavior>
-                        <a className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
-                          ({reviewedSalons[randomSalonIndex % reviewedSalons.length].reviewCount.toLocaleString()})
-                        </a>
+                      <Link href={`/review?shop=${encodeURIComponent(reviewedSalons[randomSalonIndex % reviewedSalons.length].name)}`} className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
+                        ({reviewedSalons[randomSalonIndex % reviewedSalons.length].reviewCount.toLocaleString()})
                       </Link>
                     </div>
                     <div className="font-semibold text-gray-700 text-lg -mt-[10px] group-hover:text-gray-800 transition-colors duration-300">
@@ -460,10 +456,8 @@ export default function Home() {
                           {/* 별점과 리뷰 수 추가 */}
                           <div className="flex items-center justify-center gap-2 mb-2 -mt-[13px]">
                             <StarRating rating={salon.rating} />
-                            <Link href={`/review?shop=${encodeURIComponent(salon.name)}`} legacyBehavior>
-                              <a className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
-                                ({salon.reviewCount.toLocaleString()})
-                              </a>
+                            <Link href={`/review?shop=${encodeURIComponent(salon.name)}`} className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
+                              ({salon.reviewCount.toLocaleString()})
                             </Link>
                           </div>
                           <div className="font-semibold text-gray-700 text-lg -mt-[10px] group-hover:text-gray-800 transition-colors duration-300">
