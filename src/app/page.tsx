@@ -3,10 +3,12 @@ import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
+import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
 // FontAwesome 라이브러리에 아이콘 추가
-library.add(faBell);
+library.add(faBell, faStarSolid, faStarRegular);
 
 const categories = [
   { name: '커트', href: '/haircut', icon: '💇‍♂️' },
@@ -20,19 +22,19 @@ const categories = [
 ];
 
 const popularSalons = [
-  { name: '스타일리스트 A', location: '강남', desc: '합리적 가격, 높은 평점', href: '/haircut' },
-  { name: '스타일리스트 B', location: '홍대', desc: '트렌디한 스타일', href: '/coloring' },
-  { name: '스타일리스트 C', location: '신촌', desc: '친절한 서비스', href: '/perm' },
-  { name: '스타일리스트 D', location: '건대', desc: '예약 필수 인기샵', href: '#' },
-  { name: '스타일리스트 E', location: '잠실', desc: '합리적 가격, 최신 트렌드', href: '#' },
+  { name: '스타일리스트 A', location: '강남', desc: '합리적 가격, 높은 평점', href: '/haircut', rating: 4.9, reviewCount: 2341 },
+  { name: '스타일리스트 B', location: '홍대', desc: '트렌디한 스타일', href: '/coloring', rating: 4.7, reviewCount: 1876 },
+  { name: '스타일리스트 C', location: '신촌', desc: '친절한 서비스', href: '/perm', rating: 4.8, reviewCount: 1543 },
+  { name: '스타일리스트 D', location: '건대', desc: '예약 필수 인기샵', href: '#', rating: 4.6, reviewCount: 987 },
+  { name: '스타일리스트 E', location: '잠실', desc: '합리적 가격, 최신 트렌드', href: '#', rating: 4.8, reviewCount: 765 },
 ];
 
 const reviewedSalons = [
-  { name: '뷰티살롱 A', location: '강남', desc: '리뷰 1,234개', href: '/haircut' },
-  { name: '헤어스튜디오 B', location: '홍대', desc: '리뷰 987개', href: '/coloring' },
-  { name: '미용실 C', location: '신촌', desc: '리뷰 856개', href: '/perm' },
-  { name: '헤어살롱 D', location: '건대', desc: '리뷰 743개', href: '#' },
-  { name: '뷰티샵 E', location: '잠실', desc: '리뷰 632개', href: '#' },
+  { name: '뷰티살롱 A', location: '강남', desc: '리뷰 1,234개', href: '/haircut', rating: 4.8, reviewCount: 1234 },
+  { name: '헤어스튜디오 B', location: '홍대', desc: '리뷰 987개', href: '/coloring', rating: 4.5, reviewCount: 987 },
+  { name: '미용실 C', location: '신촌', desc: '리뷰 856개', href: '/perm', rating: 4.9, reviewCount: 856 },
+  { name: '헤어살롱 D', location: '건대', desc: '리뷰 743개', href: '#', rating: 4.7, reviewCount: 743 },
+  { name: '뷰티샵 E', location: '잠실', desc: '리뷰 632개', href: '#', rating: 4.6, reviewCount: 632 },
 ];
 
 const menuWithSub = [
@@ -62,9 +64,26 @@ const menuWithSub = [
   },
 ];
 
+// 별점을 렌더링하는 컴포넌트
+const StarRating = ({ rating }: { rating: number }) => {
+  return (
+    <div className="flex items-center gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <FontAwesomeIcon
+          key={star}
+          icon={star <= rating ? faStarSolid : faStarRegular}
+          className={star <= rating ? "text-yellow-400" : "text-gray-300"}
+          style={{ fontSize: '14px', filter: 'url(#round)' }}
+        />
+      ))}
+    </div>
+  );
+};
+
 export default function Home() {
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const [randomSalonIndex, setRandomSalonIndex] = useState(0); // 랜덤 선택된 카드 인덱스
 
   // 슬라이더 상태
   const visibleCount = 5;
@@ -117,10 +136,14 @@ export default function Home() {
     if (reviewSlideCards.length === 0 || isReviewPaused) return;
     const timer = setInterval(() => {
       setReviewSlideIdx((prev) => prev + 1);
+      // 현재 보이는 카드들 중에서 랜덤으로 하나 선택
+      const visibleStartIdx = reviewSlideIdx % (slideLen - 1);
+      const randomIdx = Math.floor(Math.random() * 3) + visibleStartIdx;
+      setRandomSalonIndex(randomIdx % (slideLen - 1));
       setIsTransition(true);
     }, 5000);
     return () => clearInterval(timer);
-  }, [reviewSlideCards.length, isReviewPaused]);
+  }, [reviewSlideCards.length, isReviewPaused, reviewSlideIdx, slideLen]);
 
   // 무한루프 효과
   useEffect(() => {
@@ -169,10 +192,18 @@ export default function Home() {
   };
   const goReviewNext = () => {
     setReviewSlideIdx((prev) => prev + 1);
+    // 다음 버튼 클릭시에도 랜덤 선택
+    const visibleStartIdx = (reviewSlideIdx + 1) % (slideLen - 1);
+    const randomIdx = Math.floor(Math.random() * 3) + visibleStartIdx;
+    setRandomSalonIndex(randomIdx % (slideLen - 1));
     setIsTransition(true);
   };
   const goReviewPrev = () => {
     setReviewSlideIdx((prev) => prev - 1);
+    // 이전 버튼 클릭시에도 랜덤 선택
+    const visibleStartIdx = (reviewSlideIdx - 1) % (slideLen - 1);
+    const randomIdx = Math.floor(Math.random() * 3) + visibleStartIdx;
+    setRandomSalonIndex(randomIdx % (slideLen - 1));
     setIsTransition(true);
   };
 
@@ -297,7 +328,16 @@ export default function Home() {
                       </div>
                       {/* 텍스트 섹션 */}
                       <div className="p-4 text-center">
-                        <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
+                        {/* 별점과 리뷰 수 추가 */}
+                        <div className="flex items-center justify-center gap-2 mb-2 -mt-[13px]">
+                          <StarRating rating={salon.rating} />
+                          <Link href={`/review?shop=${encodeURIComponent(salon.name)}`} legacyBehavior>
+                            <a className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
+                              ({salon.reviewCount.toLocaleString()})
+                            </a>
+                          </Link>
+                        </div>
+                        <div className="font-semibold text-gray-700 text-lg -mt-[10px] group-hover:text-gray-800 transition-colors duration-300">
                           {salon.name}
                         </div>
                         <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
@@ -333,31 +373,46 @@ export default function Home() {
         {reviewSlideCards.length === 0 ? (
           <div className="w-full text-center text-gray-400 py-20 text-lg">등록된 업체가 없습니다.</div>
         ) : (
-          <div className="w-[1280px] mx-auto flex items-center justify-center relative">
+          <div className="w-[1200px] mx-auto flex items-center justify-between relative">
             {/* 왼쪽에 고정된 큰 카드 */}
-            <div className="w-[480px] mr-4">
+            <div className="w-[480px]">
               <Link
-                href={reviewedSalons[0].href}
+                href={reviewedSalons[randomSalonIndex % reviewedSalons.length].href}
                 className="group block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 w-[480px] h-[360px] relative overflow-hidden"
               >
                 <div className="pointer-events-none absolute inset-0 bg-[#e1e9fa] opacity-0 group-hover:opacity-20 transition-all duration-300 z-10" />
                 <div className="relative h-full">
                   <div className="w-[480px] h-[240px] overflow-hidden">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340" 
-                      alt={reviewedSalons[0].name} 
+                      src={
+                        randomSalonIndex % (slideLen-1) === 0 
+                          ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
+                          : randomSalonIndex % (slideLen-1) === 1 
+                            ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
+                            : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
+                      }
+                      alt={reviewedSalons[randomSalonIndex % reviewedSalons.length].name} 
                       className="w-[480px] h-full object-cover"
                     />
                   </div>
                   <div className="p-4 text-center">
-                    <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
-                      {reviewedSalons[0].name}
+                    {/* 별점과 리뷰 수 추가 */}
+                    <div className="flex items-center justify-center gap-2 mb-2 -mt-[13px]">
+                      <StarRating rating={reviewedSalons[randomSalonIndex % reviewedSalons.length].rating} />
+                      <Link href={`/review?shop=${encodeURIComponent(reviewedSalons[randomSalonIndex % reviewedSalons.length].name)}`} legacyBehavior>
+                        <a className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
+                          ({reviewedSalons[randomSalonIndex % reviewedSalons.length].reviewCount.toLocaleString()})
+                        </a>
+                      </Link>
+                    </div>
+                    <div className="font-semibold text-gray-700 text-lg -mt-[10px] group-hover:text-gray-800 transition-colors duration-300">
+                      {reviewedSalons[randomSalonIndex % reviewedSalons.length].name}
                     </div>
                     <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
-                      {reviewedSalons[0].location}
+                      {reviewedSalons[randomSalonIndex % reviewedSalons.length].location}
                     </div>
                     <div className="text-sm text-pink-500 group-hover:text-pink-600 transition-colors duration-300">
-                      {reviewedSalons[0].desc}
+                      {reviewedSalons[randomSalonIndex % reviewedSalons.length].desc}
                     </div>
                   </div>
                 </div>
@@ -402,7 +457,16 @@ export default function Home() {
                           } alt={salon.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="p-4 text-center">
-                          <div className="font-semibold text-gray-700 text-lg mb-1 group-hover:text-gray-800 transition-colors duration-300">
+                          {/* 별점과 리뷰 수 추가 */}
+                          <div className="flex items-center justify-center gap-2 mb-2 -mt-[13px]">
+                            <StarRating rating={salon.rating} />
+                            <Link href={`/review?shop=${encodeURIComponent(salon.name)}`} legacyBehavior>
+                              <a className="text-sm text-gray-500 hover:text-pink-500 underline cursor-pointer">
+                                ({salon.reviewCount.toLocaleString()})
+                              </a>
+                            </Link>
+                          </div>
+                          <div className="font-semibold text-gray-700 text-lg -mt-[10px] group-hover:text-gray-800 transition-colors duration-300">
                             {salon.name}
                           </div>
                           <div className="text-sm text-gray-500 mb-2 group-hover:text-gray-600 transition-colors duration-300">
@@ -439,6 +503,17 @@ export default function Home() {
         <div>© 2024 라뷰 | 미용 가격 비교 서비스</div>
         <div className="mt-1">문의: help@labview.kr</div>
       </footer>
+
+      {/* SVG 필터 추가 - 별을 둥글게 만들기 위한 필터 */}
+      <svg width="0" height="0" className="hidden">
+        <defs>
+          <filter id="round">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="round" />
+            <feBlend in="SourceGraphic" in2="round" />
+          </filter>
+        </defs>
+      </svg>
     </div>
   )
 }
