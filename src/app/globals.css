@@ -87,5 +87,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Pretendard', Arial, Helvetica, sans-serif;
+  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
 }
