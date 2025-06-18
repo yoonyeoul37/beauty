@@ -77,7 +77,19 @@ const dummyPosts: Record<string, Post[]> = {
 const POSTS_PER_PAGE = 5;
 
 // 구인구직 카드 예시 데이터
-const jobPosts = [
+const jobPosts: Array<{
+  id: number;
+  name: string;
+  location: string;
+  position: string;
+  career: string;
+  type: string;
+  period: string;
+  salary: string;
+  benefit: string;
+  premium: boolean;
+  image?: string;
+}> = [
   {
     id: 1,
     name: '엘더은살롱',
@@ -89,6 +101,7 @@ const jobPosts = [
     salary: '추후협의',
     benefit: '4대보험, 식사제공, 교통비지원',
     premium: true,
+    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=400&q=80',
   },
   {
     id: 2,
@@ -101,6 +114,7 @@ const jobPosts = [
     salary: '월 250~300만원',
     benefit: '인센티브, 명절보너스, 자유휴가',
     premium: false,
+    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=400&q=80',
   },
 ];
 
@@ -310,9 +324,7 @@ export default function CommunityMain() {
               {/* 등록 버튼 */}
               <button
                 className="ml-auto px-5 py-2 rounded-full font-bold shadow hover:opacity-90 transition text-sm"
-                style={{background: '#1E293B', color: '#fff', fontWeight: 700, border: '2px solid #1E293B'}} 
-                onMouseOver={e => e.currentTarget.style.border = '2px solid #F3F4F6'}
-                onMouseOut={e => e.currentTarget.style.border = '2px solid #1E293B'}
+                style={{background: '#1E293B', color: '#fff'}}
                 onClick={() => {
                   if (activeJobTab === 'employer') {
                     router.push('/community/job/write');
@@ -333,40 +345,47 @@ export default function CommunityMain() {
                   (jobType === '직종' || job.position === jobType) &&
                   (employmentType === '고용형태' || job.type === employmentType)
                 ).map(job => (
-                  <Link href={`/community/job/${job.id}`} key={job.id} className="block group">
-                    <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-center gap-6 hover:shadow-lg transition group-hover:scale-[1.01] cursor-pointer">
-                      <div className="w-16 h-16 rounded-xl bg-[#F3F4F6] flex items-center justify-center text-2xl font-bold text-[#1E293B] shadow-inner">
+                  <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-center gap-6 hover:shadow-lg transition group-hover:scale-[1.01] relative h-[120px] min-h-[120px]">
+                    {/* 이미지 or 이니셜 */}
+                    {job.image ? (
+                      <img
+                        src={job.image}
+                        alt={job.name}
+                        className="w-16 h-16 object-cover rounded-xl shadow-inner"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 flex items-center justify-center text-2xl font-bold text-[#1E293B] bg-[#F3F4F6] rounded-xl shadow-inner select-none">
                         {job.name[0]}
                       </div>
-                      <div className="flex-1 flex flex-col gap-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-lg font-extrabold text-gray-800">{job.name}</span>
-                          {job.premium && <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-yellow-100 text-yellow-700 rounded">프리미엄</span>}
-                        </div>
-                        <div className="flex flex-wrap gap-2 text-sm text-gray-500 mb-1">
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{job.location}</span>
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{job.position}</span>
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{job.career}</span>
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{job.type}</span>
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{job.period}</span>
-                        </div>
-                        <div className="flex gap-4 text-sm">
-                          <span style={{color: '#1E293B', fontWeight: 700}}>급여: {job.salary}</span>
-                          <span className="text-gray-400">복지: {job.benefit}</span>
-                        </div>
+                    )}
+                    <div className="flex-1 flex flex-col gap-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-extrabold text-gray-800">{job.name}</span>
+                        {job.premium && <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-yellow-100 text-yellow-700 rounded">프리미엄</span>}
                       </div>
-                      <button className="px-5 py-2 rounded-full font-bold shadow hover:opacity-90 transition" style={{background: '#1E293B', color: '#fff', fontWeight: 700, border: '2px solid #1E293B'}} onMouseOver={e => e.currentTarget.style.border = '2px solid #F3F4F6'} onMouseOut={e => e.currentTarget.style.border = '2px solid #1E293B'}>
-                        지원하기
-                      </button>
+                      <div className="flex flex-wrap gap-2 text-sm text-gray-500 mb-1">
+                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.location}</span>
+                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.position}</span>
+                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.career}</span>
+                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.type}</span>
+                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.period}</span>
+                      </div>
+                      <div className="flex gap-4 text-sm">
+                        <span style={{color: '#1E293B', fontWeight: 700}}>급여: {job.salary}</span>
+                        <span className="text-gray-400">복지: {job.benefit}</span>
+                      </div>
                     </div>
-                  </Link>
+                    <Link href={`/community/job/${job.id}`} className="px-5 py-2 rounded-full bg-[#1E293B] text-white font-bold shadow hover:bg-gray-800 transition text-sm self-center cursor-pointer">
+                      상세보기
+                    </Link>
+                  </div>
                 ))}
               </div>
             ) : (
               <div className="flex flex-col gap-6">
                 {jobSeekers.map(seeker => (
                   <Link href={`/community/jobseeker/${seeker.id}`} key={seeker.id} className="block group">
-                    <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-center gap-6 hover:shadow-lg transition group-hover:scale-[1.01] cursor-pointer">
+                    <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-stretch gap-6 hover:shadow-lg transition group-hover:scale-[1.01] cursor-pointer relative h-[120px] min-h-[120px]">
                       <div className="w-16 h-16 rounded-xl bg-blue-50 flex items-center justify-center text-2xl font-bold text-blue-400 shadow-inner">
                         {seeker.name[0]}
                       </div>

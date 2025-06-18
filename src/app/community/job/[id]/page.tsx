@@ -66,6 +66,7 @@ export default function JobDetailPage() {
         <div className="bg-white rounded-xl p-6 shadow text-gray-700 whitespace-pre-line">
           {jobDetail.상세설명}
         </div>
+        <button className="px-5 py-2 rounded-full bg-[#1E293B] text-white font-bold shadow hover:bg-gray-800 transition text-sm self-center">지원하기</button>
         <Link href="/community?tab=job" className="mt-6 px-6 py-2 rounded-full bg-pink-100 text-pink-600 font-bold shadow hover:bg-pink-200 transition self-center">목록으로</Link>
       </div>
     </main>
