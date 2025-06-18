@@ -254,8 +254,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col">
       {/* 헤더 */}
-      <header className="w-full" style={{ height: 100, minHeight: 100 }}>
-        <div className="h-full flex items-center px-4 bg-[#232526] shadow-lg border-b-2 border-gray-300/40 relative">
+      <header className="w-full bg-[#232526] shadow-lg border-b-2 border-gray-300/40">
+        <div className="h-[100px] flex items-center px-4 relative">
           <div className="flex items-center gap-8" style={{ marginLeft: 120 }}>
             <span className="text-4xl font-extrabold text-white tracking-wide drop-shadow-lg px-6 py-2 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-md">라뷰</span>
             <input
@@ -272,6 +272,40 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* 히어로 섹션 */}
+      <section className="w-full bg-gradient-to-r from-pink-50 via-purple-50 to-pink-50">
+        <div className="max-w-[1200px] mx-auto px-4 py-16">
+          <div className="flex items-center justify-between gap-8">
+            <div className="flex-1">
+              <h1
+                className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text"
+                style={{ maxWidth: '700px', lineHeight: 1.2, wordBreak: 'keep-all' }}
+              >
+                내 주변 최고의 뷰티샵을 한눈에!
+              </h1>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                합리적인 가격, 높은 평점, 다양한 리뷰로<br />
+                당신만의 완벽한 뷰티샵을 찾아보세요
+              </p>
+              <button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+                지금 바로 비교하기
+              </button>
+            </div>
+            <div className="flex-1 flex justify-end">
+              <div className="relative w-[400px] h-[300px]">
+                <img
+                  src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
+                  alt="뷰티 서비스 일러스트"
+                  className="w-full h-full object-contain"
+                />
+                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-pink-200 rounded-full opacity-50 animate-pulse"></div>
+                <div className="absolute -top-4 -left-4 w-32 h-32 bg-purple-200 rounded-full opacity-50 animate-pulse" style={{ animationDelay: '1s' }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 카테고리 */}
       <nav ref={navRef} className="w-full bg-white shadow-sm py-3 px-2 flex flex-wrap justify-center gap-4 relative">
@@ -459,10 +493,10 @@ export default function Home() {
                       <img
                         src={
                           bigCardIdx % slideLen === 0 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png&type=a340"
-                          : bigCardIdx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
-                          : bigCardIdx % slideLen === 2 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
-                          : bigCardIdx % slideLen === 3 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
-                          : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340"
+                        : bigCardIdx % slideLen === 1 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg&type=a340"
+                        : bigCardIdx % slideLen === 2 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg&type=a340"
+                        : bigCardIdx % slideLen === 3 ? "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg&type=a340"
+                        : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg&type=a340"
                         }
                         alt={reviewedSalons[bigCardIdx].name}
                         className="w-full h-full object-cover cursor-pointer transition-transform duration-200 hover:scale-105"
