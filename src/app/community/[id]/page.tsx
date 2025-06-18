@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegularHeart } from '@fortawesome/free-regular-svg-icons';
@@ -27,9 +27,10 @@ const dummyComments: Record<number, { author: string; content: string; date: str
   5: [],
 };
 
-export default function CommunityPostDetail({ params }: { params: { id: string } }) {
-  const post = dummyPosts.find(p => p.id === Number(params.id));
-  const comments = dummyComments[Number(params.id)] || [];
+export default function CommunityPostDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const post = dummyPosts.find(p => p.id === Number(id));
+  const comments = dummyComments[Number(id)] || [];
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post?.likes ?? 0);
 
