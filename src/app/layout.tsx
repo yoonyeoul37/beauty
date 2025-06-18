@@ -34,10 +34,10 @@ export default function RootLayout({
         {/* 헤더: Glass, sticky, 좌측 로고(메인 이동), 우측 메뉴 */}
         <header className="sticky top-0 z-30 w-full bg-white/60 backdrop-blur shadow-sm">
           <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-8 h-16">
-            <Link href="/" className="font-extrabold text-2xl md:text-3xl text-pink-500 tracking-tight hover:opacity-80 transition select-none">
-              스타일로그
+            <Link href="/" className="font-extrabold text-2xl md:text-3xl tracking-widest hover:opacity-80 transition select-none relative text-black" style={{fontFamily: 'serif', letterSpacing: '0.12em', textShadow: '0 0 8px #fff, 0 0 16px #e0e0e0', overflow: 'hidden'}}>
+              <span className="shine-anim">Style Logs</span>
             </Link>
-            <nav className="flex gap-2 md:gap-6 text-base font-semibold">
+            <nav className="flex gap-2 md:gap-6 text-sm font-semibold" style={{fontSize: '14px'}}>
               <Link href="/community" className="text-gray-700 hover:text-pink-500 transition">커뮤니티</Link>
               <Link href="/review" className="text-gray-700 hover:text-pink-500 transition">리뷰</Link>
               <Link href="/event" className="text-gray-700 hover:text-pink-500 transition">이벤트</Link>

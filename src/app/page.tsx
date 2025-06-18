@@ -296,25 +296,42 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col">
-      {/* 헤더 */}
-      <header className="w-full bg-[#232526] shadow-lg border-b-2 border-gray-300/40">
-        <div className="h-[100px] flex items-center px-4 relative">
-          <div className="flex items-center gap-8" style={{ marginLeft: 120 }}>
-            <span className="text-4xl font-extrabold text-white tracking-wide drop-shadow-lg px-6 py-2 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-md">스타일로그</span>
+      {/* 스타일로그 가격비교 헤더 (이미지 참고) */}
+      <header className="bg-[#DEC5AD] flex flex-col items-center py-8 border-b border-gray-200">
+        <div className="flex flex-col items-center w-full">
+          <span className="text-base md:text-lg text-gray-700 font-light mb-2 tracking-wider" style={{fontFamily: 'Georgia, serif', letterSpacing: '0.08em'}}>당신의 아름다움을 위한 첫 번째 선택</span>
+          <span
+            className="text-5xl md:text-6xl font-extrabold mb-1"
+            style={{
+              fontFamily: "'Playfair Display Variable', 'Noto Serif KR', serif",
+              color: '#C0396A',
+              letterSpacing: '0.08em',
+              textShadow: '0 2px 8px rgba(200,60,120,0.08)',
+              lineHeight: 1.1,
+            }}
+          >
+            나만의 스타일로그
+          </span>
+        </div>
+        {/* 검색창을 헤더 하단에 추가 */}
+        <div className="w-full flex justify-center mt-8">
+          <div className="w-full max-w-3xl">
             <input
+              className="w-full rounded-full border border-gray-200 bg-[#FCF6F7] text-gray-500 px-8 py-5 text-lg shadow-sm focus:outline-none placeholder-gray-400"
+              placeholder="어떤 미용실, 시술, 지역을 찾으세요?"
               type="text"
-              placeholder="검색어를 입력하세요"
-              className="w-[580px] h-[60px] rounded-full px-8 py-4 text-lg shadow focus:outline-none focus:ring-2 focus:ring-pink-300 border border-gray-200 bg-white placeholder-gray-400"
-              style={{ boxShadow: '0 2px 12px 0 rgba(255, 0, 80, 0.08)' }}
             />
-          </div>
-          {/* 헤더 우측 네비게이션(예시) */}
-          <div className="absolute right-12 flex items-center gap-6">
-            <button className="text-white/80 hover:text-pink-200 transition-colors text-lg font-semibold px-3 py-2 rounded-xl hover:bg-white/10 focus:outline-none">로그인</button>
-            <button className="text-white/80 hover:text-pink-200 transition-colors text-lg font-semibold px-3 py-2 rounded-xl hover:bg-white/10 focus:outline-none">회원가입</button>
           </div>
         </div>
       </header>
+      {/* 중앙 검색바 (헤더로 이동, 기존 위치에서 제거) */}
+      {/* <div className="flex justify-center items-center py-6 px-4">
+        <div className="w-full max-w-2xl relative">
+          <input className="w-full rounded-full border-0 px-6 py-4 text-lg shadow focus:outline-none" placeholder="어떤 미용실, 시술, 지역을 찾으세요?" />
+        </div>
+      </div> */}
+
+      {/* 네비게이션/카테고리 + 버튼 (삭제됨) */}
 
       {/* 히어로 섹션 */}
       <section className="w-full bg-gradient-to-r from-pink-50 via-purple-50 to-pink-50">

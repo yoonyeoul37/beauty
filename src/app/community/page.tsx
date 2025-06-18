@@ -159,7 +159,9 @@ export default function CommunityMain() {
 
   return (
     <main className="min-h-screen bg-gray-50 pb-20">
-      {/* 상단 카드형 배너 */}
+      {/* 상단 여백만 남기고 헤더 완전 삭제 */}
+      <div className="h-6" />
+      {/* 광고형 배너 3칸 복구 */}
       <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-6">
         {banners.map((banner, i) => (
           <Link href={banner.link || '#'} key={i} className="group">
@@ -191,9 +193,9 @@ export default function CommunityMain() {
               key={tab.key}
               onClick={() => { setActiveTab(tab.key); setPage(1); }}
               className={`flex items-center gap-2 px-5 py-2 rounded-full font-bold shadow-sm transition-all duration-200 text-sm
-                ${activeTab === tab.key ? 'bg-pink-100 text-pink-600 scale-105' : 'bg-white/90 text-gray-700 hover:bg-pink-50'}`}
+                ${activeTab === tab.key ? 'bg-gray-200 text-gray-800 scale-105' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
             >
-              <FontAwesomeIcon icon={tab.icon} className={activeTab === tab.key ? 'text-pink-400' : 'text-gray-400'} />
+              <FontAwesomeIcon icon={tab.icon} className={activeTab === tab.key ? 'text-gray-700' : 'text-gray-400'} />
               {tab.name}
             </button>
           ))}
@@ -201,7 +203,7 @@ export default function CommunityMain() {
         {/* 글쓰기/공고등록 버튼: 구인구직 탭이 아닐 때만 노출 */}
         {activeTab !== 'job' && (
           <button
-            className="ml-auto px-5 py-2 rounded-full bg-pink-500 text-white font-bold shadow hover:bg-pink-600 transition text-sm"
+            className="ml-auto px-5 py-2 rounded-full bg-gray-200 text-gray-800 font-bold shadow hover:bg-gray-300 transition text-sm"
             onClick={() => {
               router.push(`/community/write?tab=${activeTab}`);
             }}
@@ -218,13 +220,23 @@ export default function CommunityMain() {
             <div className="flex gap-2 md:gap-4 mb-6">
               <button
                 onClick={() => setActiveJobTab('employer')}
-                className={`px-5 py-2 rounded-full font-bold shadow-sm transition-all duration-200 text-sm
-                  ${activeJobTab === 'employer' ? 'bg-pink-100 text-pink-600 scale-105' : 'bg-white/90 text-gray-700 hover:bg-pink-50'}`}
+                className="px-5 py-2 rounded-full font-bold shadow-sm transition-all duration-200 text-sm"
+                style={{
+                  background: activeJobTab === 'employer' ? '#1E293B' : '#F3F4F6',
+                  color: activeJobTab === 'employer' ? '#fff' : '#374151',
+                  fontWeight: 700,
+                  border: activeJobTab === 'employer' ? 'none' : '1.5px solid #E5E7EB'
+                }}
               >구인공고</button>
               <button
                 onClick={() => setActiveJobTab('seeker')}
-                className={`px-5 py-2 rounded-full font-bold shadow-sm transition-all duration-200 text-sm
-                  ${activeJobTab === 'seeker' ? 'bg-pink-100 text-pink-600 scale-105' : 'bg-white/90 text-gray-700 hover:bg-pink-50'}`}
+                className="px-5 py-2 rounded-full font-bold shadow-sm transition-all duration-200 text-sm"
+                style={{
+                  background: activeJobTab === 'seeker' ? '#1E293B' : '#F3F4F6',
+                  color: activeJobTab === 'seeker' ? '#fff' : '#374151',
+                  fontWeight: 700,
+                  border: activeJobTab === 'seeker' ? 'none' : '1.5px solid #E5E7EB'
+                }}
               >구직자</button>
             </div>
             {/* 필터 바 + 등록 버튼 */}
@@ -297,7 +309,10 @@ export default function CommunityMain() {
               </select>
               {/* 등록 버튼 */}
               <button
-                className="ml-auto px-5 py-2 rounded-full bg-pink-500 text-white font-bold shadow hover:bg-pink-600 transition text-sm"
+                className="ml-auto px-5 py-2 rounded-full font-bold shadow hover:opacity-90 transition text-sm"
+                style={{background: '#1E293B', color: '#fff', fontWeight: 700, border: '2px solid #1E293B'}} 
+                onMouseOver={e => e.currentTarget.style.border = '2px solid #F3F4F6'}
+                onMouseOut={e => e.currentTarget.style.border = '2px solid #1E293B'}
                 onClick={() => {
                   if (activeJobTab === 'employer') {
                     router.push('/community/job/write');
@@ -320,7 +335,7 @@ export default function CommunityMain() {
                 ).map(job => (
                   <Link href={`/community/job/${job.id}`} key={job.id} className="block group">
                     <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-center gap-6 hover:shadow-lg transition group-hover:scale-[1.01] cursor-pointer">
-                      <div className="w-16 h-16 rounded-xl bg-pink-50 flex items-center justify-center text-2xl font-bold text-pink-400 shadow-inner">
+                      <div className="w-16 h-16 rounded-xl bg-[#F3F4F6] flex items-center justify-center text-2xl font-bold text-[#1E293B] shadow-inner">
                         {job.name[0]}
                       </div>
                       <div className="flex-1 flex flex-col gap-1">
@@ -336,11 +351,11 @@ export default function CommunityMain() {
                           <span className="bg-gray-50 rounded px-2 py-0.5">{job.period}</span>
                         </div>
                         <div className="flex gap-4 text-sm">
-                          <span className="text-pink-500 font-bold">급여: {job.salary}</span>
+                          <span style={{color: '#1E293B', fontWeight: 700}}>급여: {job.salary}</span>
                           <span className="text-gray-400">복지: {job.benefit}</span>
                         </div>
                       </div>
-                      <button className="px-5 py-2 rounded-full bg-pink-100 text-pink-600 font-bold shadow hover:bg-pink-200 transition">
+                      <button className="px-5 py-2 rounded-full font-bold shadow hover:opacity-90 transition" style={{background: '#1E293B', color: '#fff', fontWeight: 700, border: '2px solid #1E293B'}} onMouseOver={e => e.currentTarget.style.border = '2px solid #F3F4F6'} onMouseOut={e => e.currentTarget.style.border = '2px solid #1E293B'}>
                         지원하기
                       </button>
                     </div>
