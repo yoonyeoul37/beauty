@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import Link from 'next/link';
 config.autoAddCss = false;
 
 const geistSans = Geist({
@@ -30,6 +31,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* 헤더: Glass, sticky, 좌측 로고(메인 이동), 우측 메뉴 */}
+        <header className="sticky top-0 z-30 w-full bg-white/60 backdrop-blur shadow-sm">
+          <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-8 h-16">
+            <Link href="/" className="font-extrabold text-2xl md:text-3xl text-pink-500 tracking-tight hover:opacity-80 transition select-none">
+              스타일로그
+            </Link>
+            <nav className="flex gap-2 md:gap-6 text-base font-semibold">
+              <Link href="/community" className="text-gray-700 hover:text-pink-500 transition">커뮤니티</Link>
+              <Link href="/review" className="text-gray-700 hover:text-pink-500 transition">리뷰</Link>
+              <Link href="/event" className="text-gray-700 hover:text-pink-500 transition">이벤트</Link>
+            </nav>
+          </div>
+        </header>
         {children}
       </body>
     </html>
