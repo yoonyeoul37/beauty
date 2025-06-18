@@ -124,23 +124,29 @@ const jobSeekers = [
   },
 ];
 
-const cityOptions = ['전체', '서울', '부산', '대구'];
+const cityOptions = ['지역', '서울', '부산', '대구'];
 const districtOptions: Record<string, string[]> = {
-  전체: ['전체'],
-  서울: ['전체', '강남구', '강서구', '송파구', '마포구'],
-  부산: ['전체', '해운대구', '수영구', '동래구'],
-  대구: ['전체', '수성구', '중구', '달서구'],
+  지역: ['구'],
+  서울: ['구', '강남구', '강서구', '송파구', '마포구'],
+  부산: ['구', '해운대구', '수영구', '동래구'],
+  대구: ['구', '수성구', '중구', '달서구'],
 };
-const jobTypeOptions = ['전체', '헤어디자이너', '네일아티스트', '피부관리사'];
-const partTypeOptions = ['전체', '정규직', '알바', '스페어'];
+const jobTypeOptions = ['직종', '헤어디자이너', '네일아티스트', '피부관리사', '메이크업아티스트', '에스테틱'];
+const workPeriodOptions = ['근무기간', '주 3일', '주 4일', '주 5일', '주 6일', '풀타임', '파트타임', '협의'];
+const employmentTypeOptions = ['고용형태', '정규직', '계약직', '인턴', '알바', '프리랜서'];
+const experienceOptions = ['경력', '신입', '경력 1년 미만', '경력 1~3년', '경력 3~5년', '경력 5년 이상'];
+const detailConditionOptions = ['상세조건', '4대보험', '식사제공', '교통비지원', '인센티브', '자유휴가', '교육지원'];
 
 export default function CommunityMain() {
   const [activeTab, setActiveTab] = useState('free');
   const [page, setPage] = useState(1);
-  const [city, setCity] = useState('전체');
-  const [district, setDistrict] = useState('전체');
-  const [jobType, setJobType] = useState('전체');
-  const [partType, setPartType] = useState('전체');
+  const [city, setCity] = useState('지역');
+  const [district, setDistrict] = useState('구');
+  const [jobType, setJobType] = useState('직종');
+  const [workPeriod, setWorkPeriod] = useState('근무기간');
+  const [employmentType, setEmploymentType] = useState('고용형태');
+  const [experience, setExperience] = useState('경력');
+  const [detailCondition, setDetailCondition] = useState('상세조건');
   const [activeJobTab, setActiveJobTab] = useState<'employer' | 'seeker'>('employer');
   const router = useRouter();
 
@@ -221,10 +227,77 @@ export default function CommunityMain() {
                   ${activeJobTab === 'seeker' ? 'bg-pink-100 text-pink-600 scale-105' : 'bg-white/90 text-gray-700 hover:bg-pink-50'}`}
               >구직자</button>
             </div>
-            {/* 등록 버튼 */}
-            <div className="flex justify-end mb-6">
+            {/* 필터 바 + 등록 버튼 */}
+            <div className="flex flex-wrap gap-3 md:gap-6 items-center mb-6 p-4 bg-white/70 rounded-xl shadow-sm">
+              {/* 지역 드롭다운 */}
+              <select
+                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
+                style={{ textAlignLast: 'center' }}
+                value={city}
+                onChange={e => {
+                  setCity(e.target.value);
+                  setDistrict('구');
+                }}
+              >
+                {cityOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+              </select>
+              {/* 구/군 드롭다운 */}
+              <select
+                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
+                style={{ textAlignLast: 'center' }}
+                value={district}
+                onChange={e => setDistrict(e.target.value)}
+              >
+                {(districtOptions[city] || ['구']).map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+              </select>
+              {/* 직종 드롭다운 */}
+              <select
+                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
+                style={{ textAlignLast: 'center' }}
+                value={jobType}
+                onChange={e => setJobType(e.target.value)}
+              >
+                {jobTypeOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+              </select>
+              {/* 근무기간 드롭다운 */}
+              <select
+                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
+                style={{ textAlignLast: 'center' }}
+                value={workPeriod}
+                onChange={e => setWorkPeriod(e.target.value)}
+              >
+                {workPeriodOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+              </select>
+              {/* 고용형태 드롭다운 */}
+              <select
+                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
+                style={{ textAlignLast: 'center' }}
+                value={employmentType}
+                onChange={e => setEmploymentType(e.target.value)}
+              >
+                {employmentTypeOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+              </select>
+              {/* 경력 드롭다운 */}
+              <select
+                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
+                style={{ textAlignLast: 'center' }}
+                value={experience}
+                onChange={e => setExperience(e.target.value)}
+              >
+                {experienceOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+              </select>
+              {/* 상세조건 드롭다운 */}
+              <select
+                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
+                style={{ textAlignLast: 'center' }}
+                value={detailCondition}
+                onChange={e => setDetailCondition(e.target.value)}
+              >
+                {detailConditionOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+              </select>
+              {/* 등록 버튼 */}
               <button
-                className="px-5 py-2 rounded-full bg-pink-500 text-white font-bold shadow hover:bg-pink-600 transition text-sm"
+                className="ml-auto px-5 py-2 rounded-full bg-pink-500 text-white font-bold shadow hover:bg-pink-600 transition text-sm"
                 onClick={() => {
                   if (activeJobTab === 'employer') {
                     router.push('/community/job/write');
@@ -240,10 +313,10 @@ export default function CommunityMain() {
             {activeJobTab === 'employer' ? (
               <div className="flex flex-col gap-6">
                 {jobPosts.filter(job =>
-                  (city === '전체' || job.location.includes(city)) &&
-                  (district === '전체' || job.location.includes(district)) &&
-                  (jobType === '전체' || job.position === jobType) &&
-                  (partType === '전체' || job.type === partType)
+                  (city === '지역' || job.location.includes(city)) &&
+                  (district === '구' || job.location.includes(district)) &&
+                  (jobType === '직종' || job.position === jobType) &&
+                  (employmentType === '고용형태' || job.type === employmentType)
                 ).map(job => (
                   <Link href={`/community/job/${job.id}`} key={job.id} className="block group">
                     <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-center gap-6 hover:shadow-lg transition group-hover:scale-[1.01] cursor-pointer">
