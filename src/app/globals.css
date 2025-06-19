@@ -187,6 +187,37 @@ body {
   }
 }
 
+/* Sticky Header 애니메이션 */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+.sticky-header {
+  animation: slideDown 0.3s ease-out;
+}
+
+.sticky-header.hidden {
+  animation: slideUp 0.3s ease-out;
+}
+
 /* 로고 텍스트 전용 스타일 */
 .logo-text {
   font-family: 'Pretendard', 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', 'Noto Sans KR', Arial, sans-serif !important;

@@ -5,16 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
-import { faTrainSubway, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrainSubway, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import dynamic from 'next/dynamic';
 
 // FontAwesome 라이브러리에 아이콘 추가
-library.add(faBell, faStarSolid, faStarRegular, faTrainSubway, faHeartSolid, faHeartRegular, faMapMarkerAlt, faUserCircle, faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch);
+library.add(faBell, faStarSolid, faStarRegular, faTrainSubway, faHeartSolid, faHeartRegular, faMapMarkerAlt, faUserCircle, faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars, faChevronLeft, faChevronRight, faClock);
 
 const subwayLineColors: { [key: number]: string } = {
   1: '#0052A4', // 1호선 파랑
@@ -137,6 +137,10 @@ export default function Home() {
   const navRef = useRef<HTMLDivElement>(null);
   const [randomSalonIndex, setRandomSalonIndex] = useState(0); // 랜덤 선택된 카드 인덱스
   const [bigCardIdx, setBigCardIdx] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false); // 스크롤 상태 추가
+  const [clickedCard, setClickedCard] = useState(-1);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   // 슬라이더 상태
   const visibleCount = 5;
@@ -156,16 +160,25 @@ export default function Home() {
       reviewSlideCards = reviewSlideCards.concat(reviewedSalons);
     }
   }
-  const [slideIdx, setSlideIdx] = useState(slideLen); // 중간에서 시작
+  const [slideIdx, setSlideIdx] = useState(popularSalons.length);
   const [reviewSlideIdx, setReviewSlideIdx] = useState(slideLen); // 중간에서 시작
   const [isTransition, setIsTransition] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
   const [isReviewPaused, setIsReviewPaused] = useState(false);
 
   const [liked, setLiked] = useState<{ [key: string]: boolean }>({});
   const [bounce, setBounce] = useState<{ [key: string]: boolean }>({});
   const [showToast, setShowToast] = useState<{ [key: string]: boolean }>({});
   const [toastMsg, setToastMsg] = useState<{ [key: string]: string }>({});
+  
+  // 카드 클릭 핸들러
+  const handleCardClick = (index: number) => {
+    setClickedCard(index);
+    // 0.3초 후 원래 상태로 복원
+    setTimeout(() => {
+      setClickedCard(-1);
+    }, 300);
+  };
+
   const handleLike = (key: string) => {
     setLiked((prev) => ({ ...prev, [key]: !prev[key] }));
     setBounce((prev) => ({ ...prev, [key]: true }));
@@ -192,14 +205,39 @@ export default function Home() {
     };
   }, [openMenu]);
 
+  // 자동 슬라이드 효과
   useEffect(() => {
-    if (slideCards.length === 0 || isPaused) return;
-    const timer = setInterval(() => {
-      setSlideIdx((prev) => prev + 1);
-      setIsTransition(true);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [slideCards.length, isPaused]);
+    if (isPaused) return; // 마우스 호버 시 일시 정지
+
+    const interval = setInterval(() => {
+      const container = document.getElementById('slide-container');
+      if (container) {
+        if (currentSlide < 6) {
+          container.scrollLeft += 300;
+          setCurrentSlide(prev => prev + 1);
+        } else {
+          container.scrollLeft = 0;
+          setCurrentSlide(0);
+        }
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [currentSlide, isPaused]);
+
+  // 무한 슬라이드를 위한 인덱스 조정
+  useEffect(() => {
+    if (slideIdx >= popularSalons.length * 2) {
+      setTimeout(() => {
+        setSlideIdx(popularSalons.length);
+      }, 500);
+    }
+    if (slideIdx <= 0) {
+      setTimeout(() => {
+        setSlideIdx(popularSalons.length);
+      }, 500);
+    }
+  }, [slideIdx, popularSalons.length]);
 
   useEffect(() => {
     if (reviewSlideCards.length === 0 || isReviewPaused) return;
@@ -264,7 +302,8 @@ export default function Home() {
 
   useEffect(() => {
     const onScroll = () => {
-      // This effect is now empty as the BooksyHeader component has been removed
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 100); // 100px 이상 스크롤 시 헤더 표시
     };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
@@ -297,6 +336,91 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F7FAFC', display: 'flex', flexDirection: 'column' }}>
+      {/* Sticky Header */}
+      <div 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 sticky-header ${
+          isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full hidden'
+        }`}
+        style={{ 
+          background: '#1D1D1D',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          height: '70px'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex items-center justify-between h-full" style={{ height: '70px' }}>
+            {/* 로고 */}
+            <div className="flex items-center" style={{ height: '70px' }}>
+              <div className="text-white font-bold text-xl" style={{ fontFamily: 'Pretendard, Arial, sans-serif' }}>
+                Style Logs
+              </div>
+            </div>
+
+            {/* Booksy 스타일 3분할 검색창 */}
+            <div className="hidden md:flex flex-1 max-w-2xl mx-8 gap-3 items-center" style={{ height: '70px' }}>
+              {/* 서비스/비즈니스 검색 */}
+              <div className="relative flex-1 h-full flex items-center">
+                <input
+                  type="text"
+                  placeholder="검색 서비스 또는 비즈니스"
+                  className="w-full h-12 rounded-lg pl-4 pr-10 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-200"
+                  style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <FontAwesomeIcon icon={faSearch} />
+                </div>
+              </div>
+              {/* 지역 검색 */}
+              <div className="relative flex-1 h-full flex items-center">
+                <input
+                  type="text"
+                  placeholder="어디?"
+                  className="w-full h-12 rounded-lg pl-10 pr-3 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-200"
+                  style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} />
+                </div>
+              </div>
+              {/* 날짜/시간 검색 */}
+              <div className="relative flex-1 h-full flex items-center">
+                <input
+                  type="text"
+                  placeholder="언제?"
+                  className="w-full h-12 rounded-lg pl-10 pr-3 bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-200"
+                  style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <FontAwesomeIcon icon={faClock} />
+                </div>
+              </div>
+            </div>
+
+            {/* 데스크톱 네비게이션 */}
+            <div className="hidden md:flex items-center space-x-6" style={{ height: '70px' }}>
+              <button className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
+                비즈니스 목록
+              </button>
+              <Link href="/community" className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
+                커뮤니티
+              </Link>
+              <button className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
+                로그인
+              </button>
+            </div>
+
+            {/* 모바일 메뉴 버튼 */}
+            <div className="md:hidden" style={{ height: '70px', display: 'flex', alignItems: 'center' }}>
+              <button className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors duration-200">
+                <FontAwesomeIcon icon={faBars} className="text-xl" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 동영상 히어로 섹션 - 단독 */}
       <section className="relative w-full h-[500px] flex items-center justify-center overflow-hidden">
         <video
@@ -320,7 +444,8 @@ export default function Home() {
                 fontFamily: 'Pretendard, Arial, sans-serif',
                 textShadow: '0 2px 4px rgba(0,0,0,0.3)',
                 animation: 'premiumFadeIn 2s ease-out, premiumGlow 3s ease-in-out infinite alternate',
-                background: 'transparent !important'
+                background: 'transparent !important',
+                marginBottom: '2px'
               }}
             >
               스타일로그
@@ -332,7 +457,7 @@ export default function Home() {
                 fontSize: '18px', 
                 fontWeight: 'normal', 
                 letterSpacing: '0.1em',
-                marginTop: '8px',
+                marginTop: 6,
                 opacity: '0.9',
                 animation: 'premiumFadeIn 2.5s ease-out',
                 background: 'transparent !important'
@@ -361,9 +486,9 @@ export default function Home() {
             fontWeight: 'bold',
             letterSpacing: '0.05em',
             textAlign: 'center',
-            marginBottom: '18px'
+            marginBottom: '2px'
           }}>
-            예뻐지기 전에, 먼저 비교하세요
+            가격부터 서비스까지, 모든 것을 비교하세요
           </div>
           <div style={{
             color: 'white',
@@ -371,52 +496,353 @@ export default function Home() {
             fontWeight: 'normal',
             letterSpacing: '0.03em',
             textAlign: 'center',
-            marginBottom: '28px'
+            marginBottom: '28px',
+            marginTop: '-10px'
           }}>
             누구보다 나에게 어울리는 곳을 찾는 방법
           </div>
-          <div style={{ width: '100%' }}>
+          <div style={{ width: '100%', position: 'relative' }}>
             <input
               type="text"
               placeholder="검색어를 입력하세요"
               className="w-full h-[50px] rounded-lg px-5 text-lg bg-white/90 text-gray-900 shadow focus:outline-none focus:ring-2 focus:ring-gray-400"
-              style={{ boxSizing: 'border-box' }}
+              style={{ boxSizing: 'border-box', paddingRight: '44px' }}
             />
+            <div style={{
+              position: 'absolute',
+              right: '16px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#b0b0b0',
+              fontSize: '22px',
+              pointerEvents: 'none'
+            }}>
+              <FontAwesomeIcon icon={faSearch} />
+            </div>
           </div>
         </div>
         {/* 카테고리 메뉴 - 히어로 섹션 하단 구분선 위에 단독 배치 */}
         <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, width: '100%' }}>
           <div className="flex justify-center gap-8" style={{ flexWrap: 'nowrap', background: 'transparent' }}>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>헤어</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>네일아트</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>메이크업</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>피부관리</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>속눈썹</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>왁싱</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>반영구</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>두피케어</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>마사지</span>
-            <span className="category-item text-white text-xl font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important' }}>타투</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>헤어</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>네일아트</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>메이크업</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>피부관리</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>속눈썹</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>왁싱</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>반영구</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>두피케어</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>마사지</span>
+            <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ background: 'transparent !important', fontSize: '18px' }}>타투</span>
           </div>
         </div>
         {/* 상단 우측 로그인/회원가입 */}
         <div style={{
           position: 'absolute',
           top: '36px',
-          right: '48px',
+          left: '50%',
+          transform: 'translateX(calc(-50% + 400px))',
           zIndex: 20,
         }}>
-          <span style={{
-            color: 'rgba(255,255,255,0.92)',
-            fontSize: '15px',
-            fontWeight: 'normal',
-            letterSpacing: '0.03em',
-            cursor: 'pointer',
-            userSelect: 'none',
-            textShadow: '0 1px 4px rgba(0,0,0,0.45)'
-          }}>
-            로그인 · 회원가입
-          </span>
+          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+            <span style={{
+              color: 'rgba(255,255,255,0.92)',
+              fontSize: '15px',
+              fontWeight: 'normal',
+              letterSpacing: '0.03em',
+              cursor: 'pointer',
+              userSelect: 'none',
+              textShadow: '0 1px 4px rgba(0,0,0,0.45)'
+            }}>
+              로그인 · 회원가입
+            </span>
+            <Link href="/community">
+              <span style={{
+                color: 'rgba(255,255,255,0.92)',
+                fontSize: '15px',
+                fontWeight: 'normal',
+                letterSpacing: '0.03em',
+                cursor: 'pointer',
+                userSelect: 'none',
+                textShadow: '0 1px 4px rgba(0,0,0,0.45)'
+              }}>
+                커뮤니티
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 타임특가 섹션 */}
+      <section className="w-full pt-[60px] pb-8 bg-gray-50">
+        <div className="max-w-[1240px] mx-auto">
+          {/* 타임특가 텍스트 */}
+          <div className="mb-4 font-bold text-2xl">타임특가</div>
+          
+          {/* 슬라이드 컨테이너 */}
+          <div className="relative">
+            {/* 좌우 버튼 */}
+            <button 
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-200 border border-gray-200"
+              onClick={() => {
+                const container = document.getElementById('slide-container');
+                if (container) {
+                  container.scrollLeft -= 300;
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faChevronLeft} className="text-gray-600 text-lg" />
+            </button>
+            
+            <button 
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-200 border border-gray-200"
+              onClick={() => {
+                const container = document.getElementById('slide-container');
+                if (container) {
+                  container.scrollLeft += 300;
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faChevronRight} className="text-gray-600 text-lg" />
+            </button>
+
+            {/* 슬라이드 카드들 */}
+            <div 
+              id="slide-container"
+              className="overflow-x-auto pb-4 scroll-smooth" 
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              <div className="flex gap-5" style={{ width: 'max-content' }}>
+                {/* 슬라이드 카드 1 */}
+                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                  <div className="relative h-[200px]">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png" 
+                      alt="LA 남성 그루밍 이발소"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
+                      <span>5.0</span>
+                      <span className="text-xs">({153}개의 리뷰)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1">LA 남성 그루밍 이발소</h3>
+                    <p className="text-gray-600 text-sm">13 문화 예술로, 멜트 베이, 11946</p>
+                  </div>
+                </div>
+
+                {/* 슬라이드 카드 2 */}
+                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                  <div className="relative h-[200px]">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg" 
+                      alt="flawless 팀색 및 헤어 시스템"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
+                      <span>4.9</span>
+                      <span className="text-xs">({357}개의 리뷰)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1">flawless 팀색 및 헤어 시스템</h3>
+                    <p className="text-gray-600 text-sm">1766 이스트 콜로니얼 역대, 올랜도, 32817</p>
+                  </div>
+                </div>
+
+                {/* 슬라이드 카드 3 */}
+                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                  <div className="relative h-[200px]">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg" 
+                      alt="크리스피 컷 1"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
+                      <span>5.0</span>
+                      <span className="text-xs">({234}개의 리뷰)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1">크리스피 컷 1</h3>
+                    <p className="text-gray-600 text-sm">115 N 첼섬 스트리트, 머스코지, OK, 74401</p>
+                  </div>
+                </div>
+
+                {/* 슬라이드 카드 4 */}
+                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                  <div className="relative h-[200px]">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg" 
+                      alt="제이 @ The Parlour"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
+                      <span>5.0</span>
+                      <span className="text-xs">({599}개의 리뷰)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1">제이 @ The Parlour</h3>
+                    <p className="text-gray-600 text-sm">420 W 콜리플랜트 로드, 그린치, 45616</p>
+                  </div>
+                </div>
+
+                {/* 슬라이드 카드 5 */}
+                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                  <div className="relative h-[200px]">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg" 
+                      alt="트라이브"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
+                      <span>4.8</span>
+                      <span className="text-xs">({555}개의 리뷰)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1">트라이브</h3>
+                    <p className="text-gray-600 text-sm">555 캐슬 드라이브, 버밍엄, 35209</p>
+                  </div>
+                </div>
+
+                {/* 슬라이드 카드 6 */}
+                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                  <div className="relative h-[200px]">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png" 
+                      alt="프리미엄 헤어샵"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
+                      <span>4.9</span>
+                      <span className="text-xs">({432}개의 리뷰)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1">프리미엄 헤어샵</h3>
+                    <p className="text-gray-600 text-sm">강남대로 123, 서울, 06123</p>
+                  </div>
+                </div>
+
+                {/* 슬라이드 카드 7 */}
+                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                  <div className="relative h-[200px]">
+                    <img 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg" 
+                      alt="스타일리스트 스튜디오"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
+                      <span>5.0</span>
+                      <span className="text-xs">({298}개의 리뷰)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1">스타일리스트 스튜디오</h3>
+                    <p className="text-gray-600 text-sm">홍대로 456, 서울, 04039</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 스크롤 테스트를 위한 추가 내용 */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">인기 뷰티샵</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {popularSalons.map((salon, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <div className="h-48 bg-gray-200 relative">
+                  <img 
+                    src={salon.image} 
+                    alt={salon.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{salon.name}</h3>
+                  <p className="text-gray-600 mb-2">{salon.location}</p>
+                  <p className="text-gray-500 text-sm mb-4">{salon.desc}</p>
+                  <div className="flex items-center justify-between">
+                    <StarRating rating={salon.rating} />
+                    <span className="text-gray-500 text-sm">리뷰 {salon.reviewCount}개</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">최근 리뷰</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {reviewedSalons.map((salon, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{salon.name}</h3>
+                <p className="text-gray-600 mb-2">{salon.location}</p>
+                <p className="text-gray-500 text-sm mb-4">{salon.desc}</p>
+                <div className="flex items-center justify-between">
+                  <StarRating rating={salon.rating} />
+                  <span className="text-gray-500 text-sm">리뷰 {salon.reviewCount}개</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">서비스 카테고리</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+            {menuWithSub.map((item, index) => (
+              <div key={index} className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  <FontAwesomeIcon icon={item.icon} className="text-2xl text-gray-600" />
+                </div>
+                <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">추가 콘텐츠</h2>
+          <div className="space-y-8">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">뷰티 트렌드</h3>
+              <p className="text-gray-600 leading-relaxed">
+                최신 뷰티 트렌드를 확인하고 나에게 맞는 스타일을 찾아보세요. 
+                전문가들이 추천하는 스타일링 팁과 트렌디한 헤어스타일을 소개합니다.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">예약 가이드</h3>
+              <p className="text-gray-600 leading-relaxed">
+                뷰티샵 예약을 위한 완벽한 가이드입니다. 
+                예약 전 확인해야 할 사항들과 예약 후 준비사항을 안내해드립니다.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">고객 후기</h3>
+              <p className="text-gray-600 leading-relaxed">
+                실제 고객들의 생생한 후기를 확인하세요. 
+                다양한 뷰티샵의 서비스 품질과 고객 만족도를 한눈에 볼 수 있습니다.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
