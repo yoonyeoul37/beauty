@@ -67,7 +67,7 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #F7FAFC;
   --foreground: #171717;
 }
 
@@ -92,15 +92,15 @@ body {
 }
 
 .shine-anim {
-  position: relative;
-  display: inline-block;
-  background: linear-gradient(90deg, #000 0%, #fff 40%, #000 60%, #000 100%);
+  font-family: 'Playfair Display', 'Noto Serif KR', serif !important;
+  font-weight: 900;
+  color: #222;
+  background: linear-gradient(90deg, #c471f5 0%, #fa71cd 40%, #49a7f5 60%, #c471f5 100%);
   background-size: 200% auto;
-  color: #000;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shine-move 2.5s linear infinite;
+  animation: shine-move 8s linear infinite;
 }
 
 @keyframes shine-move {
@@ -110,4 +110,14 @@ body {
   100% {
     background-position: -200% 0;
   }
+}
+
+@keyframes neon-fade {
+  0%, 100% { text-shadow: 0 2px 16px #ff00cc, 0 1px 0 #fff, 0 0 2px #00c3ff; }
+  50% { text-shadow: 0 4px 32px #00c3ff, 0 2px 0 #fff, 0 0 8px #ff00cc; }
+}
+
+@keyframes glow-fade {
+  0%, 100% { text-shadow: 0 2px 12px #fff, 0 1px 0 #222; }
+  50% { text-shadow: 0 4px 24px #fff, 0 2px 0 #222; }
 }

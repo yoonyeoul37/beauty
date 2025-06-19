@@ -172,7 +172,7 @@ export default function CommunityMain() {
   const pagedPosts = posts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20">
+    <main style={{ minHeight: '100vh', background: '#F7FAFC', paddingBottom: '5rem' }}>
       {/* 상단 여백만 남기고 헤더 완전 삭제 */}
       <div className="h-6" />
       {/* 광고형 배너 3칸 복구 */}
@@ -236,7 +236,7 @@ export default function CommunityMain() {
                 onClick={() => setActiveJobTab('employer')}
                 className="px-5 py-2 rounded-full font-bold shadow-sm transition-all duration-200 text-sm"
                 style={{
-                  background: activeJobTab === 'employer' ? '#1E293B' : '#F3F4F6',
+                  background: activeJobTab === 'employer' ? '#334155' : '#F3F4F6',
                   color: activeJobTab === 'employer' ? '#fff' : '#374151',
                   fontWeight: 700,
                   border: activeJobTab === 'employer' ? 'none' : '1.5px solid #E5E7EB'
@@ -246,7 +246,7 @@ export default function CommunityMain() {
                 onClick={() => setActiveJobTab('seeker')}
                 className="px-5 py-2 rounded-full font-bold shadow-sm transition-all duration-200 text-sm"
                 style={{
-                  background: activeJobTab === 'seeker' ? '#1E293B' : '#F3F4F6',
+                  background: activeJobTab === 'seeker' ? '#334155' : '#F3F4F6',
                   color: activeJobTab === 'seeker' ? '#fff' : '#374151',
                   fontWeight: 700,
                   border: activeJobTab === 'seeker' ? 'none' : '1.5px solid #E5E7EB'
@@ -265,7 +265,7 @@ export default function CommunityMain() {
                   setDistrict('구');
                 }}
               >
-                {cityOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+                {cityOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
               </select>
               {/* 구/군 드롭다운 */}
               <select
@@ -274,7 +274,7 @@ export default function CommunityMain() {
                 value={district}
                 onChange={e => setDistrict(e.target.value)}
               >
-                {(districtOptions[city] || ['구']).map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+                {(districtOptions[city] || ['구']).map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
               </select>
               {/* 직종 드롭다운 */}
               <select
@@ -283,7 +283,7 @@ export default function CommunityMain() {
                 value={jobType}
                 onChange={e => setJobType(e.target.value)}
               >
-                {jobTypeOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+                {jobTypeOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
               </select>
               {/* 근무기간 드롭다운 */}
               <select
@@ -292,7 +292,7 @@ export default function CommunityMain() {
                 value={workPeriod}
                 onChange={e => setWorkPeriod(e.target.value)}
               >
-                {workPeriodOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+                {workPeriodOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
               </select>
               {/* 고용형태 드롭다운 */}
               <select
@@ -301,7 +301,7 @@ export default function CommunityMain() {
                 value={employmentType}
                 onChange={e => setEmploymentType(e.target.value)}
               >
-                {employmentTypeOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+                {employmentTypeOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
               </select>
               {/* 경력 드롭다운 */}
               <select
@@ -310,7 +310,7 @@ export default function CommunityMain() {
                 value={experience}
                 onChange={e => setExperience(e.target.value)}
               >
-                {experienceOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+                {experienceOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
               </select>
               {/* 상세조건 드롭다운 */}
               <select
@@ -319,12 +319,12 @@ export default function CommunityMain() {
                 value={detailCondition}
                 onChange={e => setDetailCondition(e.target.value)}
               >
-                {detailConditionOptions.map(opt => <option key={opt} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
+                {detailConditionOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
               </select>
               {/* 등록 버튼 */}
               <button
                 className="ml-auto px-5 py-2 rounded-full font-bold shadow hover:opacity-90 transition text-sm"
-                style={{background: '#1E293B', color: '#fff'}}
+                style={{background: '#334155', color: '#fff'}}
                 onClick={() => {
                   if (activeJobTab === 'employer') {
                     router.push('/community/job/write');
@@ -345,7 +345,7 @@ export default function CommunityMain() {
                   (jobType === '직종' || job.position === jobType) &&
                   (employmentType === '고용형태' || job.type === employmentType)
                 ).map(job => (
-                  <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-center gap-6 hover:shadow-lg transition group-hover:scale-[1.01] relative h-[120px] min-h-[120px]">
+                  <div key={job.id} className="rounded-2xl bg-white shadow-md hover:shadow-lg border border-[#334155]/20 hover:border-[#334155] p-6 flex flex-col md:flex-row items-center gap-6 transition-all duration-200 group-hover:scale-[1.01] relative h-[120px] min-h-[120px]">
                     {/* 이미지 or 이니셜 */}
                     {job.image ? (
                       <img
@@ -354,7 +354,7 @@ export default function CommunityMain() {
                         className="w-16 h-16 object-cover rounded-xl shadow-inner"
                       />
                     ) : (
-                      <div className="w-16 h-16 flex items-center justify-center text-2xl font-bold text-[#1E293B] bg-[#F3F4F6] rounded-xl shadow-inner select-none">
+                      <div className="w-16 h-16 flex items-center justify-center text-2xl font-bold text-[#111827] bg-[#F3F4F6] rounded-xl shadow-inner select-none">
                         {job.name[0]}
                       </div>
                     )}
@@ -364,18 +364,18 @@ export default function CommunityMain() {
                         {job.premium && <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-yellow-100 text-yellow-700 rounded">프리미엄</span>}
                       </div>
                       <div className="flex flex-wrap gap-2 text-sm text-gray-500 mb-1">
-                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.location}</span>
-                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.position}</span>
-                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.career}</span>
-                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.type}</span>
-                        <span className="bg-gray-50 rounded px-2 py-0.5">{job.period}</span>
+                        <span key={job.id + '-location'} className="bg-gray-50 rounded px-2 py-0.5">{job.location}</span>
+                        <span key={job.id + '-position'} className="bg-gray-50 rounded px-2 py-0.5">{job.position}</span>
+                        <span key={job.id + '-career'} className="bg-gray-50 rounded px-2 py-0.5">{job.career}</span>
+                        <span key={job.id + '-type'} className="bg-gray-50 rounded px-2 py-0.5">{job.type}</span>
+                        <span key={job.id + '-period'} className="bg-gray-50 rounded px-2 py-0.5">{job.period}</span>
                       </div>
                       <div className="flex gap-4 text-sm">
-                        <span style={{color: '#1E293B', fontWeight: 700}}>급여: {job.salary}</span>
+                        <span style={{color: '#111827', fontWeight: 700}}>급여: {job.salary}</span>
                         <span className="text-gray-400">복지: {job.benefit}</span>
                       </div>
                     </div>
-                    <Link href={`/community/job/${job.id}`} className="px-5 py-2 rounded-full bg-[#1E293B] text-white font-bold shadow hover:bg-gray-800 transition text-sm self-center cursor-pointer">
+                    <Link href={`/community/job/${job.id}`} className="px-5 py-2 rounded-full bg-[#334155] text-white font-bold shadow hover:bg-gray-800 transition text-sm self-center cursor-pointer">
                       상세보기
                     </Link>
                   </div>
@@ -383,9 +383,9 @@ export default function CommunityMain() {
               </div>
             ) : (
               <div className="flex flex-col gap-6">
-                {jobSeekers.map(seeker => (
+                {jobSeekers.map((seeker, idx) => (
                   <Link href={`/community/jobseeker/${seeker.id}`} key={seeker.id} className="block group">
-                    <div className="rounded-2xl bg-white shadow-md border border-gray-100 p-6 flex flex-col md:flex-row items-stretch gap-6 hover:shadow-lg transition group-hover:scale-[1.01] cursor-pointer relative h-[120px] min-h-[120px]">
+                    <div className="rounded-2xl bg-white shadow-md hover:shadow-lg border border-[#334155]/20 hover:border-[#334155] p-6 flex flex-col md:flex-row items-stretch gap-6 transition-all duration-200 group-hover:scale-[1.01] cursor-pointer relative h-[120px] min-h-[120px]">
                       <div className="w-16 h-16 rounded-xl bg-blue-50 flex items-center justify-center text-2xl font-bold text-blue-400 shadow-inner">
                         {seeker.name[0]}
                       </div>
@@ -395,9 +395,9 @@ export default function CommunityMain() {
                           <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-blue-100 text-blue-700 rounded">구직자</span>
                         </div>
                         <div className="flex flex-wrap gap-2 text-sm text-gray-500 mb-1">
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{seeker.region}</span>
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{seeker.desired}</span>
-                          <span className="bg-gray-50 rounded px-2 py-0.5">{seeker.career}</span>
+                          <span key={seeker.id + '-region'} className="bg-gray-50 rounded px-2 py-0.5">{seeker.region}</span>
+                          <span key={seeker.id + '-desired'} className="bg-gray-50 rounded px-2 py-0.5">{seeker.desired}</span>
+                          <span key={seeker.id + '-career'} className="bg-gray-50 rounded px-2 py-0.5">{seeker.career}</span>
                         </div>
                         <div className="text-gray-700 text-sm">{seeker.intro}</div>
                       </div>

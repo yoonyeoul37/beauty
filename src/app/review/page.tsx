@@ -30,7 +30,7 @@ export default function ReviewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-16">
-      <div className="bg-white rounded-xl shadow p-8 w-full max-w-xl">
+      <div style={{ background: '#F7FAFC', borderRadius: '1rem', boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)' }} className="p-8 w-full max-w-xl">
         <h1 className="text-2xl font-bold mb-4 text-pink-600">{shop} 리뷰</h1>
         <ul className="space-y-4">
           {dummyReviews.map((review, idx) => (

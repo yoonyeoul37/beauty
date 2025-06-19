@@ -10,10 +10,11 @@ import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch } from '@fortawesome/free-solid-svg-icons';
+import dynamic from 'next/dynamic';
 
 // FontAwesome 라이브러리에 아이콘 추가
-library.add(faBell, faStarSolid, faStarRegular, faTrainSubway, faHeartSolid, faHeartRegular, faMapMarkerAlt, faUserCircle, faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart);
+library.add(faBell, faStarSolid, faStarRegular, faTrainSubway, faHeartSolid, faHeartRegular, faMapMarkerAlt, faUserCircle, faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch);
 
 const subwayLineColors: { [key: number]: string } = {
   1: '#0052A4', // 1호선 파랑
@@ -142,8 +143,26 @@ export default function Home() {
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const [randomSalonIndex, setRandomSalonIndex] = useState(0); // 랜덤 선택된 카드 인덱스
-  // 최근 리뷰가 많은 업체 큰 카드 랜덤 인덱스
   const [bigCardIdx, setBigCardIdx] = useState(0);
+  // 사이트명 애니메이션 mount 상태
+  const [logoMounted, setLogoMounted] = useState(false);
+
+  useEffect(() => {
+    // 애니메이션 keyframes를 한 번만 삽입
+    const styleLogsKeyframes = `
+      @keyframes styleLogsFadeDown {
+        0% { opacity: 0; transform: translateY(-24px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    if (!document.getElementById('styleLogsKeyframes')) {
+      const style = document.createElement('style');
+      style.id = 'styleLogsKeyframes';
+      style.innerHTML = styleLogsKeyframes;
+      document.head.appendChild(style);
+    }
+    setLogoMounted(true);
+  }, []);
 
   // 슬라이더 상태
   const visibleCount = 5;
@@ -269,6 +288,14 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [bigCardIdx]);
 
+  useEffect(() => {
+    const onScroll = () => {
+      // This effect is now empty as the BooksyHeader component has been removed
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const goNext = () => {
     setSlideIdx((prev) => prev + 1);
     setIsTransition(true);
@@ -294,36 +321,44 @@ export default function Home() {
     setIsTransition(true);
   };
 
+  // 히어로 섹션 바로 위에 추가
+  const styleLogsKeyframes = `
+  @keyframes styleLogsFadeDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-24px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }`;
+  if (typeof window !== 'undefined') {
+    const style = document.createElement('style');
+    style.innerHTML = styleLogsKeyframes;
+    document.head.appendChild(style);
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex flex-col">
-      {/* 스타일로그 가격비교 헤더 (이미지 참고) */}
-      <header className="bg-[#DEC5AD] flex flex-col items-center py-8 border-b border-gray-200">
-        <div className="flex flex-col items-center w-full">
-          <span className="text-base md:text-lg text-gray-700 font-light mb-2 tracking-wider" style={{fontFamily: 'Georgia, serif', letterSpacing: '0.08em'}}>당신의 아름다움을 위한 첫 번째 선택</span>
-          <span
-            className="text-5xl md:text-6xl font-extrabold mb-1"
-            style={{
-              fontFamily: "'Playfair Display Variable', 'Noto Serif KR', serif",
-              color: '#C0396A',
-              letterSpacing: '0.08em',
-              textShadow: '0 2px 8px rgba(200,60,120,0.08)',
-              lineHeight: 1.1,
-            }}
-          >
-            나만의 스타일로그
-          </span>
-        </div>
-        {/* 검색창을 헤더 하단에 추가 */}
-        <div className="w-full flex justify-center mt-8">
-          <div className="w-full max-w-3xl">
-            <input
-              className="w-full rounded-full border border-gray-200 bg-[#FCF6F7] text-gray-500 px-8 py-5 text-lg shadow-sm focus:outline-none placeholder-gray-400"
-              placeholder="어떤 미용실, 시술, 지역을 찾으세요?"
-              type="text"
-            />
-          </div>
-        </div>
-      </header>
+    <div style={{ minHeight: '100vh', background: '#F7FAFC', display: 'flex', flexDirection: 'column' }}>
+      {/* 스크롤 시 나타나는 BooksyHeader */}
+      {/* <BooksyHeader /> */}
+      {/* Booksy 스타일 동영상 히어로 섹션 */}
+      <section className="relative w-full h-[480px] flex items-center justify-center overflow-hidden">
+        {/* 동영상 배경 */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+          src="/48969-459186305.mp4"
+        />
+        {/* 어두운 오버레이 효과 */}
+        <div className="absolute inset-0 bg-black/40" />
+        {/* 사이트명, 오버레이 텍스트, 검색창, 카테고리 메뉴 등 모두 삭제 */}
+      </section>
+
       {/* 중앙 검색바 (헤더로 이동, 기존 위치에서 제거) */}
       {/* <div className="flex justify-center items-center py-6 px-4">
         <div className="w-full max-w-2xl relative">
@@ -334,7 +369,7 @@ export default function Home() {
       {/* 네비게이션/카테고리 + 버튼 (삭제됨) */}
 
       {/* 히어로 섹션 */}
-      <section className="w-full bg-gradient-to-r from-pink-50 via-purple-50 to-pink-50">
+      <section className="w-full bg-[#F7FAFC]">
         <div className="max-w-[1200px] mx-auto px-4 py-16">
           <div className="flex items-center justify-between gap-8">
             <div className="flex-1">
@@ -367,8 +402,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Hero 섹션 아래에 카테고리 메뉴 배치 (섹션 바깥, margin-top: 200px) */}
+      <section className="w-full bg-transparent" style={{ marginTop: '200px' }}>
+        <div className="w-full max-w-4xl mx-auto py-8">
+          <div className="flex flex-wrap justify-center gap-6 px-4">
+            {categories.map((category) => (
+              <Link
+                key={category.name}
+                href={category.href}
+                className="group flex flex-col items-center text-gray-900 hover:text-pink-500 transition-all duration-300 transform hover:scale-110"
+              >
+                <span className="text-lg font-semibold tracking-wide drop-shadow">
+                  {category.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 카테고리 네비게이션 (sticky) */}
-      <nav ref={navRef} className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 py-2 px-2 flex flex-wrap justify-center gap-4 relative sticky top-[100px] z-30 transition-all">
+      <nav ref={navRef} className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 py-2 px-2 flex flex-wrap justify-center gap-4 relative transition-all">
         {menuWithSub.map((cat, idx) => (
           <div key={cat.name} className="relative flex flex-col items-center w-28">
             <button
@@ -402,7 +456,7 @@ export default function Home() {
       </nav>
 
       {/* 이달의 스타일 트렌드 섹션 */}
-      <div className="w-full bg-white py-16">
+      <div className="w-full bg-[#F7FAFC] py-16">
         <section className="w-full flex justify-center my-8">
           <div className="w-full max-w-5xl rounded-3xl shadow-xl px-8 py-14 flex flex-col items-center relative overflow-hidden bg-transparent">
             <div className="relative z-10 w-full">
@@ -456,7 +510,7 @@ export default function Home() {
       </div>
 
       {/* 내 주변 추천 매장 섹션 */}
-      <div className="w-full bg-pink-50 py-16">
+      <div className="w-full bg-[#F7FAFC] py-16">
         <section className="w-full flex justify-center">
           <div className="w-full max-w-3xl rounded-3xl shadow-xl px-8 py-14 my-8 flex flex-col items-center relative overflow-hidden bg-transparent">
             {/* Soft gradient and blurred circles for background */}
@@ -491,7 +545,7 @@ export default function Home() {
       </div>
 
       {/* 인기 미용실 슬라이더 (타임특가) */}
-      <div className="w-full bg-white py-16">
+      <div className="w-full bg-[#F7FAFC] py-16">
         <section className="w-full flex justify-center my-8">
           <div className="w-full max-w-5xl px-8 py-14 rounded-3xl shadow-xl bg-transparent">
             <div className="mb-10 flex items-center gap-4 justify-center">
@@ -638,7 +692,7 @@ export default function Home() {
       </section>
 
       {/* 고객 후기/리뷰 하이라이트 섹션 */}
-      <div className="w-full bg-gradient-to-r from-[#f3e8ff] via-[#f8e1ff] to-[#ffe1f1] py-16 backdrop-blur-xl">
+      <div className="w-full bg-[#F7FAFC] py-16">
         <section className="w-full flex justify-center my-12">
           <div className="w-full max-w-5xl rounded-3xl shadow-2xl px-10 py-14 flex flex-col items-center relative overflow-hidden bg-white/30 border border-white/60">
             {/* 빛나는 배경 오브젝트 */}
@@ -688,7 +742,7 @@ export default function Home() {
       </div>
 
       {/* 최근 리뷰가 많은 업체 */}
-      <div className="w-full bg-white py-12">
+      <div className="w-full bg-[#F7FAFC] py-12">
         <section className="w-full flex justify-center my-8">
           <div className="w-full max-w-5xl px-8 py-10 rounded-3xl shadow-xl bg-transparent">
             <div className="mb-5 flex items-center gap-3 text-xl font-bold text-gray-800">
@@ -826,7 +880,7 @@ export default function Home() {
       </div>
 
       {/* 지역별 인기 매장 지도 섹션 */}
-      <div className="w-full bg-gray-50 py-12">
+      <div className="w-full bg-[#F7FAFC] py-12">
         <section className="w-full flex justify-center my-12">
           <div className="w-full max-w-5xl rounded-3xl shadow-xl px-8 py-10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden bg-transparent">
             <div className="absolute -top-8 -left-8 w-32 h-32 bg-pink-100 rounded-full opacity-20 z-0"></div>
@@ -865,7 +919,7 @@ export default function Home() {
       </div>
 
       {/* 전문가 칼럼/뷰티 팁 섹션 */}
-      <div className="w-full bg-gradient-to-r from-[#f3e8ff] via-[#f8e1ff] to-[#ffe1f1] py-16 backdrop-blur-xl">
+      <div className="w-full bg-[#F7FAFC] py-16">
         <section className="w-full flex justify-center my-16">
           <div className="w-full max-w-5xl rounded-3xl shadow-2xl px-10 py-14 flex flex-col items-center relative overflow-hidden bg-white/30 border border-white/60">
             {/* 빛나는 배경 오브젝트 */}
@@ -910,7 +964,7 @@ export default function Home() {
       </div>
 
       {/* SNS 연동(인스타그램, 블로그 후기 등) 섹션 */}
-      <div className="w-full bg-white py-12">
+      <div className="w-full bg-[#F7FAFC] py-12">
         <section className="w-full flex justify-center my-12">
           <div className="w-full max-w-5xl rounded-3xl shadow-xl px-8 py-10 flex flex-col items-center relative overflow-hidden bg-transparent">
             <div className="absolute -top-8 -left-8 w-32 h-32 bg-pink-100 rounded-full opacity-20 z-0"></div>
@@ -985,6 +1039,19 @@ export default function Home() {
         animation: fade-in-out 2s;
       }
       `}</style>
+
+      {/* 우측 상단 로그인/가입 버튼 */}
+      <div style={{ position: 'fixed', top: 32, right: 40, zIndex: 50 }}>
+        <Link href="/login" className="flex items-center gap-2 bg-white/90 px-5 py-2 rounded-full shadow hover:bg-pink-100 transition-colors text-gray-800 font-semibold text-base">
+          <FontAwesomeIcon icon={faUserCircle} className="text-2xl text-pink-400" />
+          <span>로그인 / 가입</span>
+        </Link>
+      </div>
+
+      {/* 영어 텍스트 - 검색칸 위, 200px 아래 */}
+      <div style={{ position: 'absolute', top: 200, left: 0, width: '100%', zIndex: 25, textAlign: 'center' }}>
+        <span className="text-white text-2xl font-bold tracking-widest drop-shadow">Style Logs</span>
+      </div>
     </div>
   )
 }
