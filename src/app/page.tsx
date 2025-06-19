@@ -753,6 +753,107 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 앱 다운로드 섹션 */}
+      <section className="w-full py-20 bg-white">
+        <div className="max-w-[1240px] mx-auto flex gap-5">
+          {/* 왼쪽 카드 - 일반 사용자용 */}
+          <div className="flex-1 bg-[#e6f7f7] rounded-3xl p-12 h-[800px] relative overflow-hidden">
+            {/* 앱 정보 */}
+            <div className="flex items-center gap-2 mb-8">
+              <div className="w-10 h-10 bg-[#00a3a3] rounded-xl flex items-center justify-center">
+                <img src="/globe.svg" alt="Booksy" className="w-6 h-6 invert" />
+              </div>
+              <span className="text-gray-700">Booksy 앱 • iOS, Android</span>
+            </div>
+
+            {/* 메인 텍스트 */}
+            <h2 className="text-4xl font-bold mb-4">약속을 찾고<br />예약하십시오.</h2>
+            <p className="text-gray-600 mb-8">
+              전화 태그를 치릅니다. 언제 어디서나 즉시 다음 약속을 찾고<br />
+              예약하세요.
+            </p>
+
+            {/* 국가 선택 및 다운로드 버튼 */}
+            <div className="flex gap-4 items-center">
+              <select className="px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-700 w-40">
+                <option value="US">🇺🇸 United States</option>
+                <option value="KR">🇰🇷 대한민국</option>
+              </select>
+              <button className="px-8 py-3 bg-[#00a3a3] text-white rounded-lg hover:bg-[#008f8f] transition-colors">
+                다운로드
+              </button>
+            </div>
+
+            {/* 일러스트레이션 */}
+            <div className="absolute bottom-0 left-12">
+              <div className="relative w-[200px] h-[300px]">
+                <img 
+                  src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png" 
+                  alt="Woman illustration" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+
+            {/* 앱 스크린샷 */}
+            <div className="absolute bottom-0 right-12">
+              <div className="relative w-[280px] h-[500px]">
+                <img 
+                  src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg" 
+                  alt="App screenshot" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 오른쪽 카드 - 비즈니스용 */}
+          <div className="flex-1 bg-[#f8f8f8] rounded-3xl p-12 h-[800px] relative overflow-hidden">
+            {/* 앱 정보 */}
+            <div className="flex items-center gap-2 mb-8">
+              <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center">
+                <img src="/globe.svg" alt="BooksyBiz" className="w-6 h-6 invert" />
+              </div>
+              <span className="text-gray-700">BooksyBiz 앱 • iOS, 안드로이드</span>
+            </div>
+
+            {/* 메인 텍스트 */}
+            <h2 className="text-4xl font-bold mb-4">귀하의 비즈니스를<br />위한 Booksy</h2>
+            <p className="text-gray-600 mb-8">
+              Booksy를 시작하여 비즈니스를 더 잘 운영하십시오. 캘린더,<br />
+              예약, 마케팅 및 지불을 모두 하나로.
+            </p>
+
+            {/* 비즈니스 시작 버튼 */}
+            <button className="px-8 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
+              내 비즈니스 설정
+            </button>
+
+            {/* 일러스트레이션 */}
+            <div className="absolute bottom-0 left-12">
+              <div className="relative w-[200px] h-[300px]">
+                <img 
+                  src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg" 
+                  alt="Business illustration" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+
+            {/* 앱 스크린샷 */}
+            <div className="absolute bottom-0 right-12">
+              <div className="relative w-[280px] h-[500px]">
+                <img 
+                  src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg" 
+                  alt="Business app screenshot" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 스크롤 테스트를 위한 추가 내용 */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
