@@ -12,6 +12,7 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import dynamic from 'next/dynamic';
+import React from 'react';
 
 // FontAwesome 라이브러리에 아이콘 추가
 library.add(faBell, faStarSolid, faStarRegular, faTrainSubway, faHeartSolid, faHeartRegular, faMapMarkerAlt, faUserCircle, faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars, faChevronLeft, faChevronRight, faClock);
@@ -102,7 +103,7 @@ const menuWithSub = [
 ];
 
 // 별점을 렌더링하는 컴포넌트
-const StarRating = ({ rating }: { rating: number }) => {
+const StarRating = ({ rating, customSize }: { rating: number, customSize?: number }) => {
   return (
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -110,7 +111,7 @@ const StarRating = ({ rating }: { rating: number }) => {
           key={star}
           icon={star <= rating ? faStarSolid : faStarRegular}
           className={star <= rating ? "text-yellow-400" : "text-gray-300"}
-          style={{ fontSize: '14px', filter: 'url(#round)' }}
+          style={{ fontSize: customSize || '14px', filter: 'url(#round)' }}
         />
       ))}
     </div>
@@ -132,19 +133,80 @@ function ReviewAvatar({ image, name, color }: { image?: string, name?: string, c
   );
 }
 
+// 더미 리뷰 데이터 (닉네임 포함)
+const timeSpecialReviews: Record<string, { nickname: string; text: string }[]> = {
+  'LA 남성 그루밍 이발소': [
+    { nickname: 'user01', text: '정말 친절하고 실력도 좋아요! 특히 디자이너님의 꼼꼼한 상담과 세심한 스타일링 덕분에 원하는 스타일로 잘 나왔습니다. 다음에도 꼭 방문할 예정이에요. 주차도 편리하고 매장 분위기도 너무 좋았어요.' },
+    { nickname: 'user02', text: '가격이 합리적이에요. 기술력도 좋고 특히 매장이 청결해서 좋았습니다.' },
+    { nickname: 'user03', text: '분위기가 깔끔해서 만족했습니다. 디자이너분들이 모두 친절하시고 전문적인 조언을 해주셔서 더욱 만족스러웠어요. 커트 후 스타일링 방법도 자세히 설명해주셔서 집에서도 쉽게 스타일링할 수 있었습니다.' },
+    { nickname: 'user04', text: '예약이 쉬워서 편했어요.' }
+  ],
+  'flawless 팀색 및 헤어 시스템': [
+    { nickname: 'hairqueen', text: '염색 결과가 너무 마음에 들어요.' },
+    { nickname: 'minji', text: '상담이 꼼꼼해서 신뢰가 갑니다.' },
+    { nickname: 'james', text: '재방문 의사 100%!' },
+    { nickname: 'sally', text: '친구에게 추천했어요.' }
+  ],
+  '크리스피 컷 1': [
+    { nickname: 'cutman', text: '커트가 세련되고 빠릅니다.' },
+    { nickname: 'hannah', text: '직원분들이 모두 친절해요.' },
+    { nickname: 'lee', text: '대기시간이 짧아서 좋아요.' },
+    { nickname: 'user1', text: '인테리어가 너무 예쁘고 깔끔해요. 특히 조명이 예뻐서 사진 찍기도 좋았어요.' },
+    { nickname: 'user2', text: '디자이너님이 친절하게 상담해주시고 꼼꼼하게 스타일링 해주셨어요.' },
+    { nickname: 'user3', text: '가격도 합리적이고 시술 결과도 만족스러웠습니다. 다음에 또 방문할 예정이에요!' },
+    { nickname: 'user4', text: '예약시스템이 잘 되어있어서 편리했어요. 시간 약속도 잘 지켜주셔서 좋았습니다.' },
+    { nickname: 'user5', text: '헤어 디자이너분들의 실력이 모두 좋으세요. 특히 커트 라인이 예쁘게 나와서 만족했어요.' }
+  ],
+  '제이 @ The Parlour': [
+    { nickname: 'soyeon', text: '인테리어가 고급스럽고 쾌적해요.' },
+    { nickname: 'jparlour', text: '헤어스타일링이 만족스러워요.' },
+    { nickname: 'driver', text: '주차가 편리해서 좋아요.' }
+  ],
+  '트라이브': [
+    { nickname: 'tribeuser', text: '예약 시스템이 편리해요.' },
+    { nickname: 'designer', text: '헤어 디자이너가 실력파입니다.' },
+    { nickname: 'happy', text: '가격 대비 서비스가 훌륭해요.' }
+  ],
+  '프리미엄 헤어샵': [
+    { nickname: 'trend', text: '최신 트렌드 스타일을 잘 알아요.' },
+    { nickname: 'kind', text: '상담이 친절해서 좋았어요.' },
+    { nickname: 'wide', text: '매장이 넓고 쾌적합니다.' }
+  ],
+  '스타일리스트 스튜디오': [
+    { nickname: 'bright', text: '분위기가 밝고 활기차요.' },
+    { nickname: 'colorcut', text: '커트와 염색 모두 만족!' },
+    { nickname: 'friend', text: '친구와 함께 방문했어요.' }
+  ]
+};
+
 export default function Home() {
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
-  const [randomSalonIndex, setRandomSalonIndex] = useState(0); // 랜덤 선택된 카드 인덱스
+  const [randomSalonIndex, setRandomSalonIndex] = useState(0);
   const [bigCardIdx, setBigCardIdx] = useState(0);
-  const [isScrolled, setIsScrolled] = useState(false); // 스크롤 상태 추가
+  const [isScrolled, setIsScrolled] = useState(false);
   const [clickedCard, setClickedCard] = useState(-1);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<any>(null);
+  const [currentReviewPage, setCurrentReviewPage] = useState(1); // 현재 리뷰 페이지
+  const reviewsPerPage = 5; // 페이지당 리뷰 수
 
   // 슬라이더 상태
   const visibleCount = 5;
   const slideLen = popularSalons.length;
+  const [slideIdx, setSlideIdx] = useState(popularSalons.length);
+  const [reviewSlideIdx, setReviewSlideIdx] = useState(slideLen); // 중간에서 시작
+  const [isTransition, setIsTransition] = useState(true);
+  const [isReviewPaused, setIsReviewPaused] = useState(false);
+
+  const [liked, setLiked] = useState<{ [key: string]: boolean }>({});
+  const [bounce, setBounce] = useState<{ [key: string]: boolean }>({});
+  const [showToast, setShowToast] = useState<{ [key: string]: boolean }>({});
+  const [toastMsg, setToastMsg] = useState<{ [key: string]: string }>({});
+
+  // 슬라이드 카드 배열 생성
   let slideCards: typeof popularSalons = [];
   let reviewSlideCards: typeof reviewedSalons = [];
   
@@ -160,23 +222,23 @@ export default function Home() {
       reviewSlideCards = reviewSlideCards.concat(reviewedSalons);
     }
   }
-  const [slideIdx, setSlideIdx] = useState(popularSalons.length);
-  const [reviewSlideIdx, setReviewSlideIdx] = useState(slideLen); // 중간에서 시작
-  const [isTransition, setIsTransition] = useState(true);
-  const [isReviewPaused, setIsReviewPaused] = useState(false);
 
-  const [liked, setLiked] = useState<{ [key: string]: boolean }>({});
-  const [bounce, setBounce] = useState<{ [key: string]: boolean }>({});
-  const [showToast, setShowToast] = useState<{ [key: string]: boolean }>({});
-  const [toastMsg, setToastMsg] = useState<{ [key: string]: string }>({});
-  
   // 카드 클릭 핸들러
-  const handleCardClick = (index: number) => {
-    setClickedCard(index);
-    // 0.3초 후 원래 상태로 복원
-    setTimeout(() => {
-      setClickedCard(-1);
-    }, 300);
+  const handleCardClick = (data: any) => {
+    const name = String(data.name);
+    console.log('Card clicked:', data); // 디버깅용 로그
+    console.log('Card name:', name); // 카드 이름 확인
+    console.log('Available reviews:', Object.keys(timeSpecialReviews)); // 사용 가능한 리뷰 키 확인
+    console.log('Found reviews:', timeSpecialReviews[name]); // 찾은 리뷰 확인
+    
+    const modalDataToSet = {
+      ...data,
+      reviews: timeSpecialReviews[name] || []
+    };
+    console.log('Modal data to set:', modalDataToSet); // 모달 데이터 확인
+    
+    setModalData(modalDataToSet);
+    setModalOpen(true);
   };
 
   const handleLike = (key: string) => {
@@ -309,6 +371,14 @@ export default function Home() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // 모달 디버깅용 useEffect
+  useEffect(() => {
+    if (modalOpen && modalData) {
+      console.log('Modal opened with data:', modalData);
+      console.log('Modal reviews:', modalData.reviews);
+    }
+  }, [modalOpen, modalData]);
+
   const goNext = () => {
     setSlideIdx((prev) => prev + 1);
     setIsTransition(true);
@@ -333,6 +403,29 @@ export default function Home() {
     setRandomSalonIndex(randomIdx % (slideLen - 1));
     setIsTransition(true);
   };
+
+  // 리뷰 페이지네이션 처리 함수
+  const getCurrentPageReviews = (reviews: any[]) => {
+    const startIndex = (currentReviewPage - 1) * reviewsPerPage;
+    return reviews.slice(startIndex, startIndex + reviewsPerPage);
+  };
+
+  const totalPages = modalData?.reviews ? Math.ceil(modalData.reviews.length / reviewsPerPage) : 0;
+
+  const handlePrevPage = () => {
+    setCurrentReviewPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentReviewPage(prev => Math.min(prev + 1, totalPages));
+  };
+
+  // 모달이 열릴 때마다 페이지를 1로 리셋
+  useEffect(() => {
+    if (modalOpen) {
+      setCurrentReviewPage(1);
+    }
+  }, [modalOpen]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#F7FAFC', display: 'flex', flexDirection: 'column' }}>
@@ -616,133 +709,190 @@ export default function Home() {
             >
               <div className="flex gap-5" style={{ width: 'max-content' }}>
                 {/* 슬라이드 카드 1 */}
-                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                <div
+                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => handleCardClick({
+                    name: 'LA 남성 그루밍 이발소',
+                    rating: 5.0,
+                    reviewCount: 153,
+                    address: '13 문화 예술로, 멜트 베이, 11946',
+                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png'
+                  })}
+                >
                   <div className="relative h-[200px]">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png" 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png"
                       alt="LA 남성 그루밍 이발소"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
                       <span>5.0</span>
-                      <span className="text-xs">({153}개의 리뷰)</span>
+                      <span className="text-xs">(153개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 text-center">
                     <h3 className="font-bold text-lg mb-1">LA 남성 그루밍 이발소</h3>
                     <p className="text-gray-600 text-sm">13 문화 예술로, 멜트 베이, 11946</p>
                   </div>
                 </div>
-
                 {/* 슬라이드 카드 2 */}
-                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                <div
+                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => handleCardClick({
+                    name: 'flawless 팀색 및 헤어 시스템',
+                    rating: 4.9,
+                    reviewCount: 357,
+                    address: '1766 이스트 콜로니얼 역대, 올랜도, 32817',
+                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg'
+                  })}
+                >
                   <div className="relative h-[200px]">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg" 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg"
                       alt="flawless 팀색 및 헤어 시스템"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
                       <span>4.9</span>
-                      <span className="text-xs">({357}개의 리뷰)</span>
+                      <span className="text-xs">(357개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 text-center">
                     <h3 className="font-bold text-lg mb-1">flawless 팀색 및 헤어 시스템</h3>
                     <p className="text-gray-600 text-sm">1766 이스트 콜로니얼 역대, 올랜도, 32817</p>
                   </div>
                 </div>
-
                 {/* 슬라이드 카드 3 */}
-                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                <div
+                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => handleCardClick({
+                    name: '크리스피 컷 1',
+                    rating: 5.0,
+                    reviewCount: 234,
+                    address: '115 N 첼섬 스트리트, 머스코지, OK, 74401',
+                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg'
+                  })}
+                >
                   <div className="relative h-[200px]">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMjRfMjc4%2FMDAxNzQyNzgxMDg5OTEy.CX9CWh323KrjA97EdgmkKX3MyuDyN1KMzszFp_NZVv8g.O8Y_EoFJZ2ljMyU0bsMkkyw4iS-avY6oWBiGHi8RXHcg.JPEG%2FIMG_0633.jpg" 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg"
                       alt="크리스피 컷 1"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
                       <span>5.0</span>
-                      <span className="text-xs">({234}개의 리뷰)</span>
+                      <span className="text-xs">(234개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 text-center">
                     <h3 className="font-bold text-lg mb-1">크리스피 컷 1</h3>
                     <p className="text-gray-600 text-sm">115 N 첼섬 스트리트, 머스코지, OK, 74401</p>
                   </div>
                 </div>
-
                 {/* 슬라이드 카드 4 */}
-                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                <div
+                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => handleCardClick({
+                    name: '제이 @ The Parlour',
+                    rating: 5.0,
+                    reviewCount: 599,
+                    address: '420 W 콜리플랜트 로드, 그린치, 45616',
+                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg'
+                  })}
+                >
                   <div className="relative h-[200px]">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg" 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMTYg%2FMDAxNzMzOTA3MzQ3OTI2.lV6R8qiR_UgsOTRRhTag6W2Bc5UgS11RBvf_58-wSoMg.7TDP02bP98aFd2JQzh0cGeUbMiN1ocuMu6ApUM2wqqYg.JPEG%2F900%25A3%25DF20241211%25A3%25DF105615%25A3%25A80%25A3%25A9.jpg"
                       alt="제이 @ The Parlour"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
                       <span>5.0</span>
-                      <span className="text-xs">({599}개의 리뷰)</span>
+                      <span className="text-xs">(599개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 text-center">
                     <h3 className="font-bold text-lg mb-1">제이 @ The Parlour</h3>
                     <p className="text-gray-600 text-sm">420 W 콜리플랜트 로드, 그린치, 45616</p>
                   </div>
                 </div>
-
                 {/* 슬라이드 카드 5 */}
-                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                <div
+                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => handleCardClick({
+                    name: '트라이브',
+                    rating: 4.8,
+                    reviewCount: 555,
+                    address: '555 캐슬 드라이브, 버밍엄, 35209',
+                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg'
+                  })}
+                >
                   <div className="relative h-[200px]">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg" 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTZfMTM2%2FMDAxNzM5NzEwNjcwNjI0.E2wdB1sfjz0CNvEOHMDR_dHL-CiJ4pKy2rLhaY1leLMg._CMjlTBkhwdeqRJlsLGn6Ctn-S_8Tl7gak5VrjQhwZYg.JPEG%2F900%25A3%25DF20250213%25A3%25DF181930.jpg"
                       alt="트라이브"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
                       <span>4.8</span>
-                      <span className="text-xs">({555}개의 리뷰)</span>
+                      <span className="text-xs">(555개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 text-center">
                     <h3 className="font-bold text-lg mb-1">트라이브</h3>
                     <p className="text-gray-600 text-sm">555 캐슬 드라이브, 버밍엄, 35209</p>
                   </div>
                 </div>
-
                 {/* 슬라이드 카드 6 */}
-                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                <div
+                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => handleCardClick({
+                    name: '프리미엄 헤어샵',
+                    rating: 4.9,
+                    reviewCount: 432,
+                    address: '강남대로 123, 서울, 06123',
+                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png'
+                  })}
+                >
                   <div className="relative h-[200px]">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png" 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png"
                       alt="프리미엄 헤어샵"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
                       <span>4.9</span>
-                      <span className="text-xs">({432}개의 리뷰)</span>
+                      <span className="text-xs">(432개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 text-center">
                     <h3 className="font-bold text-lg mb-1">프리미엄 헤어샵</h3>
                     <p className="text-gray-600 text-sm">강남대로 123, 서울, 06123</p>
                   </div>
                 </div>
-
                 {/* 슬라이드 카드 7 */}
-                <div className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:shadow-xl">
+                <div
+                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+                  onClick={() => handleCardClick({
+                    name: '스타일리스트 스튜디오',
+                    rating: 5.0,
+                    reviewCount: 298,
+                    address: '홍대로 456, 서울, 04039',
+                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg'
+                  })}
+                >
                   <div className="relative h-[200px]">
                     <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg" 
+                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg"
                       alt="스타일리스트 스튜디오"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
                       <span>5.0</span>
-                      <span className="text-xs">({298}개의 리뷰)</span>
+                      <span className="text-xs">(298개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 text-center">
                     <h3 className="font-bold text-lg mb-1">스타일리스트 스튜디오</h3>
                     <p className="text-gray-600 text-sm">홍대로 456, 서울, 04039</p>
                   </div>
@@ -763,14 +913,14 @@ export default function Home() {
               <div className="w-10 h-10 bg-[#00a3a3] rounded-xl flex items-center justify-center">
                 <img src="/globe.svg" alt="Booksy" className="w-6 h-6 invert" />
               </div>
-              <span className="text-gray-700">Booksy 앱 • iOS, Android</span>
+              <span className="text-gray-700">stylelogs 앱 • iOS, Android</span>
             </div>
 
             {/* 메인 텍스트 */}
-            <h2 className="text-4xl font-bold mb-4">약속을 찾고<br />예약하십시오.</h2>
+            <h2 className="text-4xl font-bold mb-4">가까운 뷰티샵, 더 스마트하게. <br />예약하십시오.</h2>
             <p className="text-gray-600 mb-8">
               전화 태그를 치릅니다. 언제 어디서나 즉시 다음 약속을 찾고<br />
-              예약하세요.
+              예약하세요. 더 스마트하게.
             </p>
 
             {/* 국가 선택 및 다운로드 버튼 */}
@@ -814,13 +964,13 @@ export default function Home() {
               <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center">
                 <img src="/globe.svg" alt="BooksyBiz" className="w-6 h-6 invert" />
               </div>
-              <span className="text-gray-700">BooksyBiz 앱 • iOS, 안드로이드</span>
+              <span className="text-gray-700">style Logs 앱 • iOS, 안드로이드</span>
             </div>
 
             {/* 메인 텍스트 */}
-            <h2 className="text-4xl font-bold mb-4">귀하의 비즈니스를<br />위한 Booksy</h2>
+            <h2 className="text-4xl font-bold mb-4">귀하의 비즈니스를<br />위한 styleLogs</h2>
             <p className="text-gray-600 mb-8">
-              Booksy를 시작하여 비즈니스를 더 잘 운영하십시오. 캘린더,<br />
+              스타일로그를 시작하여 비즈니스를 더 잘 운영하십시오. 캘린더,<br />
               예약, 마케팅 및 지불을 모두 하나로.
             </p>
 
@@ -946,6 +1096,85 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* 모달 컴포넌트 */}
+      {modalOpen && modalData && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-[450px] relative animate-fadeIn max-h-[90vh] overflow-y-auto">
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl"
+              onClick={() => setModalOpen(false)}
+            >
+              &times;
+            </button>
+            <img 
+              src={modalData.image || "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAzMDZfMjQ4%2FMDAxNzQxMjMxNDEzMjA1.NMlLTOkPOOQ1bBLuJ1SoBpME8lOfwZ860k521zNXyMQg.zT73UtiPMXcmSG4kJ4U_5MsZBMIAJwSdR2YSuDkCQQMg.PNG%2F%25B9%25CC%25BF%25EB%25BD%25C7_%25C1%25B6%25B8%25ED_3.png"} 
+              alt={modalData.name} 
+              className="w-full h-40 object-cover rounded-lg mb-4" 
+            />
+            <h3 className="text-xl font-bold mb-2 text-center">{modalData.name}</h3>
+            <div className="flex flex-col items-center gap-1 mb-2">
+              <div className="flex items-center gap-2">
+                <StarRating rating={modalData.rating} />
+                <span className="font-semibold">{modalData.rating}</span>
+                <span className="text-gray-500 text-sm">({modalData.reviewCount}개의 리뷰)</span>
+              </div>
+            </div>
+            <div className="text-gray-600 text-sm mb-4 text-center">{modalData.address}</div>
+            <div className="border-t pt-3">
+              <div className="font-semibold mb-2">고객 리뷰</div>
+              <ul className="space-y-2">
+                {modalData.reviews && modalData.reviews.length > 0 ? (
+                  getCurrentPageReviews(modalData.reviews).map((r: { nickname: string; text: string }, i: number) => (
+                    <li key={i} className="text-gray-700 text-sm bg-gray-50 rounded p-3">
+                      <div className="flex items-start gap-2">
+                        <div className="flex-shrink-0 mt-1">
+                          <StarRating rating={5} customSize={12} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium mb-1">{r.nickname}</div>
+                          <div className="text-gray-600 leading-relaxed break-words">{r.text}</div>
+                        </div>
+                      </div>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-400 text-sm">아직 리뷰가 없습니다.</li>
+                )}
+              </ul>
+              {modalData.reviews && modalData.reviews.length > reviewsPerPage && (
+                <div className="flex justify-center items-center gap-4 mt-4 border-t pt-4">
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={currentReviewPage === 1}
+                    className={`px-3 py-1 rounded ${
+                      currentReviewPage === 1
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    이전
+                  </button>
+                  <span className="text-sm text-gray-600">
+                    {currentReviewPage} / {totalPages}
+                  </span>
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentReviewPage === totalPages}
+                    className={`px-3 py-1 rounded ${
+                      currentReviewPage === totalPages
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    다음
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
