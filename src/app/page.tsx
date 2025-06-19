@@ -127,6 +127,15 @@ export default function Home() {
     };
   }, [openMenu]);
 
+  useEffect(() => {
+    function handleScroll() {
+      setIsScrolled(window.scrollY > 100);
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <main className="min-h-screen bg-white">
       <StickyHeader isScrolled={isScrolled} />
