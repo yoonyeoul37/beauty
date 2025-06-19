@@ -1,13 +1,13 @@
+"use client";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import Image from 'next/image';
 import StarRating from './StarRating';
-import { timeSpecialReviews } from '../data/reviews';
-import { useState } from 'react';
 import ReviewModal from './ReviewModal';
+import { timeSpecialReviews } from '../data/reviews';
 import TestDropdown from './TestDropdown';
 
 interface TimeSpecialSectionProps {
@@ -18,25 +18,58 @@ interface TimeSpecialSectionProps {
   setClickedCard: (index: number) => void;
 }
 
-// 가격 데이터
-const salonPrices = [
-  { original: 150000, special: 105000 },
-  { original: 130000, special: 91000 },
-  { original: 140000, special: 98000 },
-  { original: 160000, special: 112000 },
-  { original: 120000, special: 84000 },
-  { original: 170000, special: 119000 },
+// 살롱 데이터 타입 정의
+interface SalonData {
+  name: string;
+  image: string;
+  originalPrice: number;
+  specialPrice: number;
+}
+
+// 살롱 데이터 배열
+const salonData: SalonData[] = [
+  {
+    name: "LA 남성 그루밍 이발소",
+    image: "https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    originalPrice: 80000,
+    specialPrice: 56000
+  },
+  {
+    name: "flawless 팀색 및 헤어 시스템",
+    image: "https://images.pexels.com/photos/3993451/pexels-photo-3993451.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    originalPrice: 120000,
+    specialPrice: 84000
+  },
+  {
+    name: "크리스피 컷 1",
+    image: "https://images.pexels.com/photos/3993453/pexels-photo-3993453.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    originalPrice: 150000,
+    specialPrice: 105000
+  },
+  {
+    name: "제이 @ The Parlour",
+    image: "https://images.pexels.com/photos/3993455/pexels-photo-3993455.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    originalPrice: 100000,
+    specialPrice: 70000
+  },
+  {
+    name: "트라이브",
+    image: "https://images.pexels.com/photos/3993457/pexels-photo-3993457.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    originalPrice: 200000,
+    specialPrice: 140000
+  },
+  {
+    name: "프리미엄 헤어샵",
+    image: "https://images.pexels.com/photos/3993467/pexels-photo-3993467.jpeg?auto=compress&cs=tinysrgb&w=1920",
+    originalPrice: 90000,
+    specialPrice: 63000
+  }
 ];
 
-// 이미지 데이터
-const salonImages = [
-  "https://images.pexels.com/photos/3992874/pexels-photo-3992874.jpeg?auto=compress&cs=tinysrgb&w=1920",  // 모던한 화이트 인테리어
-  "https://images.pexels.com/photos/3993444/pexels-photo-3993444.jpeg?auto=compress&cs=tinysrgb&w=1920",  // 고급스러운 스타일링 공간
-  "https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=1920",  // 세련된 미용실 인테리어
-  "https://images.pexels.com/photos/3985298/pexels-photo-3985298.jpeg?auto=compress&cs=tinysrgb&w=1920",  // 밝은 조명의 미용실
-  "https://images.pexels.com/photos/3985320/pexels-photo-3985320.jpeg?auto=compress&cs=tinysrgb&w=1920",  // 깔끔한 화이트 인테리어
-  "https://images.pexels.com/photos/3993467/pexels-photo-3993467.jpeg?auto=compress&cs=tinysrgb&w=1920"   // 모던한 스타일링 공간
-];
+// 배열을 랜덤하게 섞는 함수
+const shuffleArray = (array: any[]) => {
+  return [...array].sort(() => Math.random() - 0.5);
+};
 
 export default function TimeSpecialSection({
   randomSalonIndex,
@@ -45,14 +78,45 @@ export default function TimeSpecialSection({
   clickedCard,
   setClickedCard
 }: TimeSpecialSectionProps) {
-  const salonNames = Object.keys(timeSpecialReviews);
-  const [selectedSalon, setSelectedSalon] = useState<string | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [sortType, setSortType] = useState<'distance' | 'review' | 'price'>('distance');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedSalon, setSelectedSalon] = useState<string | null>(null);
+  const [shuffledSalons, setShuffledSalons] = useState<SalonData[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+
+  // 초기 섞기 및 1분마다 섞기
+  useEffect(() => {
+    const shuffle = () => {
+      if (!isPaused) {
+        setShuffledSalons(shuffleArray(salonData.slice(0, 6)));
+      }
+    };
+
+    // 초기 섞기
+    shuffle();
+
+    // 1분마다 섞기
+    const interval = setInterval(shuffle, 60000);
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   const handleSort = (type: string) => {
     setSortType(type as 'distance' | 'review' | 'price');
-    // 여기에 정렬 로직 추가
+  };
+
+  const handleMouseEnter = (idx: number) => {
+    setHoveredCard(idx);
+    setIsPaused(true);
+  };
+
+  const handleMouseLeave = (idx: number) => {
+    setHoveredCard(null);
+    // 다른 상호작용이 없을 때만 재시작
+    if (clickedCard === -1 && bigCardIdx === -1 && !selectedSalon) {
+      setIsPaused(false);
+    }
   };
 
   return (
@@ -89,10 +153,10 @@ export default function TimeSpecialSection({
 
         {/* 카드 그리드 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {salonNames.slice(0, 6).map((salonName, idx) => (
+          {shuffledSalons.map((salon, idx) => (
             <div
-              key={idx}
-              className={`bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ${
+              key={`${salon.name}-${idx}`}
+              className={`bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 hover:-translate-y-2 ${
                 clickedCard === idx ? 'transform scale-[1.02]' : ''
               }`}
               style={{
@@ -100,14 +164,23 @@ export default function TimeSpecialSection({
                   ? '0 10px 40px rgba(0,0,0,0.12)'
                   : '0 4px 20px rgba(0,0,0,0.08)'
               }}
-              onClick={() => setClickedCard(idx === clickedCard ? -1 : idx)}
+              onClick={() => {
+                setClickedCard(idx === clickedCard ? -1 : idx);
+                setIsPaused(true);
+              }}
+              onMouseEnter={() => {
+                handleMouseEnter(idx);
+              }}
+              onMouseLeave={() => {
+                handleMouseLeave(idx);
+              }}
             >
               {/* 이미지 */}
               <div className="relative h-48">
                 <div className="relative w-full h-full">
                   <Image
-                    src={salonImages[idx]}
-                    alt={salonName}
+                    src={salon.image}
+                    alt={salon.name}
                     fill
                     style={{ objectFit: 'cover' }}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -122,6 +195,7 @@ export default function TimeSpecialSection({
                   onClick={(e) => {
                     e.stopPropagation();
                     setBigCardIdx(idx === bigCardIdx ? -1 : idx);
+                    setIsPaused(true);
                   }}
                 >
                   <FontAwesomeIcon
@@ -135,7 +209,7 @@ export default function TimeSpecialSection({
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-bold mb-2">{salonName}</h3>
+                    <h3 className="text-xl font-bold mb-2">{salon.name}</h3>
                     <div className="flex items-center gap-2 text-gray-500 text-sm">
                       <FontAwesomeIcon icon={faMapMarkerAlt} />
                       <span>강남구 신사동</span>
@@ -147,12 +221,13 @@ export default function TimeSpecialSection({
                       className="text-sm text-gray-500 mt-1 hover:text-pink-500 transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (timeSpecialReviews[salonName]?.length > 0) {
-                          setSelectedSalon(salonName);
+                        if (timeSpecialReviews[salon.name]?.length > 0) {
+                          setSelectedSalon(salon.name);
+                          setIsPaused(true);
                         }
                       }}
                     >
-                      {timeSpecialReviews[salonName]?.length || 0} 리뷰
+                      {timeSpecialReviews[salon.name]?.length || 0} 리뷰
                     </button>
                   </div>
                 </div>
@@ -165,8 +240,8 @@ export default function TimeSpecialSection({
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-sm text-gray-500 line-through">₩{salonPrices[idx].original.toLocaleString()}</span>
-                      <span className="text-lg font-bold ml-2">₩{salonPrices[idx].special.toLocaleString()}</span>
+                      <span className="text-sm text-gray-500 line-through">₩{salon.originalPrice.toLocaleString()}</span>
+                      <span className="text-lg font-bold ml-2">₩{salon.specialPrice.toLocaleString()}</span>
                     </div>
                     <span className="text-red-500 font-bold">30% OFF</span>
                   </div>
@@ -177,6 +252,7 @@ export default function TimeSpecialSection({
                   className="w-full py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
+                    setIsPaused(true);
                     // 예약 로직
                   }}
                 >
@@ -192,7 +268,10 @@ export default function TimeSpecialSection({
       {selectedSalon && (
         <ReviewModal
           isOpen={!!selectedSalon}
-          onClose={() => setSelectedSalon(null)}
+          onClose={() => {
+            setSelectedSalon(null);
+            setIsPaused(false);
+          }}
           salonName={selectedSalon}
           reviews={timeSpecialReviews[selectedSalon].map(review => ({
             nickname: review.nickname,
