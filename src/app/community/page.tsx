@@ -175,6 +175,20 @@ export default function CommunityMain() {
     <main style={{ minHeight: '100vh', background: '#F7FAFC', paddingBottom: '5rem' }}>
       {/* 상단 여백만 남기고 헤더 완전 삭제 */}
       <div className="h-6" />
+      
+      {/* 홈으로 가기 버튼 */}
+      <div className="max-w-5xl mx-auto px-4 py-4">
+        <Link 
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          홈으로 돌아가기
+        </Link>
+      </div>
+      
       {/* 광고형 배너 3칸 복구 */}
       <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-6">
         {banners.map((banner, i) => (

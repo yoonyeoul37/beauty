@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faClock, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
@@ -176,8 +177,14 @@ export default function TimeSpecialSection({
               }}
             >
               {/* 이미지 */}
-              <div className="relative h-48">
-                <div className="relative w-full h-full">
+              <Link 
+                href={`/salon/${encodeURIComponent(salon.name)}`}
+                className="block relative w-full pt-[75%]"
+                onClick={(e) => {
+                  e.stopPropagation(); // 카드 전체 클릭 이벤트와 분리
+                }}
+              >
+                <div className="absolute inset-0">
                   <Image
                     src={salon.image}
                     alt={salon.name}
@@ -203,7 +210,7 @@ export default function TimeSpecialSection({
                     className={idx === bigCardIdx ? "text-red-500" : "text-gray-400"}
                   />
                 </button>
-              </div>
+              </Link>
 
               {/* 컨텐츠 */}
               <div className="p-6">
