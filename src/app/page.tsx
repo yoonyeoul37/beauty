@@ -156,9 +156,14 @@ export default function Home() {
           <div className="text-center text-white">
             <h2 className="text-4xl font-bold mb-4">당신의 아름다움을 위한 최고의 선택</h2>
             <p className="text-xl mb-8">전문가와 함께 새로운 스타일을 찾아보세요</p>
-            <button className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors">
-              지금 시작하기
-            </button>
+            <div className="flex gap-4 justify-center">
+              <button className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors">
+                지금 시작하기
+              </button>
+              <Link href="/community" className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-black transition-colors">
+                커뮤니티
+              </Link>
+            </div>
           </div>
         </div>
       </section>

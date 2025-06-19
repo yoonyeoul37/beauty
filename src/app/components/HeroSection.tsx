@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import TestDropdown from './TestDropdown';
+import Link from 'next/link';
+import { useState } from 'react';
 
 interface HeroSectionProps {
   showDropdown: boolean;
@@ -8,6 +10,13 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ showDropdown, setShowDropdown }: HeroSectionProps) {
+  const [sortType, setSortType] = useState('distance');
+
+  const handleSort = (type: string) => {
+    setSortType(type);
+    console.log('Sort type changed to:', type);
+  };
+
   return (
     <section className="relative w-full h-[500px] flex items-center justify-center overflow-hidden">
       <video
@@ -54,6 +63,18 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
           </div>
         </div>
       </div>
+
+      {/* 커뮤니티 링크 - 오른쪽 상단 */}
+      <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 10 }}>
+        <Link 
+          href="/community"
+          className="text-white text-lg font-semibold hover:text-gray-200 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-white/10"
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
+        >
+          커뮤니티
+        </Link>
+      </div>
+
       {/* 히어로 중앙 컨테이너 */}
       <div style={{
         position: 'absolute',
@@ -127,7 +148,13 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
           ))}
         </div>
         {/* 테스트용 드롭다운 */}
-        {showDropdown && <TestDropdown />}
+        {showDropdown && (
+          <TestDropdown 
+            isOpen={showDropdown}
+            onClose={() => setShowDropdown(false)}
+            onSort={handleSort}
+          />
+        )}
       </div>
     </section>
   );
