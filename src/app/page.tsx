@@ -730,9 +730,18 @@ export default function Home() {
                       <span className="text-xs">(153개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-1">LA 남성 그루밍 이발소</h3>
-                    <p className="text-gray-600 text-sm">13 문화 예술로, 멜트 베이, 11946</p>
+                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">LA 남성 그루밍 이발소</h3>
+                      <p className="text-gray-600 text-sm mb-3">프리미엄 남성 헤어케어 서비스</p>
+                      <p className="text-gray-500 text-xs mb-4">13 문화 예술로, 멜트 베이, 11946</p>
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg mb-2">₩25,000</div>
+                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
+                        예약하기
+                      </button>
+                    </div>
                   </div>
                 </div>
                 {/* 슬라이드 카드 2 */}
@@ -757,9 +766,18 @@ export default function Home() {
                       <span className="text-xs">(357개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-1">flawless 팀색 및 헤어 시스템</h3>
-                    <p className="text-gray-600 text-sm">1766 이스트 콜로니얼 역대, 올랜도, 32817</p>
+                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">flawless 팀색 및 헤어 시스템</h3>
+                      <p className="text-gray-600 text-sm mb-3">전문 염색 및 헤어 스타일링</p>
+                      <p className="text-gray-500 text-xs mb-4">1766 이스트 콜로니얼 역대, 올랜도, 32817</p>
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg mb-2">₩45,000</div>
+                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
+                        예약하기
+                      </button>
+                    </div>
                   </div>
                 </div>
                 {/* 슬라이드 카드 3 */}
@@ -784,9 +802,18 @@ export default function Home() {
                       <span className="text-xs">(234개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-1">크리스피 컷 1</h3>
-                    <p className="text-gray-600 text-sm">115 N 첼섬 스트리트, 머스코지, OK, 74401</p>
+                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">크리스피 컷 1</h3>
+                      <p className="text-gray-600 text-sm mb-3">트렌디한 커트 스타일링</p>
+                      <p className="text-gray-500 text-xs mb-4">115 N 첼섬 스트리트, 머스코지, OK, 74401</p>
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg mb-2">₩30,000</div>
+                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
+                        예약하기
+                      </button>
+                    </div>
                   </div>
                 </div>
                 {/* 슬라이드 카드 4 */}
@@ -811,9 +838,18 @@ export default function Home() {
                       <span className="text-xs">(599개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-1">제이 @ The Parlour</h3>
-                    <p className="text-gray-600 text-sm">420 W 콜리플랜트 로드, 그린치, 45616</p>
+                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">제이 @ The Parlour</h3>
+                      <p className="text-gray-600 text-sm mb-3">고급 헤어 스타일링 서비스</p>
+                      <p className="text-gray-500 text-xs mb-4">420 W 콜리플랜트 로드, 그린치, 45616</p>
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg mb-2">₩55,000</div>
+                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
+                        예약하기
+                      </button>
+                    </div>
                   </div>
                 </div>
                 {/* 슬라이드 카드 5 */}
@@ -838,9 +874,18 @@ export default function Home() {
                       <span className="text-xs">(555개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-1">트라이브</h3>
-                    <p className="text-gray-600 text-sm">555 캐슬 드라이브, 버밍엄, 35209</p>
+                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">트라이브</h3>
+                      <p className="text-gray-600 text-sm mb-3">모던한 헤어 디자인 스튜디오</p>
+                      <p className="text-gray-500 text-xs mb-4">555 캐슬 드라이브, 버밍엄, 35209</p>
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg mb-2">₩35,000</div>
+                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
+                        예약하기
+                      </button>
+                    </div>
                   </div>
                 </div>
                 {/* 슬라이드 카드 6 */}
@@ -865,9 +910,18 @@ export default function Home() {
                       <span className="text-xs">(432개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-1">프리미엄 헤어샵</h3>
-                    <p className="text-gray-600 text-sm">강남대로 123, 서울, 06123</p>
+                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">프리미엄 헤어샵</h3>
+                      <p className="text-gray-600 text-sm mb-3">럭셔리 헤어 케어 서비스</p>
+                      <p className="text-gray-500 text-xs mb-4">강남대로 123, 서울, 06123</p>
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg mb-2">₩65,000</div>
+                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
+                        예약하기
+                      </button>
+                    </div>
                   </div>
                 </div>
                 {/* 슬라이드 카드 7 */}
@@ -892,9 +946,18 @@ export default function Home() {
                       <span className="text-xs">(298개의 리뷰)</span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-1">스타일리스트 스튜디오</h3>
-                    <p className="text-gray-600 text-sm">홍대로 456, 서울, 04039</p>
+                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">스타일리스트 스튜디오</h3>
+                      <p className="text-gray-600 text-sm mb-3">아티스틱 헤어 디자인</p>
+                      <p className="text-gray-500 text-xs mb-4">홍대로 456, 서울, 04039</p>
+                    </div>
+                    <div>
+                      <div className="text-red-600 font-bold text-lg mb-2">₩40,000</div>
+                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
+                        예약하기
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
