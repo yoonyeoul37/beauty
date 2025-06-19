@@ -7,19 +7,17 @@ import { faTrainSubway, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import dynamic from 'next/dynamic';
+import { faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import HeroSection from './components/HeroSection';
 import StarRating from './components/StarRating';
-import ReviewAvatar from './components/ReviewAvatar';
 import StickyHeader from './components/StickyHeader';
 import AppDownloadSection from './components/AppDownloadSection';
 import TimeSpecialSection from './components/TimeSpecialSection';
 import { timeSpecialReviews } from './data/reviews';
 
 // FontAwesome 라이브러리에 아이콘 추가
-library.add(faBell, faTrainSubway, faHeartSolid, faHeartRegular, faMapMarkerAlt, faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars, faChevronLeft, faChevronRight, faClock);
+library.add(faBell, faTrainSubway, faHeartSolid, faHeartRegular, faMapMarkerAlt, faScissors, faPalette, faSpa, faBrush, faStar, faGem, faUser, faHeart, faSearch, faBars, faClock);
 
 const subwayLineColors: { [key: number]: string } = {
   1: '#0052A4', // 1호선 파랑
@@ -113,77 +111,7 @@ export default function Home() {
   const [bigCardIdx, setBigCardIdx] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [clickedCard, setClickedCard] = useState(-1);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalData, setModalData] = useState<any>(null);
-  const [currentReviewPage, setCurrentReviewPage] = useState(1);
   const [showDropdown, setShowDropdown] = useState(false);
-  const reviewsPerPage = 5;
-  const totalPages = modalData?.reviews ? Math.ceil(modalData.reviews.length / reviewsPerPage) : 1;
-
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
-
-  // 슬라이더 상태
-  const visibleCount = 5;
-  const slideLen = popularSalons.length;
-  const [slideIdx, setSlideIdx] = useState(popularSalons.length);
-  const [reviewSlideIdx, setReviewSlideIdx] = useState(slideLen); // 중간에서 시작
-  const [isTransition, setIsTransition] = useState(true);
-  const [isReviewPaused, setIsReviewPaused] = useState(false);
-
-  const [liked, setLiked] = useState<{ [key: string]: boolean }>({});
-  const [bounce, setBounce] = useState<{ [key: string]: boolean }>({});
-  const [showToast, setShowToast] = useState<{ [key: string]: boolean }>({});
-  const [toastMsg, setToastMsg] = useState<{ [key: string]: string }>({});
-
-  // 슬라이드 카드 배열 생성
-  let slideCards: typeof popularSalons = [];
-  let reviewSlideCards: typeof reviewedSalons = [];
-  
-  if (slideLen === 0) {
-    slideCards = [];
-    reviewSlideCards = [];
-  } else {
-    // 현재 있는 카드만 반복해서 5*3개 이상으로 복제
-    while (slideCards.length < visibleCount * 3) {
-      slideCards = slideCards.concat(popularSalons);
-    }
-    while (reviewSlideCards.length < visibleCount * 3) {
-      reviewSlideCards = reviewSlideCards.concat(reviewedSalons);
-    }
-  }
-
-  // 카드 클릭 핸들러
-  const handleCardClick = (data: any) => {
-    const name = String(data.name);
-    console.log('Card clicked:', data); // 디버깅용 로그
-    console.log('Card name:', name); // 카드 이름 확인
-    console.log('Available reviews:', Object.keys(timeSpecialReviews)); // 사용 가능한 리뷰 키 확인
-    console.log('Found reviews:', timeSpecialReviews[name]); // 찾은 리뷰 확인
-    
-    const modalDataToSet = {
-      ...data,
-      reviews: timeSpecialReviews[name] || []
-    };
-    console.log('Modal data to set:', modalDataToSet); // 모달 데이터 확인
-    
-    setModalData(modalDataToSet);
-    setModalOpen(true);
-  };
-
-  const handleLike = (key: string) => {
-    setLiked((prev) => ({ ...prev, [key]: !prev[key] }));
-    setBounce((prev) => ({ ...prev, [key]: true }));
-    setToastMsg((prev) => ({
-      ...prev,
-      [key]: liked[key] ? '찜을 취소했어요' : '관심 매장으로 등록!'
-    }));
-    setShowToast((prev) => ({ ...prev, [key]: true }));
-    setTimeout(() => setBounce((prev) => ({ ...prev, [key]: false })), 500);
-    setTimeout(() => setShowToast((prev) => ({ ...prev, [key]: false })), 2000);
-  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -198,226 +126,6 @@ export default function Home() {
       window.removeEventListener('mousedown', handleClickOutside);
     };
   }, [openMenu]);
-
-  // 자동 슬라이드 효과
-  useEffect(() => {
-    if (isPaused) return; // 마우스 호버 시 일시 정지
-
-    const interval = setInterval(() => {
-      const container = document.getElementById('slide-container');
-      if (container) {
-        if (currentSlide < 6) {
-          container.scrollLeft += 300;
-          setCurrentSlide(prev => prev + 1);
-        } else {
-          container.scrollLeft = 0;
-          setCurrentSlide(0);
-        }
-      }
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [currentSlide, isPaused]);
-
-  // 무한 슬라이드를 위한 인덱스 조정
-  useEffect(() => {
-    if (slideIdx >= popularSalons.length * 2) {
-      setTimeout(() => {
-        setSlideIdx(popularSalons.length);
-      }, 500);
-    }
-    if (slideIdx <= 0) {
-      setTimeout(() => {
-        setSlideIdx(popularSalons.length);
-      }, 500);
-    }
-  }, [slideIdx, popularSalons.length]);
-
-  useEffect(() => {
-    if (reviewSlideCards.length === 0 || isReviewPaused) return;
-    const timer = setInterval(() => {
-      setReviewSlideIdx((prev) => prev + 1);
-      // 현재 보이는 카드들 중에서 랜덤으로 하나 선택
-      const visibleStartIdx = reviewSlideIdx % (slideLen - 1);
-      const randomIdx = Math.floor(Math.random() * 3) + visibleStartIdx;
-      setRandomSalonIndex(randomIdx % (slideLen - 1));
-      setIsTransition(true);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [reviewSlideCards.length, isReviewPaused, reviewSlideIdx, slideLen]);
-
-  // 무한루프 효과
-  useEffect(() => {
-    if (slideIdx === slideCards.length - visibleCount + 1) {
-      const timeout = setTimeout(() => {
-        setIsTransition(false);
-        setSlideIdx(slideLen);
-      }, 500);
-      return () => clearTimeout(timeout);
-    } else if (slideIdx === 0) {
-      const timeout = setTimeout(() => {
-        setIsTransition(false);
-        setSlideIdx(slideCards.length - visibleCount * 2);
-      }, 500);
-      return () => clearTimeout(timeout);
-    } else {
-      setIsTransition(true);
-    }
-  }, [slideIdx, slideLen, slideCards.length]);
-
-  useEffect(() => {
-    if (reviewSlideIdx === reviewSlideCards.length - visibleCount + 1) {
-      const timeout = setTimeout(() => {
-        setIsTransition(false);
-        setReviewSlideIdx(slideLen);
-      }, 500);
-      return () => clearTimeout(timeout);
-    } else if (reviewSlideIdx === 0) {
-      const timeout = setTimeout(() => {
-        setIsTransition(false);
-        setReviewSlideIdx(reviewSlideCards.length - visibleCount * 2);
-      }, 500);
-      return () => clearTimeout(timeout);
-    } else {
-      setIsTransition(true);
-    }
-  }, [reviewSlideIdx, slideLen, reviewSlideCards.length]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      let nextIdx;
-      do {
-        nextIdx = Math.floor(Math.random() * reviewedSalons.length);
-      } while (nextIdx === bigCardIdx);
-      setBigCardIdx(nextIdx);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [bigCardIdx]);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 100); // 100px 이상 스크롤 시 헤더 표시
-    };
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  // 모달 디버깅용 useEffect
-  useEffect(() => {
-    if (modalOpen && modalData) {
-      console.log('Modal opened with data:', modalData);
-      console.log('Modal reviews:', modalData.reviews);
-    }
-  }, [modalOpen, modalData]);
-
-  const goNext = () => {
-    setSlideIdx((prev) => prev + 1);
-    setIsTransition(true);
-  };
-  const goPrev = () => {
-    setSlideIdx((prev) => prev - 1);
-    setIsTransition(true);
-  };
-  const goReviewNext = () => {
-    setReviewSlideIdx((prev) => prev + 1);
-    // 다음 버튼 클릭시에도 랜덤 선택
-    const visibleStartIdx = (reviewSlideIdx + 1) % (slideLen - 1);
-    const randomIdx = Math.floor(Math.random() * 3) + visibleStartIdx;
-    setRandomSalonIndex(randomIdx % (slideLen - 1));
-    setIsTransition(true);
-  };
-  const goReviewPrev = () => {
-    setReviewSlideIdx((prev) => prev - 1);
-    // 이전 버튼 클릭시에도 랜덤 선택
-    const visibleStartIdx = (reviewSlideIdx - 1) % (slideLen - 1);
-    const randomIdx = Math.floor(Math.random() * 3) + visibleStartIdx;
-    setRandomSalonIndex(randomIdx % (slideLen - 1));
-    setIsTransition(true);
-  };
-
-  // 리뷰 페이지네이션 처리 함수
-  const getCurrentPageReviews = (reviews: any[]) => {
-    const startIndex = (currentReviewPage - 1) * reviewsPerPage;
-    return reviews.slice(startIndex, startIndex + reviewsPerPage);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentReviewPage(prev => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentReviewPage(prev => Math.min(prev + 1, totalPages));
-  };
-
-  // 모달이 열릴 때마다 페이지를 1로 리셋
-  useEffect(() => {
-    if (modalOpen) {
-      setCurrentReviewPage(1);
-    }
-  }, [modalOpen]);
-
-  // 드롭다운 위치 계산 및 표시 함수
-  const handleCategoryClick = (index: number, event: React.MouseEvent) => {
-    event.stopPropagation(); // 이벤트 버블링 방지
-    const target = event.currentTarget;
-    const rect = target.getBoundingClientRect();
-    
-    // 현재 선택된 카테고리와 같은 카테고리를 클릭한 경우 드롭다운을 닫음
-    if (selectedCategory === index) {
-      setSelectedCategory(null);
-    } else {
-      setDropdownPosition({
-        x: rect.left,
-        y: rect.bottom
-      });
-      setSelectedCategory(index);
-    }
-  };
-
-  // 외부 클릭 감지
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (selectedCategory !== null) {
-        setSelectedCategory(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [selectedCategory]);
-
-  // 드롭다운 컴포넌트
-  const SortDropdown = ({ x, y }: { x: number; y: number }) => {
-    return (
-      <div 
-        className="fixed bg-white rounded-lg shadow-lg"
-        style={{
-          left: x,
-          top: y,
-          zIndex: 9999,
-          minWidth: '120px',
-          border: '1px solid rgba(0,0,0,0.1)',
-          backgroundColor: 'white'
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="py-1">
-          <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
-            거리순
-          </button>
-          <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
-            리뷰순
-          </button>
-          <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
-            가격순
-          </button>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <main className="min-h-screen bg-white">
