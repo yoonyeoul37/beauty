@@ -737,7 +737,18 @@ export default function Home() {
                       <p className="text-gray-500 text-xs mb-4">13 문화 예술로, 멜트 베이, 11946</p>
                     </div>
                     <div>
-                      <div className="text-red-600 font-bold text-lg mb-2">₩25,000</div>
+                      <div className="text-gray-700 text-sm mb-2">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center">
+                            <span className="w-12">커트</span>
+                            <span className="font-semibold ml-2">₩25,000</span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="w-12">염색</span>
+                            <span className="font-semibold text-red-600 ml-2">₩60,000~</span>
+                          </div>
+                        </div>
+                      </div>
                       <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
                         예약하기
                       </button>
@@ -773,7 +784,18 @@ export default function Home() {
                       <p className="text-gray-500 text-xs mb-4">1766 이스트 콜로니얼 역대, 올랜도, 32817</p>
                     </div>
                     <div>
-                      <div className="text-red-600 font-bold text-lg mb-2">₩45,000</div>
+                      <div className="text-gray-700 text-sm mb-2">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center">
+                            <span className="w-12">커트</span>
+                            <span className="font-semibold ml-2">₩45,000</span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="w-12">펌</span>
+                            <span className="font-semibold text-red-600 ml-2">₩70,000~</span>
+                          </div>
+                        </div>
+                      </div>
                       <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
                         예약하기
                       </button>
@@ -809,7 +831,18 @@ export default function Home() {
                       <p className="text-gray-500 text-xs mb-4">115 N 첼섬 스트리트, 머스코지, OK, 74401</p>
                     </div>
                     <div>
-                      <div className="text-red-600 font-bold text-lg mb-2">₩30,000</div>
+                      <div className="text-gray-700 text-sm mb-2">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center">
+                            <span className="w-12">커트</span>
+                            <span className="font-semibold ml-2">₩30,000</span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="w-12">펌</span>
+                            <span className="font-semibold text-red-600 ml-2">₩55,000~</span>
+                          </div>
+                        </div>
+                      </div>
                       <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
                         예약하기
                       </button>
@@ -845,7 +878,18 @@ export default function Home() {
                       <p className="text-gray-500 text-xs mb-4">420 W 콜리플랜트 로드, 그린치, 45616</p>
                     </div>
                     <div>
-                      <div className="text-red-600 font-bold text-lg mb-2">₩55,000</div>
+                      <div className="text-gray-700 text-sm mb-2">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center">
+                            <span className="w-12">커트</span>
+                            <span className="font-semibold ml-2">₩40,000</span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="w-12">펌</span>
+                            <span className="font-semibold text-red-600 ml-2">₩80,000~</span>
+                          </div>
+                        </div>
+                      </div>
                       <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
                         예약하기
                       </button>
@@ -881,7 +925,18 @@ export default function Home() {
                       <p className="text-gray-500 text-xs mb-4">555 캐슬 드라이브, 버밍엄, 35209</p>
                     </div>
                     <div>
-                      <div className="text-red-600 font-bold text-lg mb-2">₩35,000</div>
+                      <div className="text-gray-700 text-sm mb-2">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center">
+                            <span className="w-12">커트</span>
+                            <span className="font-semibold ml-2">₩35,000</span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="w-12">펌</span>
+                            <span className="font-semibold text-red-600 ml-2">₩65,000~</span>
+                          </div>
+                        </div>
+                      </div>
                       <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
                         예약하기
                       </button>
@@ -917,43 +972,18 @@ export default function Home() {
                       <p className="text-gray-500 text-xs mb-4">강남대로 123, 서울, 06123</p>
                     </div>
                     <div>
-                      <div className="text-red-600 font-bold text-lg mb-2">₩65,000</div>
-                      <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
-                        예약하기
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                {/* 슬라이드 카드 7 */}
-                <div
-                  className="w-[280px] bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
-                  onClick={() => handleCardClick({
-                    name: '스타일리스트 스튜디오',
-                    rating: 5.0,
-                    reviewCount: 298,
-                    address: '홍대로 456, 서울, 04039',
-                    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg'
-                  })}
-                >
-                  <div className="relative h-[200px]">
-                    <img 
-                      src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MDhfNDUg%2FMDAxNzQ0MTIzMDIyMjI1.GkH_xYwR5E6D3EpxQ-cWl2pjb-IEOYQrOv3dB4E0RQQg.slRzhIYyZbJUD5xLGUS101AtECex03LXD0T-bcT45Iog.JPEG%2FDSC08772.jpg"
-                      alt="스타일리스트 스튜디오"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-2 right-2 bg-black/80 text-white px-2 py-1 rounded-md text-sm font-bold flex items-center gap-1">
-                      <span>5.0</span>
-                      <span className="text-xs">(298개의 리뷰)</span>
-                    </div>
-                  </div>
-                  <div className="p-4 text-center" style={{ minHeight: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <div>
-                      <h3 className="font-bold text-lg mb-2">스타일리스트 스튜디오</h3>
-                      <p className="text-gray-600 text-sm mb-3">아티스틱 헤어 디자인</p>
-                      <p className="text-gray-500 text-xs mb-4">홍대로 456, 서울, 04039</p>
-                    </div>
-                    <div>
-                      <div className="text-red-600 font-bold text-lg mb-2">₩40,000</div>
+                      <div className="text-gray-700 text-sm mb-2">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center">
+                            <span className="w-12">커트</span>
+                            <span className="font-semibold ml-2">₩50,000</span>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="w-12">펌</span>
+                            <span className="font-semibold text-red-600 ml-2">₩100,000~</span>
+                          </div>
+                        </div>
+                      </div>
                       <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-rose-600 transition-colors">
                         예약하기
                       </button>
