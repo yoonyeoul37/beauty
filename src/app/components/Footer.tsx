@@ -9,7 +9,7 @@ export default function Footer() {
             <div className="space-y-1">
               <p><strong>회사명:</strong> 태가나주식회사</p>
               <p><strong>대표:</strong> 윤여울</p>
-              <p><strong>주소:</strong> 서울특별시 서초구 방방로6길 13 4층</p>
+              <p><strong>주소:</strong> 서울특별시 서초구 마방로6길 13 4층</p>
               <p><strong>고객센터:</strong> 1533-8237 (평일 10:00 - 18:00)</p>
             </div>
           </div>
