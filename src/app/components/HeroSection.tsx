@@ -35,17 +35,17 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
             style={{ 
               color: 'white', 
               fontSize: '36px', 
-              fontWeight: 700, 
-              fontFamily: "'Gmarket Sans', sans-serif",
+              fontWeight: 900, 
+              fontFamily: "'Noto Sans KR', sans-serif",
               letterSpacing: '0.1em',
               textShadow: '0 2px 5px rgba(0,0,0,0.4)',
-              animation: 'premiumFadeIn 2s ease-out, premiumGlow 3s ease-in-out infinite alternate',
+              animation: 'premiumFadeIn 2s ease-out, premiumGlowV2 4s ease-in-out infinite alternate',
               background: 'transparent !important',
               marginBottom: '2px',
               marginLeft: '200px'
             }}
           >
-            태가나
+            tegana
           </div>
           <div 
             className="english-text"
@@ -57,12 +57,12 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
               letterSpacing: '0.1em',
               marginTop: -10,
               opacity: '0.9',
-              animation: 'premiumFadeIn 2.5s ease-out',
               background: 'transparent !important',
-              marginLeft: '150x',
+              marginLeft: '150px',
+              animation: 'fadeInUp 2s ease-out',
             }}
           >
-            "아름다움의 기준, 한눈에 비교하다"
+            태가나에서 한눈에 비교하다
           </div>
         </div>
       </div>

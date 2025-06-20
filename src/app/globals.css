@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700;900&family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 @tailwind base;
 @tailwind components;
@@ -166,6 +166,26 @@ body {
       0 0 20px rgba(255,255,255,0.2),
       0 0 30px rgba(255,255,255,0.1);
     transform: scale(1);
+  }
+}
+
+@keyframes premiumGlowV2 {
+  0% {
+    text-shadow: 
+      0 2px 4px rgba(0,0,0,0.4),
+      0 0 20px rgba(255, 235, 205, 0.2); /* Subtle gold glow */
+  }
+  50% {
+    text-shadow: 
+      0 2px 6px rgba(0,0,0,0.5),
+      0 0 35px rgba(255, 235, 205, 0.5), /* Brighter gold glow */
+      0 0 5px rgba(255, 255, 255, 0.8); /* Inner white sharp glow */
+    transform: scale(1.01);
+  }
+  100% {
+    text-shadow: 
+      0 2px 4px rgba(0,0,0,0.4),
+      0 0 20px rgba(255, 235, 205, 0.2); /* Subtle gold glow */
   }
 }
 

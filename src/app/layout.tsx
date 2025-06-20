@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faMapMarkerAlt, faClock, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { Inter } from "next/font/google";
+import Footer from "./components/Footer";
 config.autoAddCss = false;
 
 const geistSans = Geist({
@@ -42,6 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased ${inter.className}`}
       >
         {children}
+        <Footer />
       </body>
     </html>
   );
