@@ -9,8 +9,28 @@ interface HeroSectionProps {
   setShowDropdown: (show: boolean) => void;
 }
 
+const mainCategories = [
+  {
+    name: '헤어',
+    sub: ['컷', '펌', '염색', '클리닉', '스타일링']
+  },
+  {
+    name: '네일아트',
+    sub: ['젤네일', '네일아트', '네일케어', '패디큐어']
+  },
+  { name: '메이크업', sub: ['데일리', '웨딩', '특수분장'] },
+  { name: '피부관리', sub: [] },
+  { name: '속눈썹', sub: ['연장', '펌'] },
+  { name: '왁싱', sub: [] },
+  { name: '반영구', sub: [] },
+  { name: '두피케어', sub: [] },
+  { name: '마사지', sub: [] },
+  { name: '타투', sub: [] },
+];
+
 export default function HeroSection({ showDropdown, setShowDropdown }: HeroSectionProps) {
   const [sortType, setSortType] = useState('distance');
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const handleSort = (type: string) => {
     setSortType(type);
@@ -179,31 +199,45 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
           </div>
         </div>
       </div>
-      {/* 카테고리 메뉴 - 히어로 섹션 하단 구분선 위에 단독 배치 */}
-      <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: 50, width: '100%' }}>
-        <div className="flex justify-center gap-8" style={{ flexWrap: 'nowrap', background: 'transparent' }}>
-          {['헤어', '네일아트', '메이크업', '피부관리', '속눈썹', '왁싱', '반영구', '두피케어', '마사지', '타투'].map((category, index) => (
-            <div key={index} className="relative">
-              <span 
-                className="category-item text-white font-bold drop-shadow cursor-pointer" 
-                style={{ background: 'transparent !important', fontSize: '18px' }}
-                onClick={() => {
-                  alert('카테고리 클릭됨!');
-                  setShowDropdown(!showDropdown);
-                }}
-              >
-                {category}
+      {/* 카테고리 메뉴 - 히어로 섹션 하단에 2단 구조로 변경 */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 z-40"
+        onMouseLeave={() => setActiveCategory(null)}
+      >
+        {/* 1단 카테고리 */}
+        <div className="flex justify-center gap-8 py-3" style={{ flexWrap: 'nowrap' }}>
+          {mainCategories.map((category) => (
+            <div 
+              key={category.name} 
+              className="relative"
+              onMouseEnter={() => setActiveCategory(category.name)}
+            >
+              <span className="category-item text-white font-bold drop-shadow cursor-pointer" style={{ fontSize: '18px' }}>
+                {category.name}
               </span>
             </div>
           ))}
         </div>
-        {/* 테스트용 드롭다운 */}
-        {showDropdown && (
-          <TestDropdown 
-            isOpen={showDropdown}
-            onClose={() => setShowDropdown(false)}
-            onSort={handleSort}
-          />
+
+        {/* 2단 카테고리 (활성화 시 나타남) */}
+        {activeCategory && (
+          <div 
+            className="absolute bottom-full left-0 right-0 mb-2 bg-black/30 backdrop-blur-sm transition-all duration-300"
+            style={{ 
+              height: activeCategory ? '50px' : '0px', 
+              overflow: 'hidden',
+            }}
+          >
+            <div className="max-w-[1240px] mx-auto flex justify-center items-center h-full gap-6">
+              {mainCategories.find(c => c.name === activeCategory)?.sub.map((subCategory) => (
+                <Link key={subCategory} href={`/${subCategory.toLowerCase()}`}>
+                  <div className="text-white hover:text-pink-300 transition-colors duration-200 text-base font-medium">
+                    {subCategory}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </section>

@@ -12,7 +12,6 @@ import { timeSpecialReviews } from '../data/reviews';
 import TestDropdown from './TestDropdown';
 
 interface TimeSpecialSectionProps {
-  randomSalonIndex: number;
   bigCardIdx: number;
   setBigCardIdx: (index: number) => void;
   clickedCard: number;
@@ -99,7 +98,6 @@ const shuffleArray = (array: any[]) => {
 };
 
 export default function TimeSpecialSection({
-  randomSalonIndex,
   bigCardIdx,
   setBigCardIdx,
   clickedCard,
