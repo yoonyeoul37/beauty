@@ -4,6 +4,7 @@ import HeroSection from './components/HeroSection';
 import TimeSpecialSection from './components/TimeSpecialSection';
 import AppDownloadSection from './components/AppDownloadSection';
 import StickyHeader from './components/StickyHeader';
+import FloatingCategoryMenu from './components/FloatingCategoryMenu';
 import Link from 'next/link';
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <StickyHeader isScrolled={isScrolled} />
+      <FloatingCategoryMenu isVisible={isScrolled} />
       <HeroSection showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
       
       {/* CategoryNav 컴포넌트를 제거합니다. */}

@@ -32,6 +32,7 @@ interface SalonData {
   image: string;
   time: string;
   services: ServicePrice[];
+  shuffledServices?: ServicePrice[];
 }
 
 // 살롱 데이터 배열
@@ -110,19 +111,24 @@ export default function TimeSpecialSection({
   const [isPaused, setIsPaused] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
-  // 초기 섞기 및 1분마다 섞기
+  // 초기 섞기 및 20분마다 섞기
   useEffect(() => {
     const shuffle = () => {
       if (!isPaused) {
-        setShuffledSalons(shuffleArray(salonData.slice(0, 6)));
+        // 살롱을 섞을 때, 각 살롱의 서비스 목록도 미리 섞어서 저장
+        const newlyShuffledSalons = shuffleArray(salonData.slice(0, 6)).map(salon => ({
+          ...salon,
+          shuffledServices: shuffleArray([...salon.services]).slice(0, 2)
+        }));
+        setShuffledSalons(newlyShuffledSalons);
       }
     };
 
     // 초기 섞기
     shuffle();
 
-    // 1분마다 섞기
-    const interval = setInterval(shuffle, 60000);
+    // 20분마다 섞기
+    const interval = setInterval(shuffle, 1200000); // 20분 = 20 * 60 * 1000 = 1,200,000ms
 
     return () => clearInterval(interval);
   }, [isPaused]);
@@ -270,7 +276,7 @@ export default function TimeSpecialSection({
                     <span>{salon.time}</span>
                   </div>
                   
-                  {shuffleArray([...salon.services]).slice(0, 2).map((service, serviceIdx) => (
+                  {(salon.shuffledServices || []).map((service, serviceIdx) => (
                     <div key={serviceIdx} className="text-sm">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-gray-800">{service.name}</span>
