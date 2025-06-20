@@ -2,10 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import HeroSection from './components/HeroSection';
 import TimeSpecialSection from './components/TimeSpecialSection';
-import AppDownloadSection from './components/AppDownloadSection';
+// import AppDownloadSection from './components/AppDownloadSection'; // 기존 섹션 주석 처리
+// import BusinessSection from './components/BusinessSection'; // 기존 섹션 주석 처리
 import StickyHeader from './components/StickyHeader';
 import FloatingCategoryMenu from './components/FloatingCategoryMenu';
 import Link from 'next/link';
+import DualCtaSection from './components/DualCtaSection'; // 새로 만든 섹션 import
+import FeatureSearch from "./components/FeatureSearch";
+import FeatureManage from "./components/FeatureManage";
+import FeatureReview from "./components/FeatureReview";
+import CitySearchSection from "./components/CitySearchSection";
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -74,7 +80,13 @@ export default function Home() {
         </div>
       </section>
       
-      <AppDownloadSection />
+      {/* <AppDownloadSection /> */}
+      {/* <BusinessSection /> */}
+      <DualCtaSection />
+      <FeatureSearch />
+      <FeatureManage />
+      <FeatureReview />
+      <CitySearchSection />
     </main>
   );
 }
