@@ -59,22 +59,68 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
               opacity: '0.9',
               animation: 'premiumFadeIn 2.5s ease-out',
               background: 'transparent !important',
-              marginLeft: '230px',
+              marginLeft: '150x',
             }}
           >
-            tegana
+            "아름다움의 기준, 한눈에 비교하다"
           </div>
         </div>
       </div>
 
-      {/* 커뮤니티 링크 - 오른쪽 상단 */}
-      <div style={{ position: 'absolute', top: '8px', right: '70px',  zIndex: 10 }}>
+      {/* 커뮤니티 & 잡스 링크 - 오른쪽 상단 */}
+      <div style={{ position: 'absolute', top: '15px', right: '70px',  zIndex: 10, display: 'flex', gap: '20px', alignItems: 'center' }}>
+        {/* 태가나잡스 링크 */}
         <Link 
           href="/community"
-          className="text-white text-base font-semibold hover:text-gray-200 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-white/10"
+          className="text-white hover:text-gray-200 transition-colors duration-200 px-3 py-1 rounded-lg hover:bg-white/10"
           style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
         >
-          커뮤니티
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ 
+              fontSize: '14px', 
+              fontWeight: 600,
+              fontFamily: "'Gmarket Sans', sans-serif",
+              marginBottom: '1px'
+            }}>
+              태가나잡스
+            </div>
+            <div style={{ 
+              fontSize: '8px', 
+              fontWeight: 700,
+              fontFamily: "'Montserrat', sans-serif",
+              letterSpacing: '0.1em',
+              opacity: '0.8'
+            }}>
+              TEGANA JOBS
+            </div>
+          </div>
+        </Link>
+
+        {/* 커뮤니티 링크 */}
+        <Link 
+          href="/community"
+          className="text-white hover:text-gray-200 transition-colors duration-200 px-3 py-1 rounded-lg hover:bg-white/10"
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ 
+              fontSize: '14px', 
+              fontWeight: 600,
+              fontFamily: "'Gmarket Sans', sans-serif",
+              marginBottom: '1px'
+            }}>
+              커뮤니티
+            </div>
+            <div style={{ 
+              fontSize: '8px', 
+              fontWeight: 700,
+              fontFamily: "'Montserrat', sans-serif",
+              letterSpacing: '0.1em',
+              opacity: '0.8'
+            }}>
+              COMMUNITY
+            </div>
+          </div>
         </Link>
       </div>
 
