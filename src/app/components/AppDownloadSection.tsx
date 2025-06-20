@@ -5,13 +5,13 @@ export default function AppDownloadSection() {
         {/* 왼쪽 카드 - 일반 사용자용 */}
         <div className="flex-1 bg-[#e6f7f7] rounded-3xl p-12 h-[800px] relative overflow-hidden">
           {/* 앱 정보 */}
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-              <img src="/app-icon.png" alt="App Icon" className="w-8 h-8" />
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-gray-200 rounded-2xl flex items-center justify-center">
+              {/* 아이콘/로고 */}
             </div>
             <div>
               <h3 className="text-xl font-bold">스타일로그</h3>
-              <p className="text-sm text-gray-600">Style Logs</p>
+              <p className="text-gray-500">고객용 앱</p>
             </div>
           </div>
           {/* 앱 설명 */}
@@ -26,7 +26,7 @@ export default function AppDownloadSection() {
             </p>
           </div>
           {/* 다운로드 버튼 */}
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <button className="bg-black text-white px-8 py-4 rounded-xl hover:bg-gray-900 transition-colors">
               App Store
             </button>
@@ -43,13 +43,13 @@ export default function AppDownloadSection() {
         {/* 오른쪽 카드 - 비즈니스용 */}
         <div className="flex-1 bg-[#f7e6f7] rounded-3xl p-12 h-[800px] relative overflow-hidden">
           {/* 앱 정보 */}
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-              <img src="/business-icon.png" alt="Business Icon" className="w-8 h-8" />
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-gray-200 rounded-2xl flex items-center justify-center">
+              {/* 아이콘/로고 */}
             </div>
             <div>
               <h3 className="text-xl font-bold">스타일로그 비즈니스</h3>
-              <p className="text-sm text-gray-600">Style Logs Business</p>
+              <p className="text-gray-500">사장님용 앱</p>
             </div>
           </div>
           {/* 앱 설명 */}

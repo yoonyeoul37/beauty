@@ -25,7 +25,7 @@ export default function StickyHeader({ isScrolled }: StickyHeaderProps) {
           {/* 로고 */}
           <div className="flex items-center" style={{ height: '70px' }}>
             <div className="text-white font-bold text-xl" style={{ fontFamily: 'Pretendard, Arial, sans-serif' }}>
-              Style Logs
+            tegana
             </div>
           </div>
 

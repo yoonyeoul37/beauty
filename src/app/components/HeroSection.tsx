@@ -28,47 +28,50 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
         src="/48969-459186305.mp4"
       />
       {/* 사이트명 - 왼쪽 상단 고급진 애니메이션 */}
-      <div style={{ position: 'absolute', top: '40px', left: '40px', zIndex: 10, background: 'transparent' }}>
+      <div style={{ position: 'absolute', top: '20px', left: '40px', zIndex: 10, background: 'transparent' }}>
         <div style={{ display: 'flex', flexDirection: 'column', background: 'transparent' }}>
           <div 
             className="premium-logo"
             style={{ 
               color: 'white', 
               fontSize: '36px', 
-              fontWeight: 'bold', 
-              letterSpacing: '0.15em',
-              fontFamily: 'Pretendard, Arial, sans-serif',
-              textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+              fontWeight: 700, 
+              fontFamily: "'Gmarket Sans', sans-serif",
+              letterSpacing: '0.1em',
+              textShadow: '0 2px 5px rgba(0,0,0,0.4)',
               animation: 'premiumFadeIn 2s ease-out, premiumGlow 3s ease-in-out infinite alternate',
               background: 'transparent !important',
-              marginBottom: '2px'
+              marginBottom: '2px',
+              marginLeft: '200px'
             }}
           >
-            스타일로그
+            태가나
           </div>
           <div 
             className="english-text"
             style={{ 
               color: 'white', 
-              fontSize: '18px', 
-              fontWeight: 'normal', 
+              fontSize: '20px', 
+              fontWeight: 800,
+              fontFamily: "'Montserrat', sans-serif",
               letterSpacing: '0.1em',
-              marginTop: 6,
+              marginTop: -10,
               opacity: '0.9',
               animation: 'premiumFadeIn 2.5s ease-out',
-              background: 'transparent !important'
+              background: 'transparent !important',
+              marginLeft: '230px',
             }}
           >
-            Style Logs
+            tegana
           </div>
         </div>
       </div>
 
       {/* 커뮤니티 링크 - 오른쪽 상단 */}
-      <div style={{ position: 'absolute', top: '40px', right: '40px', zIndex: 10 }}>
+      <div style={{ position: 'absolute', top: '8px', right: '70px',  zIndex: 10 }}>
         <Link 
           href="/community"
-          className="text-white text-lg font-semibold hover:text-gray-200 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-white/10"
+          className="text-white text-base font-semibold hover:text-gray-200 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-white/10"
           style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
         >
           커뮤니티
@@ -94,9 +97,10 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
           fontWeight: 'bold',
           letterSpacing: '0.05em',
           textAlign: 'center',
-          marginBottom: '2px'
+          marginBottom: '2px',
+          whiteSpace: 'nowrap'
         }}>
-          가격부터 서비스까지, 모든 것을 비교하세요
+          내 주변 모든 뷰티샵을 태가나에서 간편하게
         </div>
         <div style={{
           color: 'white',
