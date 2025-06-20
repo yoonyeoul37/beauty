@@ -19,12 +19,20 @@ interface TimeSpecialSectionProps {
   setClickedCard: (index: number) => void;
 }
 
+// 서비스 가격 타입 정의
+interface ServicePrice {
+  name: string;
+  originalPrice: number;
+  specialPrice: number;
+  discount?: string;
+}
+
 // 살롱 데이터 타입 정의
 interface SalonData {
   name: string;
   image: string;
-  originalPrice: number;
-  specialPrice: number;
+  time: string;
+  services: ServicePrice[];
 }
 
 // 살롱 데이터 배열
@@ -32,38 +40,56 @@ const salonData: SalonData[] = [
   {
     name: "LA 남성 그루밍 이발소",
     image: "https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg?auto=compress&cs=tinysrgb&w=1920",
-    originalPrice: 80000,
-    specialPrice: 56000
+    time: "오늘 14:00 - 16:00",
+    services: [
+      { name: "남성컷", originalPrice: 40000, specialPrice: 32000, discount: "20%" },
+      { name: "다운펌", originalPrice: 60000, specialPrice: 48000, discount: "20%" }
+    ]
   },
   {
     name: "flawless 팀색 및 헤어 시스템",
     image: "https://images.pexels.com/photos/3993451/pexels-photo-3993451.jpeg?auto=compress&cs=tinysrgb&w=1920",
-    originalPrice: 120000,
-    specialPrice: 84000
+    time: "오늘 11:00 - 13:00",
+    services: [
+      { name: "전체염색", originalPrice: 120000, specialPrice: 84000, discount: "30%" },
+      { name: "뿌리염색", originalPrice: 80000, specialPrice: 56000, discount: "30%" }
+    ]
   },
   {
     name: "크리스피 컷 1",
     image: "https://images.pexels.com/photos/3993453/pexels-photo-3993453.jpeg?auto=compress&cs=tinysrgb&w=1920",
-    originalPrice: 150000,
-    specialPrice: 105000
+    time: "오늘 18:00 - 20:00",
+    services: [
+      { name: "일반펌", originalPrice: 150000, specialPrice: 105000, discount: "30%" },
+      { name: "클리닉", originalPrice: 100000, specialPrice: 70000, discount: "30%" }
+    ]
   },
   {
     name: "제이 @ The Parlour",
     image: "https://images.pexels.com/photos/3993455/pexels-photo-3993455.jpeg?auto=compress&cs=tinysrgb&w=1920",
-    originalPrice: 100000,
-    specialPrice: 70000
+    time: "오늘 13:00 - 15:00",
+    services: [
+      { name: "여성컷", originalPrice: 50000, specialPrice: 35000, discount: "30%" },
+      { name: "드라이", originalPrice: 40000, specialPrice: 28000, discount: "30%" }
+    ]
   },
   {
     name: "트라이브",
     image: "https://images.pexels.com/photos/3993457/pexels-photo-3993457.jpeg?auto=compress&cs=tinysrgb&w=1920",
-    originalPrice: 200000,
-    specialPrice: 140000
+    time: "오늘 16:00 - 18:00",
+    services: [
+      { name: "특수펌", originalPrice: 200000, specialPrice: 140000, discount: "30%" },
+      { name: "두피케어", originalPrice: 120000, specialPrice: 84000, discount: "30%" }
+    ]
   },
   {
     name: "프리미엄 헤어샵",
     image: "https://images.pexels.com/photos/3993467/pexels-photo-3993467.jpeg?auto=compress&cs=tinysrgb&w=1920",
-    originalPrice: 90000,
-    specialPrice: 63000
+    time: "오늘 17:00 - 19:00",
+    services: [
+      { name: "컷", originalPrice: 90000, specialPrice: 63000, discount: "30%" },
+      { name: "염색", originalPrice: 150000, specialPrice: 105000, discount: "30%" }
+    ]
   }
 ];
 
@@ -240,29 +266,35 @@ export default function TimeSpecialSection({
                 </div>
 
                 {/* 타임 스페셜 정보 */}
-                <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                  <div className="flex items-center gap-2 text-gray-600 mb-2">
+                <div className="bg-gray-50 rounded-xl p-4 mb-4 space-y-2">
+                  <div className="flex items-center gap-2 text-gray-600 text-sm">
                     <FontAwesomeIcon icon={faClock} className="text-gray-400" />
-                    <span className="text-sm">오늘 17:00 - 19:00</span>
+                    <span>{salon.time}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-sm text-gray-500 line-through">₩{salon.originalPrice.toLocaleString()}</span>
-                      <span className="text-lg font-bold ml-2">₩{salon.specialPrice.toLocaleString()}</span>
+                  
+                  {shuffleArray([...salon.services]).slice(0, 2).map((service, serviceIdx) => (
+                    <div key={serviceIdx} className="text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-gray-800">{service.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-400 line-through">
+                            ₩{service.originalPrice.toLocaleString()}
+                          </span>
+                          <span className="text-lg font-bold text-red-500">
+                            ₩{service.specialPrice.toLocaleString()}
+                          </span>
+                          {service.discount && (
+                            <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded-md">
+                              {service.discount}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <span className="text-red-500 font-bold">30% OFF</span>
-                  </div>
+                  ))}
                 </div>
 
-                {/* 예약 버튼 */}
-                <button 
-                  className="w-full py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsPaused(true);
-                    // 예약 로직
-                  }}
-                >
+                <button className="w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition-colors">
                   예약하기
                 </button>
               </div>
