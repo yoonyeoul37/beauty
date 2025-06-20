@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from 'react';
 import Image from "next/image";
+import Link from 'next/link';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useSearchParams } from 'next/navigation';
 import { 
@@ -14,6 +15,7 @@ import {
 import TgnLogo from "../components/TgnLogo";
 import FilterModal from '../components/FilterModal';
 import SortByModal from '../components/SortByModal';
+import PromoCardBanner from '../components/PromoCardBanner';
 
 // This is dummy data. Later, this will come from a database.
 const dummySalons = [
@@ -139,7 +141,7 @@ export default function SearchPage() {
 
                 <div className="hidden md:flex items-center space-x-4 text-sm font-medium">
                   <a href="#" className="hover:text-gray-300">비즈니스 목록</a>
-                  <a href="#" className="hover:text-gray-300">커뮤니티</a>
+                  <Link href="/community" className="hover:text-gray-300">커뮤니티</Link>
                   <a href="#" className="hover:text-gray-300">로그인</a>
                 </div>
               </div>
@@ -158,7 +160,7 @@ export default function SearchPage() {
           </div>
 
           {/* Filter and Sort bar - now part of the sticky header */}
-          <div className="bg-gray-50/95 backdrop-blur-sm border-b border-gray-200">
+          <div className="bg-gray-50/95 backdrop-blur-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-14">
                 {/* Left side: Filters */}
@@ -166,7 +168,7 @@ export default function SearchPage() {
                   <button 
                     ref={filterButtonRef}
                     onClick={handleFilterClick}
-                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors focus:outline-none"
                   >
                     <AdjustmentsHorizontalIcon className="h-5 w-5 text-gray-500" />
                     <span>필터</span>
@@ -174,7 +176,7 @@ export default function SearchPage() {
                   <button
                     ref={sortByButtonRef}
                     onClick={handleSortByClick}
-                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors focus:outline-none"
                   >
                     <span>정렬 기준: {currentSort}</span>
                     <ChevronDownIcon className="h-4 w-4 text-gray-500" />
@@ -193,7 +195,8 @@ export default function SearchPage() {
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <PromoCardBanner />
           <div className="mb-10">
             <h1 className="text-3xl font-extrabold text-gray-900">
               {`'${city || '전체'}'의 '${category || '모든 서비스'}' 검색 결과`}

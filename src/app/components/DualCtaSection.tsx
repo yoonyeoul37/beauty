@@ -3,8 +3,38 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import TgnLogo from './TgnLogo';
 import TgnBizLogo from './TgnBizLogo';
+
+// 고객용 로고
+const CustomerLogo = () => (
+  <svg 
+    width="48" 
+    height="48" 
+    viewBox="0 0 100 100" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className="rounded-xl shadow-sm"
+  >
+    <rect width="100" height="100" rx="20" fill="#14b8a6"/>
+    <path 
+      d="M 50 28 V 72 M 25 50 C 40 45, 60 45, 75 50" 
+      stroke="white" 
+      strokeWidth="8" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+    <text 
+      x="60" 
+      y="77" 
+      fontFamily="'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif" 
+      fontSize="30" 
+      fontWeight="bold" 
+      fill="white"
+    >
+      gn
+    </text>
+  </svg>
+);
 
 // 고객용 CTA 카드
 const CustomerCtaCard = () => {
@@ -23,7 +53,7 @@ const CustomerCtaCard = () => {
       {/* --- 상단 콘텐츠 영역 --- */}
       <div className="min-h-[210px]">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <TgnLogo />
+          <CustomerLogo />
           <span className="font-bold text-gray-700 text-sm">태가나 앱 - iOS, 안드로이드</span>
         </div>
         <h3 className="text-2xl font-bold text-gray-900 mb-3">앱 다운로드</h3>
