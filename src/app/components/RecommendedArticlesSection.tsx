@@ -21,56 +21,18 @@ const articles = [
     imgSrc: '/images/chanel-4743979_1280.jpg',
     href: '#',
   },
-  {
-    title: '집에서 하는 스파 데이 아이디어',
-    imgSrc: '/images/cosmetics-9086984_640.jpg', // Re-using image
-    href: '#',
-  },
-  {
-    title: '건강한 머릿결을 위한 5가지 습관',
-    imgSrc: '/images/makeup-1289325_640.jpg', // Re-using image
-    href: '#',
-  }
 ];
 
 const RecommendedArticlesSection = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -300 : 300;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
   return (
     <section className="bg-white py-16 sm:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-left mb-8">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">당신에게 추천합니다</h2>
-          <div className="hidden sm:flex items-center gap-x-2">
-            <button
-              onClick={() => scroll('left')}
-              className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
-              aria-label="scroll left"
-            >
-              <ChevronLeftIcon className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
-              aria-label="scroll right"
-            >
-              <ChevronRightIcon className="h-5 w-5" />
-            </button>
-          </div>
         </div>
-        <div
-          ref={scrollRef}
-          className="flex gap-x-8 overflow-x-auto scroll-smooth scrollbar-hide -mb-4 pb-4"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, idx) => (
-            <Link key={idx} href={article.href} className="group block flex-shrink-0 w-full sm:w-80">
+            <Link key={idx} href={article.href} className="group block">
               <div className="overflow-hidden rounded-lg">
                 <Image
                   src={article.imgSrc}

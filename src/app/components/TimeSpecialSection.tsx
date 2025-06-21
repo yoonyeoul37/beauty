@@ -1,7 +1,5 @@
-"use client";
 import TimeSpecialGrid from './TimeSpecialGrid';
-import { timeSpecialReviews as allReviews } from '@/app/data/reviews'; // 기본값으로 사용
-import { useState, useEffect } from 'react';
+import { timeSpecialReviews as allReviews } from '@/app/data/reviews';
 
 // 데이터 타입 정의 (중복될 수 있으나, 서버 컴포넌트의 독립성을 위해 유지)
 interface ServicePrice {
@@ -77,8 +75,8 @@ const salonData: SalonData[] = [
   ];
   
 const shuffleArray = (array: any[]) => {
-  // 진짜 랜덤으로 섞기
-  return [...array].sort(() => Math.random() - 0.5);
+  // Use a deterministic sort instead of random shuffle to prevent hydration mismatch
+  return [...array].sort((a, b) => a.name.localeCompare(b.name));
 };
 
 interface TimeSpecialSectionProps {
@@ -86,24 +84,15 @@ interface TimeSpecialSectionProps {
 }
 
 const TimeSpecialSection: React.FC<TimeSpecialSectionProps> = ({ reviews = allReviews }) => {
-  const [showAll, setShowAll] = useState(false);
-  const [shuffledSalons, setShuffledSalons] = useState<SalonData[]>([]);
-
-  useEffect(() => {
-    // 클라이언트에서만 랜덤 실행
-    const initialSalons = shuffleArray(salonData.slice(0, 6)).map(salon => ({
-      ...salon,
-      shuffledServices: shuffleArray([...salon.services]).slice(0, 2)
-    }));
-    setShuffledSalons(initialSalons);
-  }, []);
+  const shuffledSalons = shuffleArray(salonData).map(salon => ({
+    ...salon,
+    shuffledServices: shuffleArray([...salon.services]).slice(0, 2)
+  }));
   
   return (
     <section className="bg-white py-12 md:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {shuffledSalons.length > 0 && (
-          <TimeSpecialGrid showAll={showAll} reviews={reviews} initialSalons={shuffledSalons} />
-        )}
+        <TimeSpecialGrid reviews={reviews} initialSalons={shuffledSalons} />
       </div>
     </section>
   );

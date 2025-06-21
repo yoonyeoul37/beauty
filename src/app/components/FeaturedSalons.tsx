@@ -4,6 +4,9 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/24/solid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import ReviewModal from './ReviewModal';
 
 const featuredSalons = [
@@ -47,6 +50,14 @@ const featuredSalons = [
     imageUrl: 'https://images.pexels.com/photos/3997388/pexels-photo-3997388.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     category: '네일살롱'
   },
+  {
+    id: 6,
+    name: '글램 헤어 스튜디오',
+    rating: 4.7,
+    reviewCount: 189,
+    imageUrl: 'https://images.pexels.com/photos/3993451/pexels-photo-3993451.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    category: '헤어살롱'
+  },
 ];
 
 // 샘플 리뷰 데이터
@@ -82,12 +93,23 @@ const FeaturedSalons = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [selectedSalon, setSelectedSalon] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [likedSalons, setLikedSalons] = useState<number[]>([]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       const scrollAmount = direction === 'left' ? -400 : 400;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
+  };
+
+  const handleLikeClick = (e: React.MouseEvent, salonId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLikedSalons(prev =>
+      prev.includes(salonId)
+        ? prev.filter(id => id !== salonId)
+        : [...prev, salonId]
+    );
   };
 
   const handleReviewClick = (salon: any) => {
@@ -134,8 +156,8 @@ const FeaturedSalons = () => {
                     <Image
                       src={salon.imageUrl}
                       alt={salon.name}
-                      layout="fill"
-                      objectFit="cover"
+                      fill
+                      style={{ objectFit: 'cover' }}
                       className="group-hover:scale-105 transition-transform duration-300"
                     />
                     <button
@@ -151,11 +173,24 @@ const FeaturedSalons = () => {
                       <span className="ml-1">({salon.reviewCount})</span>
                     </button>
                   </div>
-                  <div className="p-8 pt-4 flex flex-col items-center text-center">
-                    <p className="text-base text-teal-600 font-semibold">{salon.category}</p>
-                    <h3 className="mt-0 text-lg font-bold text-gray-900 truncate">
-                      {salon.name}
-                    </h3>
+                  <div className="relative p-4 h-40 flex flex-col justify-center items-center text-center">
+                    <button
+                      onClick={(e) => handleLikeClick(e, salon.id)}
+                      className="absolute -top-1 right-0 p-2 text-gray-400 hover:text-red-500 transition-colors z-10"
+                      aria-label="찜하기"
+                    >
+                      <FontAwesomeIcon
+                        icon={likedSalons.includes(salon.id) ? faHeartSolid : faHeartRegular}
+                        className={likedSalons.includes(salon.id) ? "text-red-500" : ""}
+                        size="lg"
+                      />
+                    </button>
+                    <div className="transform -translate-y-[30px]">
+                      <p className="text-xl text-teal-600 font-semibold">{salon.category}</p>
+                      <h3 className="mt-1 text-lg font-bold text-gray-900">
+                        {salon.name}
+                      </h3>
+                    </div>
                   </div>
                 </Link>
               </div>

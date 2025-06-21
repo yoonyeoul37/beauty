@@ -7,7 +7,7 @@ import { faMapMarkerAlt, faClock, faChevronDown, faHeart as faHeartSolid } from 
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import StarRating from './StarRating';
 import ReviewModal from './ReviewModal';
-import TestDropdown from './TestDropdown';
+import SortByModal from './SortByModal';
 
 // Interface definitions from TimeSpecialSection
 interface ServicePrice {
@@ -25,76 +25,157 @@ interface SalonData {
   shuffledServices?: ServicePrice[];
 }
 
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ');
+}
+
 interface TimeSpecialGridProps {
   initialSalons: SalonData[];
   reviews: Record<string, { nickname: string; text: string }[]>;
-  showAll: boolean;
 }
 
-export default function TimeSpecialGrid({ initialSalons, reviews, showAll }: TimeSpecialGridProps) {
-  const [bigCardIdx, setBigCardIdx] = useState(-1);
-  const [clickedCard, setClickedCard] = useState(-1);
+export default function TimeSpecialGrid({ initialSalons, reviews }: TimeSpecialGridProps) {
+  const [isReviewModalOpen, setReviewModalOpen] = useState(false);
+  const [isSortByModalOpen, setSortByModalOpen] = useState(false);
+  const [selectedSalon, setSelectedSalon] = useState<SalonData | null>(null);
+  const [showAll, setShowAll] = useState(false);
+  const [showViewDropdown, setShowViewDropdown] = useState(false);
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [sortType, setSortType] = useState<'distance' | 'review' | 'price'>('distance');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedSalon, setSelectedSalon] = useState<string | null>(null);
-  const [shuffledSalons] = useState<SalonData[]>(initialSalons);
-  const [isPaused, setIsPaused] = useState(false);
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [likedSalons, setLikedSalons] = useState<string[]>([]);
 
-  const handleSort = (type: string) => {
-    setSortType(type as 'distance' | 'review' | 'price');
-    setIsDropdownOpen(false);
-    // Add sorting logic here if needed
+  const handleOpenReviewModal = (salon: SalonData) => {
+    setSelectedSalon(salon);
+    setReviewModalOpen(true);
   };
+  
+  const handleLikeClick = (e: React.MouseEvent, salonName: string) => {
+    e.stopPropagation();
+    setLikedSalons(prev =>
+      prev.includes(salonName)
+        ? prev.filter(name => name !== salonName)
+        : [...prev, salonName]
+    );
+  };
+  
+  const salonsToShow = showAll ? initialSalons : initialSalons.slice(0, 6);
 
-  const handleMouseEnter = (idx: number) => {
-    setHoveredCard(idx);
-    setIsPaused(true);
-  };
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (showViewDropdown || showSortDropdown) {
+        const dropdown = document.querySelector('.dropdown');
+        if (dropdown && !dropdown.contains(e.target as Node)) {
+          setShowViewDropdown(false);
+          setShowSortDropdown(false);
+        }
+      }
+    };
 
-  const handleMouseLeave = () => {
-    setHoveredCard(null);
-    setIsPaused(false);
-  };
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
 
   return (
     <>
-      <div className="flex justify-between items-center mb-12">
-        <div>
-          <h2 className="text-3xl font-bold mb-2">타임스페셜</h2>
-          <p className="text-gray-600">지금 바로 예약하고 특별한 혜택을 받으세요</p>
-        </div>
-        <div className="flex gap-4 items-center">
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          타임스페셜
+        </h2>
+        <div className="flex items-center space-x-4">
           <div className="relative">
-            <button 
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+            <button
+              onClick={() => setShowViewDropdown(!showViewDropdown)}
+              className="hidden sm:inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-500"
             >
-              {sortType === 'distance' && '거리순'}
-              {sortType === 'review' && '리뷰순'}
-              {sortType === 'price' && '가격순'}
-              <FontAwesomeIcon icon={faChevronDown} className="w-3 h-3" />
+              {showAll ? '간단히 보기' : '전체보기'}
+              <FontAwesomeIcon icon={faChevronDown} className="ml-1 h-3 w-3" />
             </button>
-            <TestDropdown 
-              isOpen={isDropdownOpen}
-              onClose={() => setIsDropdownOpen(false)}
-              onSort={handleSort}
-            />
+            {showViewDropdown && (
+              <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      setShowAll(false);
+                      setShowViewDropdown(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    간단히 보기
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowAll(true);
+                      setShowViewDropdown(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    전체보기
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          <button className="px-6 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            전체보기
-          </button>
+          
+          <div className="relative">
+            <button
+              onClick={() => setShowSortDropdown(!showSortDropdown)}
+              className="hidden sm:inline-flex items-center text-sm font-semibold text-gray-700 hover:text-gray-900"
+            >
+              정렬 기준
+              <FontAwesomeIcon icon={faChevronDown} className="ml-1 h-3 w-3" />
+            </button>
+            {showSortDropdown && (
+              <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      setSortType('distance');
+                      setShowSortDropdown(false);
+                    }}
+                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                      sortType === 'distance' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
+                    }`}
+                  >
+                    거리순
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSortType('review');
+                      setShowSortDropdown(false);
+                    }}
+                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                      sortType === 'review' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
+                    }`}
+                  >
+                    리뷰순
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSortType('price');
+                      setShowSortDropdown(false);
+                    }}
+                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                      sortType === 'price' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
+                    }`}
+                  >
+                    가격순
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {shuffledSalons.map((salon, idx) => (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {salonsToShow.map((salon, idx) => (
           <div
             key={`${salon.name}-${idx}`}
             className="bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 hover:-translate-y-2"
-            onClick={() => setClickedCard(idx === clickedCard ? -1 : idx)}
-            onMouseEnter={() => handleMouseEnter(idx)}
-            onMouseLeave={handleMouseLeave}
+            onClick={() => handleOpenReviewModal(salon)}
           >
             <div className="block relative w-full pt-[75%]">
               <div className="absolute inset-0">
@@ -108,16 +189,14 @@ export default function TimeSpecialGrid({ initialSalons, reviews, showAll }: Tim
                   priority={idx < 3}
                 />
               </div>
-              <button 
-                className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors z-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setBigCardIdx(idx === bigCardIdx ? -1 : idx);
-                }}
+              <button
+                onClick={(e) => handleLikeClick(e, salon.name)}
+                className="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-40 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-60 transition-colors z-10"
+                aria-label="찜하기"
               >
                 <FontAwesomeIcon
-                  icon={idx === bigCardIdx ? faHeartSolid : faHeartRegular}
-                  className={idx === bigCardIdx ? "text-red-500" : "text-gray-400"}
+                  icon={likedSalons.includes(salon.name) ? faHeartSolid : faHeartRegular}
+                  className={likedSalons.includes(salon.name) ? "text-red-500" : "text-white"}
                 />
               </button>
             </div>
@@ -137,9 +216,7 @@ export default function TimeSpecialGrid({ initialSalons, reviews, showAll }: Tim
                     className="text-sm text-gray-500 mt-1 hover:text-pink-500 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (reviews[salon.name]?.length > 0) {
-                        setSelectedSalon(salon.name);
-                      }
+                      handleOpenReviewModal(salon);
                     }}
                   >
                     {reviews[salon.name]?.length || 0} 리뷰
@@ -183,11 +260,20 @@ export default function TimeSpecialGrid({ initialSalons, reviews, showAll }: Tim
           </div>
         ))}
       </div>
+      <div className="mt-8 text-center sm:hidden">
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+        >
+          {showAll ? '간단히 보기' : '전체보기'}
+        </button>
+      </div>
+
       {selectedSalon && (
         <ReviewModal
           isOpen={!!selectedSalon}
-          salonName={selectedSalon}
-          reviews={reviews[selectedSalon] || []}
+          salonName={selectedSalon.name}
+          reviews={reviews[selectedSalon.name] || []}
           onClose={() => setSelectedSalon(null)}
         />
       )}

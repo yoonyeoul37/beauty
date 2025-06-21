@@ -31,15 +31,16 @@ export default function Home() {
       <StickyHeader isScrolled={isScrolled} />
       <FloatingCategoryMenu isVisible={isScrolled} />
       <HeroSection showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
+      <TimeSpecialSection reviews={timeSpecialReviews} />
       
       <section className="w-full py-20 bg-black text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-4">당신의 아름다움을 위한 최고의 선택</h2>
           <p className="text-xl mb-8">전문가와 함께 새로운 스타일을 찾아보세요</p>
           <div className="flex gap-4 justify-center">
-            <button className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors">
+            <Link href="/search" className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition-colors">
               지금 시작하기
-            </button>
+            </Link>
             <Link href="/community" className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-black transition-colors">
               커뮤니티
             </Link>
@@ -47,8 +48,6 @@ export default function Home() {
         </div>
       </section>
       
-      <TimeSpecialSection reviews={timeSpecialReviews} />
-
       <section className="w-full py-20 bg-gray-50">
         <div className="max-w-[1240px] mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">지금 가입하고 특별한 혜택을 받으세요</h2>
