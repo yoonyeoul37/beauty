@@ -101,7 +101,7 @@ const FeaturedSalons = () => {
                     <span className="ml-1">({salon.reviewCount})</span>
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-8">
                   <p className="text-xs text-teal-600 font-semibold">{salon.category}</p>
                   <h3 className="mt-1 text-base font-bold text-gray-900 truncate">
                     {salon.name}
