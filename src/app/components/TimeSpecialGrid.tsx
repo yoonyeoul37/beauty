@@ -8,7 +8,6 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import StarRating from './StarRating';
 import ReviewModal from './ReviewModal';
 import TestDropdown from './TestDropdown';
-import { timeSpecialReviews } from '../data/reviews';
 
 // Interface definitions from TimeSpecialSection
 interface ServicePrice {
@@ -28,9 +27,11 @@ interface SalonData {
 
 interface TimeSpecialGridProps {
   initialSalons: SalonData[];
+  reviews: Record<string, { nickname: string; text: string }[]>;
+  showAll: boolean;
 }
 
-export default function TimeSpecialGrid({ initialSalons }: TimeSpecialGridProps) {
+export default function TimeSpecialGrid({ initialSalons, reviews, showAll }: TimeSpecialGridProps) {
   const [bigCardIdx, setBigCardIdx] = useState(-1);
   const [clickedCard, setClickedCard] = useState(-1);
   const [sortType, setSortType] = useState<'distance' | 'review' | 'price'>('distance');
@@ -136,12 +137,12 @@ export default function TimeSpecialGrid({ initialSalons }: TimeSpecialGridProps)
                     className="text-sm text-gray-500 mt-1 hover:text-pink-500 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (timeSpecialReviews[salon.name]?.length > 0) {
+                      if (reviews[salon.name]?.length > 0) {
                         setSelectedSalon(salon.name);
                       }
                     }}
                   >
-                    {timeSpecialReviews[salon.name]?.length || 0} 리뷰
+                    {reviews[salon.name]?.length || 0} 리뷰
                   </button>
                 </div>
               </div>
@@ -183,7 +184,12 @@ export default function TimeSpecialGrid({ initialSalons }: TimeSpecialGridProps)
         ))}
       </div>
       {selectedSalon && (
-        <ReviewModal salonName={selectedSalon} onClose={() => setSelectedSalon(null)} />
+        <ReviewModal
+          isOpen={!!selectedSalon}
+          salonName={selectedSalon}
+          reviews={reviews[selectedSalon] || []}
+          onClose={() => setSelectedSalon(null)}
+        />
       )}
     </>
   );

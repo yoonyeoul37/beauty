@@ -12,6 +12,7 @@ import FeatureSearch from './components/FeatureSearch';
 import FeatureManage from './components/FeatureManage';
 import FeatureReview from './components/FeatureReview';
 import RecommendedArticlesSection from './components/RecommendedArticlesSection';
+import { timeSpecialReviews } from '@/app/data/reviews';
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,7 +47,7 @@ export default function Home() {
         </div>
       </section>
       
-      <TimeSpecialSection />
+      <TimeSpecialSection reviews={timeSpecialReviews} />
 
       <section className="w-full py-20 bg-gray-50">
         <div className="max-w-[1240px] mx-auto text-center">

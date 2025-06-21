@@ -1,4 +1,6 @@
 import TimeSpecialGrid from './TimeSpecialGrid';
+import { timeSpecialReviews as allReviews } from '@/app/data/reviews'; // 기본값으로 사용
+import { useState, useEffect } from 'react';
 
 // 데이터 타입 정의 (중복될 수 있으나, 서버 컴포넌트의 독립성을 위해 유지)
 interface ServicePrice {
@@ -78,18 +80,35 @@ const shuffleArray = (array: any[]) => {
     return [...array].sort((a, b) => a.name.localeCompare(b.name));
 };
 
-export default function TimeSpecialSection() {
-  
+interface TimeSpecialSectionProps {
+  reviews?: Record<string, { nickname: string; text: string }[]>;
+}
+
+const TimeSpecialSection: React.FC<TimeSpecialSectionProps> = ({ reviews = allReviews }) => {
+  const [showAll, setShowAll] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const initialSalons = shuffleArray(salonData.slice(0, 6)).map(salon => ({
     ...salon,
     shuffledServices: shuffleArray([...salon.services]).slice(0, 2)
   }));
-
+  
   return (
-    <section className="w-full py-20 bg-white">
-      <div className="max-w-[1240px] mx-auto">
-        <TimeSpecialGrid initialSalons={initialSalons} />
+    <section className="bg-white py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {isLoading ? null : (
+          <TimeSpecialGrid showAll={showAll} reviews={reviews} initialSalons={initialSalons} />
+        )}
       </div>
     </section>
   );
-} 
+}
+
+export default TimeSpecialSection; 
