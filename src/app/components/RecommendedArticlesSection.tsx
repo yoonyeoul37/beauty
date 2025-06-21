@@ -80,7 +80,7 @@ const RecommendedArticlesSection = () => {
                   className="w-full h-50 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-800 group-hover:text-teal-600 transition">
+              <h3 className="mt-4 text-lg font-semibold text-gray-800 group-hover:text-teal-600 transition text-center">
                 {article.title}
               </h3>
             </Link>

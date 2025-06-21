@@ -56,7 +56,7 @@ export default function CitySearchSection() {
             <button 
               key={city} 
               onClick={() => setSelectedCity(city)}
-              className="flex items-center text-gray-600 hover:text-teal-500 transition-colors text-left"
+              className="flex items-center justify-center text-gray-600 hover:text-teal-500 transition-colors"
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 

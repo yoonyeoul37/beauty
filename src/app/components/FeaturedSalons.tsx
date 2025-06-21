@@ -59,7 +59,7 @@ const FeaturedSalons = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-8">
+    <div className="bg-gray-50 py-8 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-800">추천 업체</h2>

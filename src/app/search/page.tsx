@@ -29,9 +29,11 @@ const dummySalons = [
     imageUrl: "https://images.pexels.com/photos/3993324/pexels-photo-3993324.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     promoted: true,
     services: [
-      { name: "머리 자르기. 테이퍼. 대머리 페이즈 등", price: 30000, duration: "35분" },
-      { name: "헤어컷과 스트레이트 면도기", price: 45000, duration: "55분" },
-      { name: "수염 및 눈썹 정리", price: 30000, duration: "35분" },
+      { name: "머리 자르기. 테이퍼. 대머리 페이즈 등", price: 30000, duration: "35분", description: "핫 타월과 마사지가 포함되어 있습니다." },
+      { name: "헤어컷과 스트레이트 면도기", price: 45000, duration: "55분", description: "최고급 면도 크림을 사용합니다." },
+      { name: "수염 및 눈썹 정리", price: 30000, duration: "35분", description: "깔끔한 인상을 위한 필수 코스입니다." },
+      { name: "어린이 컷", price: 25000, duration: "30분", description: "12세 이하 어린이를 위한 컷입니다." },
+      { name: "두피 스케일링", price: 50000, duration: "45분", description: "상쾌한 두피 관리를 경험해보세요." },
     ],
   },
   {
@@ -42,9 +44,9 @@ const dummySalons = [
     address: "서울 강남구 테헤란로 123",
     imageUrl: "https://images.pexels.com/photos/3993398/pexels-photo-3993398.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     services: [
-      { name: "여성 컷", price: 30000 },
-      { name: "남성 컷", price: 25000 },
-      { name: "클리닉", price: 80000 },
+      { name: "여성 컷", price: 30000, duration: "50분", description: "트렌디한 스타일을 연출해 드립니다." },
+      { name: "남성 컷", price: 25000, duration: "30분", description: "정통 클래식 컷 전문입니다." },
+      { name: "클리닉", price: 80000, duration: "1시간 20분", description: "손상된 모발에 영양을 공급합니다." },
     ],
   },
   {
@@ -55,9 +57,9 @@ const dummySalons = [
     address: "서울 마포구 양화로 45",
     imageUrl: "https://images.pexels.com/photos/3997388/pexels-photo-3997388.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     services: [
-      { name: "기본 케어", price: 20000 },
-      { name: "젤 네일", price: 55000 },
-      { name: "웨딩 네일", price: 120000 },
+      { name: "기본 케어", price: 20000, duration: "30분", description: "손톱 모양 정리 및 큐티클 제거가 포함됩니다." },
+      { name: "젤 네일", price: 55000, duration: "1시간", description: "다양한 색상과 디자인 선택이 가능합니다." },
+      { name: "웨딩 네일", price: 120000, duration: "1시간 30분", description: "가장 특별한 날을 위한 맞춤 디자인을 제공합니다." },
     ],
   },
     {
@@ -68,8 +70,8 @@ const dummySalons = [
     address: "서울 서초구 서초대로 77",
     imageUrl: "https://images.pexels.com/photos/853427/pexels-photo-853427.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     services: [
-      { name: "뿌리 염색", price: 60000 },
-      { name: "S컬 펌", price: 150000 },
+      { name: "뿌리 염색", price: 60000, duration: "1시간 30분", description: "자라난 모발의 색상을 균일하게 맞춥니다." },
+      { name: "S컬 펌", price: 150000, duration: "2시간 30분", description: "자연스럽고 탄력 있는 웨이브를 연출합니다." },
     ],
   },
 ];
@@ -92,6 +94,13 @@ export default function SearchPage() {
   const searchParams = useSearchParams();
   const city = searchParams.get('city');
   const category = searchParams.get('category');
+  const [displayedSalons, setDisplayedSalons] = useState<typeof dummySalons>([]);
+
+  useEffect(() => {
+    // 페이지가 로드될 때 한 번만 실행되어 살롱 목록을 무작위로 섞습니다.
+    const shuffled = [...dummySalons].sort(() => Math.random() - 0.5);
+    setDisplayedSalons(shuffled);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -220,108 +229,64 @@ export default function SearchPage() {
               <p className="mt-2 text-sm text-gray-500">{dummySalons.length}개의 검색 결과</p>
             </div>
 
-            <div className="space-y-8">
-              {dummySalons.map((salon) => {
-                if (salon.promoted) {
-                  return (
-                    <div key={salon.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg transition-shadow duration-300">
-                      <div className="flex flex-col md:flex-row">
-                        <div className="md:w-1/3 flex-shrink-0">
-                          <Image
-                            src={salon.imageUrl}
-                            alt={salon.name}
-                            width={300}
-                            height={300}
-                            className="object-cover h-full w-full"
-                          />
-                        </div>
-                        <div className="flex-1 p-6 flex flex-col justify-between">
-                          <div>
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <div className="flex items-center mb-2">
-                                  <h2 className="text-xl font-bold text-gray-800">{salon.name}</h2>
-                                  <div className="ml-4 flex items-center">
-                                    <StarIcon className="h-5 w-5 text-yellow-400" />
-                                    <span className="ml-1 text-gray-600 font-medium">{salon.rating}</span>
-                                    <span className="ml-2 text-sm text-gray-500">({salon.reviewCount})</span>
-                                  </div>
-                                </div>
-                                <p className="text-sm text-gray-500 mb-2">{salon.address}</p>
-                                <div className="flex items-center text-xs text-gray-500">
-                                  <span>Promoted</span>
-                                  <InformationCircleIcon className="h-4 w-4 ml-1 text-gray-400" />
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="border-t border-gray-100 my-4"></div>
-
-                            <ul className="space-y-3">
-                              {salon.services.slice(0, 3).map((service, index) => (
-                                <li key={index} className="flex justify-between items-center text-sm">
-                                  <div className="flex flex-col">
-                                    <span className="text-gray-800 font-medium">{service.name}</span>
-                                    <span className="text-gray-500">{service.duration}</span>
-                                  </div>
-                                  <div className="flex items-center gap-x-3">
-                                    <span className="font-semibold text-gray-800 text-base">{service.price.toLocaleString()}원</span>
-                                    <button className="px-5 py-2 bg-teal-500 text-white font-bold rounded-md hover:bg-teal-600 transition-colors text-xs">
-                                      선택
-                                    </button>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                }
-                return (
-                  <div key={salon.id} className="flex bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex-shrink-0">
+            <div className="space-y-6">
+              {displayedSalons.map((salon) => (
+                <div key={salon.id} className="flex bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
+                  {/* Image Section */}
+                  <div className="flex-shrink-0 w-64 md:w-80">
+                    <div className="relative h-full">
                       <Image
                         src={salon.imageUrl}
                         alt={salon.name}
-                        width={250}
-                        height={250}
-                        className="object-cover h-full"
+                        layout="fill"
+                        objectFit="cover"
+                        className="h-full w-full"
                       />
-                    </div>
-                    <div className="flex-1 p-6 flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-center mb-1">
-                          <h2 className="text-xl font-bold text-gray-800">{salon.name}</h2>
-                          <div className="ml-4 flex items-center">
-                            <StarIcon className="h-5 w-5 text-yellow-400" />
-                            <span className="ml-1 text-gray-600 font-medium">{salon.rating}</span>
-                            <span className="ml-2 text-sm text-gray-500">({salon.reviewCount})</span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-500 mb-4">{salon.address}</p>
-                        
-                        <div className="border-t border-gray-100 my-4"></div>
-
-                        <ul className="space-y-2">
-                          {salon.services.map((service, index) => (
-                            <li key={index} className="flex justify-between items-center text-sm">
-                              <span className="text-gray-700">{service.name}</span>
-                              <span className="font-semibold text-gray-800">{service.price.toLocaleString()}원</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="mt-6 flex justify-end">
-                        <button className="px-6 py-2 bg-teal-500 text-white font-semibold rounded-md hover:bg-teal-600 transition-colors">
-                          상세보기 및 예약
-                        </button>
+                      <div className="absolute top-4 left-4 bg-black bg-opacity-70 text-white text-center rounded-md px-3 py-2">
+                        <p className="font-bold text-xl">{salon.rating.toFixed(1)}</p>
+                        <p className="text-xs">{salon.reviewCount}개의 리뷰</p>
                       </div>
                     </div>
                   </div>
-                )
-              })}
+
+                  {/* Content Section */}
+                  <div className="flex-1 p-6 flex flex-col">
+                    <div className="flex-1">
+                      <div className="mb-4">
+                        <h2 className="text-2xl font-bold text-gray-800">{salon.name}</h2>
+                        <p className="text-sm text-gray-500 mt-1">{salon.address}</p>
+                        {salon.promoted && (
+                          <div className="mt-2 inline-flex items-center gap-x-1.5 rounded-md bg-gray-800 px-2 py-1 text-xs font-medium text-white">
+                            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 7.162V4.5a.75.75 0 00-1.5 0v1.468a5.992 5.992 0 00-4.34-1.933 6 6 0 100 12 5.992 5.992 0 004.34-1.933v1.468a.75.75 0 001.5 0V12.838a.75.75 0 00-.33-.626 5.25 5.25 0 00-8.34-4.088 1.5 1.5 0 01-2.258-2.258 8.25 8.25 0 0110.588 6.018.75.75 0 00.33-.626zM5 10a5 5 0 1110 0 5 5 0 01-10 0z" /></svg>
+                            추천
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Services List */}
+                      <ul className="divide-y divide-gray-200">
+                        {salon.services.map((service, index) => (
+                          <li key={index} className="py-4 flex justify-between items-center">
+                            <div className="flex-grow">
+                              <p className="font-semibold text-gray-800">{service.name}</p>
+                              <p className="text-sm text-gray-600 mt-1">{service.description}</p>
+                            </div>
+                            <div className="ml-6 flex-shrink-0 flex items-center gap-x-6">
+                              <div className="text-right">
+                                <p className="font-bold text-lg text-gray-800">{service.price.toLocaleString()}원</p>
+                                <p className="text-sm text-gray-500">{service.duration}</p>
+                              </div>
+                              <button className="px-6 py-2.5 bg-teal-500 text-white font-bold rounded-md hover:bg-teal-600 transition-colors">
+                                예약
+                              </button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </main>
