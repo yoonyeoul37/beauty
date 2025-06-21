@@ -82,8 +82,10 @@ export default function ReviewPage() {
         <ReviewModal
           isOpen={!!selectedReview}
           onClose={() => setSelectedReview(null)}
-          review={selectedReview}
           salonName={shop}
+          reviews={[selectedReview]}
+          totalReviews={1}
+          averageRating={selectedReview.rating}
         />
       )}
     </div>

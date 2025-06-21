@@ -125,7 +125,7 @@ export default function TimeSpecialGrid({ initialSalons, reviews, showAll }: Tim
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-xl font-bold mb-2">{salon.name}</h3>
+                  <h3 className="text-xl font-bold mb-2 truncate">{salon.name}</h3>
                   <div className="flex items-center gap-2 text-gray-500 text-sm">
                     <FontAwesomeIcon icon={faMapMarkerAlt} />
                     <span>강남구 신사동</span>
