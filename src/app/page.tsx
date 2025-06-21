@@ -11,7 +11,7 @@ import BusinessSection from './components/BusinessSection';
 import FeatureSearch from './components/FeatureSearch';
 import FeatureManage from './components/FeatureManage';
 import FeatureReview from './components/FeatureReview';
-import PromoCardBanner from './components/PromoCardBanner';
+import RecommendedArticlesSection from './components/RecommendedArticlesSection';
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -72,7 +72,7 @@ export default function Home() {
       <FeatureReview />
 
       <CitySearchSection />
-      <PromoCardBanner />
+      <RecommendedArticlesSection />
     </main>
   );
 }

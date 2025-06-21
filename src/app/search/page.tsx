@@ -10,15 +10,30 @@ import {
   CalendarIcon,
   AdjustmentsHorizontalIcon,
   ChevronDownIcon,
-  MapIcon
+  MapIcon,
+  InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import TgnLogo from "../components/TgnLogo";
 import FilterModal from '../components/FilterModal';
 import SortByModal from '../components/SortByModal';
-import PromoCardBanner from '../components/PromoCardBanner';
+import FeaturedSalons from '../components/FeaturedSalons';
 
 // This is dummy data. Later, this will come from a database.
 const dummySalons = [
+  {
+    id: 99,
+    name: "ESE 이발사",
+    rating: 5.0,
+    reviewCount: 84,
+    address: "1.8마일. 1215W. 어빙 파크 로드, 벤슨빌, 60106",
+    imageUrl: "https://images.pexels.com/photos/3993324/pexels-photo-3993324.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    promoted: true,
+    services: [
+      { name: "머리 자르기. 테이퍼. 대머리 페이즈 등", price: 30000, duration: "35분" },
+      { name: "헤어컷과 스트레이트 면도기", price: 45000, duration: "55분" },
+      { name: "수염 및 눈썹 정리", price: 30000, duration: "35분" },
+    ],
+  },
   {
     id: 1,
     name: "헤어살롱 봄날",
@@ -195,58 +210,119 @@ export default function SearchPage() {
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PromoCardBanner />
-          <div className="mb-10">
-            <h1 className="text-3xl font-extrabold text-gray-900">
-              {`'${city || '전체'}'의 '${category || '모든 서비스'}' 검색 결과`}
-            </h1>
-            <p className="mt-2 text-sm text-gray-500">{dummySalons.length}개의 검색 결과</p>
-          </div>
+        <main>
+          <FeaturedSalons />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-10">
+              <h1 className="text-3xl font-extrabold text-gray-900">
+                {`'${city || '전체'}'의 '${category || '모든 서비스'}' 검색 결과`}
+              </h1>
+              <p className="mt-2 text-sm text-gray-500">{dummySalons.length}개의 검색 결과</p>
+            </div>
 
-          <div className="space-y-8">
-            {dummySalons.map((salon) => (
-              <div key={salon.id} className="flex bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
-                <div className="flex-shrink-0">
-                  <Image
-                    src={salon.imageUrl}
-                    alt={salon.name}
-                    width={250}
-                    height={250}
-                    className="object-cover h-full"
-                  />
-                </div>
-                <div className="flex-1 p-6 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center mb-1">
-                      <h2 className="text-xl font-bold text-gray-800">{salon.name}</h2>
-                      <div className="ml-4 flex items-center">
-                        <StarIcon className="h-5 w-5 text-yellow-400" />
-                        <span className="ml-1 text-gray-600 font-medium">{salon.rating}</span>
-                        <span className="ml-2 text-sm text-gray-500">({salon.reviewCount})</span>
+            <div className="space-y-8">
+              {dummySalons.map((salon) => {
+                if (salon.promoted) {
+                  return (
+                    <div key={salon.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg transition-shadow duration-300">
+                      <div className="flex flex-col md:flex-row">
+                        <div className="md:w-1/3 flex-shrink-0">
+                          <Image
+                            src={salon.imageUrl}
+                            alt={salon.name}
+                            width={300}
+                            height={300}
+                            className="object-cover h-full w-full"
+                          />
+                        </div>
+                        <div className="flex-1 p-6 flex flex-col justify-between">
+                          <div>
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <div className="flex items-center mb-2">
+                                  <h2 className="text-xl font-bold text-gray-800">{salon.name}</h2>
+                                  <div className="ml-4 flex items-center">
+                                    <StarIcon className="h-5 w-5 text-yellow-400" />
+                                    <span className="ml-1 text-gray-600 font-medium">{salon.rating}</span>
+                                    <span className="ml-2 text-sm text-gray-500">({salon.reviewCount})</span>
+                                  </div>
+                                </div>
+                                <p className="text-sm text-gray-500 mb-2">{salon.address}</p>
+                                <div className="flex items-center text-xs text-gray-500">
+                                  <span>Promoted</span>
+                                  <InformationCircleIcon className="h-4 w-4 ml-1 text-gray-400" />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="border-t border-gray-100 my-4"></div>
+
+                            <ul className="space-y-3">
+                              {salon.services.slice(0, 3).map((service, index) => (
+                                <li key={index} className="flex justify-between items-center text-sm">
+                                  <div className="flex flex-col">
+                                    <span className="text-gray-800 font-medium">{service.name}</span>
+                                    <span className="text-gray-500">{service.duration}</span>
+                                  </div>
+                                  <div className="flex items-center gap-x-3">
+                                    <span className="font-semibold text-gray-800 text-base">{service.price.toLocaleString()}원</span>
+                                    <button className="px-5 py-2 bg-teal-500 text-white font-bold rounded-md hover:bg-teal-600 transition-colors text-xs">
+                                      선택
+                                    </button>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500 mb-4">{salon.address}</p>
-                    
-                    <div className="border-t border-gray-100 my-4"></div>
+                  )
+                }
+                return (
+                  <div key={salon.id} className="flex bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={salon.imageUrl}
+                        alt={salon.name}
+                        width={250}
+                        height={250}
+                        className="object-cover h-full"
+                      />
+                    </div>
+                    <div className="flex-1 p-6 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center mb-1">
+                          <h2 className="text-xl font-bold text-gray-800">{salon.name}</h2>
+                          <div className="ml-4 flex items-center">
+                            <StarIcon className="h-5 w-5 text-yellow-400" />
+                            <span className="ml-1 text-gray-600 font-medium">{salon.rating}</span>
+                            <span className="ml-2 text-sm text-gray-500">({salon.reviewCount})</span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-4">{salon.address}</p>
+                        
+                        <div className="border-t border-gray-100 my-4"></div>
 
-                    <ul className="space-y-2">
-                      {salon.services.map((service, index) => (
-                        <li key={index} className="flex justify-between items-center text-sm">
-                          <span className="text-gray-700">{service.name}</span>
-                          <span className="font-semibold text-gray-800">{service.price.toLocaleString()}원</span>
-                        </li>
-                      ))}
-                    </ul>
+                        <ul className="space-y-2">
+                          {salon.services.map((service, index) => (
+                            <li key={index} className="flex justify-between items-center text-sm">
+                              <span className="text-gray-700">{service.name}</span>
+                              <span className="font-semibold text-gray-800">{service.price.toLocaleString()}원</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="mt-6 flex justify-end">
+                        <button className="px-6 py-2 bg-teal-500 text-white font-semibold rounded-md hover:bg-teal-600 transition-colors">
+                          상세보기 및 예약
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="mt-6 flex justify-end">
-                    <button className="px-6 py-2 bg-teal-500 text-white font-semibold rounded-md hover:bg-teal-600 transition-colors">
-                      상세보기 및 예약
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+                )
+              })}
+            </div>
           </div>
         </main>
       </div>
