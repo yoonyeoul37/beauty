@@ -455,7 +455,7 @@ export default function CommunityMain() {
                       key={idx}
                       onClick={() => setPage(idx + 1)}
                       className={`w-9 h-9 rounded-full flex items-center justify-center font-bold border transition-all duration-150
-                        ${page === idx + 1 ? 'bg-pink-500 text-white border-pink-500 shadow' : 'bg-white text-gray-500 border-gray-200 hover:bg-pink-100 hover:text-pink-600'}`}
+                        ${page === idx + 1 ? 'bg-gradient-to-r from-gray-800 to-gray-900 text-white border-gray-700 shadow-lg' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-gray-700 hover:border-gray-300'}`}
                     >
                       {idx + 1}
                     </button>
