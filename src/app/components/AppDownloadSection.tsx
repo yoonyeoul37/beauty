@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faApple, faGooglePlay } from '@fortawesome/free-brands-svg-icons';
+import { faSearch, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 
 // 간단한 로고 컴포넌트
 const StyleLogAppLogo = () => (
@@ -37,13 +37,13 @@ export default function AppDownloadSection() {
 
       {/* 하단 버튼 */}
       <div className="flex items-center gap-3 mt-6">
-        <a href="#" className="flex items-center justify-center gap-2 bg-gray-800 text-white w-full py-3 rounded-lg hover:bg-black transition-colors text-sm font-medium">
-          <FontAwesomeIcon icon={faApple} className="text-lg" />
-          App Store
+        <a href="/search" className="flex items-center justify-center gap-2 bg-gray-800 text-white w-full py-3 rounded-lg hover:bg-black transition-colors text-sm font-medium">
+          <FontAwesomeIcon icon={faSearch} className="text-base" />
+          내 주변 뷰티샵 찾기
         </a>
         <a href="#" className="flex items-center justify-center gap-2 bg-gray-800 text-white w-full py-3 rounded-lg hover:bg-black transition-colors text-sm font-medium">
-          <FontAwesomeIcon icon={faGooglePlay} className="text-base" />
-          Google Play
+          <FontAwesomeIcon icon={faSquarePlus} className="text-base" />
+          홈 화면에 추가
         </a>
       </div>
 

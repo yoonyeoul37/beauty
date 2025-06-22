@@ -8,6 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faMapMarkerAlt, faClock, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { Inter } from "next/font/google";
 import Footer from "./components/Footer";
+import localFont from 'next/font/local';
+import { Analytics } from "@vercel/analytics/react"
+import BackgroundMusic from './components/BackgroundMusic';
 config.autoAddCss = false;
 
 const geistSans = Geist({
@@ -21,6 +24,10 @@ const geistMono = Geist_Mono({
 });
 
 const inter = Inter({ subsets: ["latin"] });
+
+const pretendard = localFont({
+  src: '../../public/fonts/Pretendard-Regular.woff',
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -40,10 +47,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@700&family=Montserrat:wght@800&display=swap" rel="stylesheet" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased ${inter.className}`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ${inter.className} ${pretendard.className}`}
       >
         {children}
         <Footer />
+        <Analytics />
+        <BackgroundMusic />
       </body>
     </html>
   );

@@ -2,53 +2,53 @@ import Link from 'next/link'
 
 const haircutData = [
   {
-    name: "스타일리스트 A",
+    name: "헤어살롱 가",
     location: "강남",
-    malePrice: "15,000원",
-    femalePrice: "25,000원",
-    rating: 4.8,
-    reviews: 128
+    mensCut: "30,000원",
+    womensCut: "35,000원",
+    rating: 4.9,
+    reviews: 210
   },
   {
-    name: "스타일리스트 B",
+    name: "스타일 나",
     location: "홍대",
-    malePrice: "12,000원",
-    femalePrice: "22,000원",
-    rating: 4.6,
-    reviews: 95
+    mensCut: "28,000원",
+    womensCut: "32,000원",
+    rating: 4.7,
+    reviews: 150
   },
   {
-    name: "스타일리스트 C",
-    location: "신촌",
-    malePrice: "13,000원",
-    femalePrice: "23,000원",
-    rating: 4.7,
-    reviews: 156
+    name: "뷰티 다",
+    location: "이태원",
+    mensCut: "35,000원",
+    womensCut: "40,000원",
+    rating: 4.8,
+    reviews: 188
   }
 ]
 
 export default function HaircutPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="container mx-auto px-4 py-16">
         <div className="flex items-center mb-8">
-          <Link href="/" className="text-pink-600 hover:text-pink-700">
+          <Link href="/" className="text-blue-600 hover:text-blue-700">
             ← 홈으로
           </Link>
         </div>
         
-        <h1 className="text-4xl font-bold text-center text-pink-600 mb-8">
-          커트 가격 비교
+        <h1 className="text-4xl font-bold text-center text-blue-600 mb-8">
+          헤어컷 가격 비교
         </h1>
         
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <table className="min-w-full">
-            <thead className="bg-pink-50">
+            <thead className="bg-blue-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">미용실</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">위치</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">남성 커트</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">여성 커트</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">남성 컷</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">여성 컷</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">평점</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">리뷰</th>
               </tr>
@@ -58,8 +58,8 @@ export default function HaircutPage() {
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{salon.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salon.location}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salon.malePrice}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salon.femalePrice}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salon.mensCut}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salon.womensCut}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salon.rating}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salon.reviews}</td>
                 </tr>
