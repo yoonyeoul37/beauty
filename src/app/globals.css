@@ -198,6 +198,173 @@ body {
   }
 }
 
+/* 새로운 생동감 있는 애니메이션들 */
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes textShimmer {
+  0%, 100% {
+    text-shadow: 
+      0 2px 4px rgba(0,0,0,0.4),
+      0 0 20px rgba(255, 235, 205, 0.2);
+  }
+  50% {
+    text-shadow: 
+      0 2px 6px rgba(0,0,0,0.5),
+      0 0 35px rgba(255, 235, 205, 0.5),
+      0 0 5px rgba(255, 255, 255, 0.8);
+  }
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroTitleSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroSubtitleSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes searchContainerSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes searchGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateX(-50%) scaleX(0.8);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateX(-50%) scaleX(1.2);
+  }
+}
+
+@keyframes categorySlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes categoryItemFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes categoryGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateX(-50%) scaleX(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(-50%) scaleX(1.1);
+  }
+}
+
+@keyframes subCategorySlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subCategoryFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 검색창 포커스 효과 */
+.search-input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.search-focused {
+  animation: searchPulse 2s ease-in-out infinite;
+}
+
+@keyframes searchPulse {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 0 3px rgba(236, 72, 153, 0.1);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 0 3px rgba(236, 72, 153, 0.2);
+  }
+}
+
+/* 카테고리 활성화 효과 */
+.category-active {
+  animation: categoryActivePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes categoryActivePulse {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(255,255,255,0.6), 0 2px 5px rgba(0,0,0,0.5);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 2px 5px rgba(0,0,0,0.5);
+  }
+}
+
 /* 사이트명 애니메이션 */
 @keyframes fadeInUp {
   from {
@@ -393,4 +560,33 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* 푸터 링크 애니메이션 */
+.footer-link {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: white;
+}
+
+.footer-link::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: #f472b6; /* pink-400 */
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-out;
+}
+
+.footer-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
