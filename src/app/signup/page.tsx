@@ -83,11 +83,19 @@ export default function SignupPage() {
     servicePrices: {},
     
     // 타임스페셜
-    timeSpecialService: '',
-    discountRate: '',
-    startDate: '',
-    endDate: '',
-    description: '',
+    timeSpecial: {
+      services: [
+        {
+          service: '',
+          discountRate: '',
+          startDate: '',
+          endDate: '',
+          startTime: '',
+          endTime: ''
+        }
+      ],
+      description: '',
+    },
     
     // 업체 프로필 (4단계)
     businessDescription: '',
@@ -106,15 +114,50 @@ export default function SignupPage() {
     cashPayment: true,
 
     // 구인 정보 (선택사항)
-    jobPosition: '',
-    employmentType: 'full-time',
-    salary: '',
-    jobDescription: '',
-    qualifications: ''
+    jobPosting: {
+      title: '',
+      logo: '',
+      모집마감: '상시채용',
+      모집인원: '0명',
+      모집분야: '',
+      경력: '',
+      우대사항: '',
+      학력: '학력무관',
+      연령: '연령무관',
+      직무: '',
+      성별: '성별무관',
+      직종: '',
+      근무기간: '협의',
+      고용형태: '정규직',
+      급여: '',
+      휴무일: '협의',
+      복지: '',
+      상세설명: ''
+    }
   });
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: string, value: any, subfield?: string) => {
+    if (subfield) {
+      setFormData(prev => ({
+        ...prev,
+        [field]: {
+          ...prev[field as keyof typeof prev],
+          [subfield]: value,
+        },
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
+  };
+
+  const handleJobInputChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      jobPosting: {
+        ...prev.jobPosting,
+        [field]: value,
+      }
+    }));
   };
 
   const handleBusinessHoursChange = (day: string, field: 'open' | 'close' | 'closed', value: string | boolean) => {
@@ -457,85 +500,180 @@ export default function SignupPage() {
                   {/* 타임스페셜 상세 설정 */}
                   {hasTimeSpecial && selectedCategory && (
                     <div className="space-y-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
-                      {/* 할인 서비스 선택 */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">할인 서비스</label>
-                        <select
-                          value={formData.timeSpecialService}
-                          onChange={(e) => handleInputChange('timeSpecialService', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
-                          required
+                      {/* 서비스별 타임스페셜 설정 */}
+                      <div className="space-y-6">
+                        {formData.timeSpecial.services.map((service, serviceIndex) => (
+                          <div key={serviceIndex} className="p-4 bg-white rounded-lg border border-amber-200">
+                            <div className="flex items-center justify-between mb-4">
+                              <h4 className="text-sm font-semibold text-amber-800">
+                                할인 서비스 {serviceIndex + 1}
+                              </h4>
+                              {serviceIndex > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newServices = formData.timeSpecial.services.filter((_, index) => index !== serviceIndex);
+                                    handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                                  }}
+                                  className="text-red-500 text-sm hover:text-red-700"
+                                >
+                                  삭제
+                                </button>
+                              )}
+                            </div>
+                            
+                            <div className="space-y-4">
+                              {/* 서비스 선택 */}
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">할인 서비스</label>
+                                <select
+                                  value={service.service}
+                                  onChange={(e) => {
+                                    const newServices = [...formData.timeSpecial.services];
+                                    newServices[serviceIndex] = { ...service, service: e.target.value };
+                                    handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                                  }}
+                                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
+                                  required
+                                >
+                                  <option value="">서비스 선택</option>
+                                  {selectedCategoryConfig?.services.map(serviceName => (
+                                    <option key={serviceName} value={serviceName}>{serviceName}</option>
+                                  ))}
+                                </select>
+                              </div>
+                              
+                              {/* 할인율 */}
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">할인율</label>
+                                <div className="relative">
+                                  <input
+                                    type="number"
+                                    value={service.discountRate}
+                                    onChange={(e) => {
+                                      const newServices = [...formData.timeSpecial.services];
+                                      newServices[serviceIndex] = { ...service, discountRate: e.target.value };
+                                      handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                                    }}
+                                    className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
+                                    placeholder="할인율을 입력하세요"
+                                    required
+                                  />
+                                  <FontAwesomeIcon icon={faPercent} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                </div>
+                              </div>
+                              
+                              {/* 날짜 설정 */}
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">시작일</label>
+                                  <input
+                                    type="date"
+                                    value={service.startDate}
+                                    onChange={(e) => {
+                                      const newServices = [...formData.timeSpecial.services];
+                                      newServices[serviceIndex] = { ...service, startDate: e.target.value };
+                                      handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                                    }}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
+                                    required
+                                  />
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">종료일</label>
+                                  <input
+                                    type="date"
+                                    value={service.endDate}
+                                    onChange={(e) => {
+                                      const newServices = [...formData.timeSpecial.services];
+                                      newServices[serviceIndex] = { ...service, endDate: e.target.value };
+                                      handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                                    }}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
+                                    required
+                                  />
+                                </div>
+                              </div>
+                              
+                              {/* 시간 설정 */}
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">시작 시간</label>
+                                  <select
+                                    value={service.startTime}
+                                    onChange={(e) => {
+                                      const newServices = [...formData.timeSpecial.services];
+                                      newServices[serviceIndex] = { ...service, startTime: e.target.value };
+                                      handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                                    }}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
+                                    required
+                                  >
+                                    <option value="">시간 선택</option>
+                                    {Array.from({ length: 48 }, (_, i) => {
+                                      const hours = Math.floor(i / 2);
+                                      const minutes = (i % 2) * 30;
+                                      const time = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                      return <option key={time} value={time}>{time}</option>;
+                                    })}
+                                  </select>
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">종료 시간</label>
+                                  <select
+                                    value={service.endTime}
+                                    onChange={(e) => {
+                                      const newServices = [...formData.timeSpecial.services];
+                                      newServices[serviceIndex] = { ...service, endTime: e.target.value };
+                                      handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                                    }}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
+                                    required
+                                  >
+                                    <option value="">시간 선택</option>
+                                    {Array.from({ length: 48 }, (_, i) => {
+                                      const hours = Math.floor(i / 2);
+                                      const minutes = (i % 2) * 30;
+                                      const time = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                      return <option key={time} value={time}>{time}</option>;
+                                    })}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {/* 서비스 추가 버튼 */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newService = {
+                              service: '',
+                              discountRate: '',
+                              startDate: '',
+                              endDate: '',
+                              startTime: '',
+                              endTime: ''
+                            };
+                            const newServices = [...formData.timeSpecial.services, newService];
+                            handleInputChange('timeSpecial', { ...formData.timeSpecial, services: newServices });
+                          }}
+                          className="w-full py-3 px-4 border-2 border-dashed border-amber-300 rounded-xl text-amber-600 hover:border-amber-400 hover:text-amber-700 transition-colors duration-200"
                         >
-                          <option value="">서비스를 선택하세요</option>
-                          {selectedCategoryConfig.services.map((service) => (
-                            <option key={service} value={service}>{service}</option>
-                          ))}
-                        </select>
+                          + 할인 서비스 추가
+                        </button>
                       </div>
-
-                      {/* 할인율 */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                          <FontAwesomeIcon icon={faPercent} className="text-amber-500" />
-                          할인율
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="number"
-                            value={formData.discountRate}
-                            onChange={(e) => handleInputChange('discountRate', e.target.value)}
-                            className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
-                            placeholder="할인율을 입력하세요"
-                            min="1"
-                            max="100"
-                            required
-                          />
-                          <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-                            %
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* 기간 설정 */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                            <FontAwesomeIcon icon={faCalendarAlt} className="text-amber-500" />
-                            시작일
-                          </label>
-                          <input
-                            type="date"
-                            value={formData.startDate}
-                            onChange={(e) => handleInputChange('startDate', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                            <FontAwesomeIcon icon={faCalendarAlt} className="text-amber-500" />
-                            종료일
-                          </label>
-                          <input
-                            type="date"
-                            value={formData.endDate}
-                            onChange={(e) => handleInputChange('endDate', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm"
-                            required
-                          />
-                        </div>
-                      </div>
-
+                      
                       {/* 설명 */}
-                      <div className="space-y-2">
+                      <div>
                         <label className="text-sm font-medium text-gray-700">타임스페셜 설명</label>
                         <textarea
-                          value={formData.description}
-                          onChange={(e) => handleInputChange('description', e.target.value)}
+                          value={formData.timeSpecial.description}
+                          onChange={(e) => handleInputChange('timeSpecial', { ...formData.timeSpecial, description: e.target.value })}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm resize-none"
                           rows={3}
-                          placeholder="타임스페셜에 대한 설명을 입력하세요"
-                          required
+                          placeholder="예: 신년 맞이 특별 할인! 다양한 서비스 할인 혜택"
                         />
                       </div>
                     </div>
@@ -612,39 +750,54 @@ export default function SignupPage() {
                   </div>
 
                   {wantsToPostJob && (
-                    <div className="space-y-4 p-4 bg-gray-50 rounded-2xl">
-                      {/* 모집 분야 */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">모집 분야</label>
-                        <input type="text" value={formData.jobPosition} onChange={(e) => handleInputChange('jobPosition', e.target.value)} placeholder="예: 헤어 디자이너" className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400" />
+                    <div className="space-y-6 p-6 bg-gray-50 rounded-2xl border border-gray-200">
+                      
+                      {/* 메인 정보 */}
+                      <div className="space-y-4">
+                        <h4 className="text-md font-semibold text-gray-700 border-b pb-2">메인 정보</h4>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">공고 제목</label>
+                          <input type="text" value={formData.jobPosting.title} onChange={(e) => handleJobInputChange('title', e.target.value)} placeholder="예: 함께 성장할 디자이너를 찾습니다!" className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">대표 이미지 URL</label>
+                          <input type="text" value={formData.jobPosting.logo} onChange={(e) => handleJobInputChange('logo', e.target.value)} placeholder="https://example.com/image.jpg" className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400" />
+                        </div>
                       </div>
 
-                      {/* 고용 형태 */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">고용 형태</label>
-                        <select value={formData.employmentType} onChange={(e) => handleInputChange('employmentType', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400">
-                          <option value="full-time">정규직</option>
-                          <option value="part-time">파트타임</option>
-                          <option value="contract">계약직</option>
-                        </select>
+                      {/* 모집 요강 */}
+                      <div className="space-y-4">
+                        <h4 className="text-md font-semibold text-gray-700 border-b pb-2">모집 요강</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">모집마감</label><input type="text" value={formData.jobPosting.모집마감} onChange={(e) => handleJobInputChange('모집마감', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">학력</label><input type="text" value={formData.jobPosting.학력} onChange={(e) => handleJobInputChange('학력', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">모집인원</label><input type="text" value={formData.jobPosting.모집인원} onChange={(e) => handleJobInputChange('모집인원', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">연령</label><input type="text" value={formData.jobPosting.연령} onChange={(e) => handleJobInputChange('연령', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">모집분야</label><input type="text" value={formData.jobPosting.모집분야} onChange={(e) => handleJobInputChange('모집분야', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">직무</label><input type="text" value={formData.jobPosting.직무} onChange={(e) => handleJobInputChange('직무', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">경력</label><input type="text" value={formData.jobPosting.경력} onChange={(e) => handleJobInputChange('경력', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                          <div className="space-y-2"><label className="text-sm font-medium text-gray-700">성별</label><input type="text" value={formData.jobPosting.성별} onChange={(e) => handleJobInputChange('성별', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                        </div>
+                         <div className="space-y-2"><label className="text-sm font-medium text-gray-700">우대사항</label><textarea value={formData.jobPosting.우대사항} onChange={(e) => handleJobInputChange('우대사항', e.target.value)} rows={2} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"></textarea></div>
                       </div>
 
-                      {/* 급여 조건 */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">급여 조건</label>
-                        <input type="text" value={formData.salary} onChange={(e) => handleInputChange('salary', e.target.value)} placeholder="예: 월급 300만원 / 협의 후 결정" className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400" />
+                      {/* 근무 조건 */}
+                      <div className="space-y-4">
+                        <h4 className="text-md font-semibold text-gray-700 border-b pb-2">근무 조건</h4>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2"><label className="text-sm font-medium text-gray-700">직종</label><input type="text" value={formData.jobPosting.직종} onChange={(e) => handleJobInputChange('직종', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                            <div className="space-y-2"><label className="text-sm font-medium text-gray-700">근무기간</label><input type="text" value={formData.jobPosting.근무기간} onChange={(e) => handleJobInputChange('근무기간', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                            <div className="space-y-2"><label className="text-sm font-medium text-gray-700">고용형태</label><input type="text" value={formData.jobPosting.고용형태} onChange={(e) => handleJobInputChange('고용형태', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                            <div className="space-y-2"><label className="text-sm font-medium text-gray-700">급여</label><input type="text" value={formData.jobPosting.급여} onChange={(e) => handleJobInputChange('급여', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                            <div className="space-y-2"><label className="text-sm font-medium text-gray-700">휴무일</label><input type="text" value={formData.jobPosting.휴무일} onChange={(e) => handleJobInputChange('휴무일', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"/></div>
+                         </div>
+                         <div className="space-y-2"><label className="text-sm font-medium text-gray-700">복지</label><textarea value={formData.jobPosting.복지} onChange={(e) => handleJobInputChange('복지', e.target.value)} rows={2} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"></textarea></div>
                       </div>
 
-                      {/* 주요 업무 */}
+                      {/* 상세 설명 */}
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">주요 업무</label>
-                        <textarea value={formData.jobDescription} onChange={(e) => handleInputChange('jobDescription', e.target.value)} rows={3} placeholder="담당할 주요 업무에 대해 설명해주세요." className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400"></textarea>
-                      </div>
-
-                      {/* 자격 요건 */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">자격 요건</label>
-                        <textarea value={formData.qualifications} onChange={(e) => handleInputChange('qualifications', e.target.value)} rows={3} placeholder="필요한 자격 요건이나 우대사항을 입력해주세요." className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400"></textarea>
+                        <label className="text-sm font-medium text-gray-700">상세 설명</label>
+                        <textarea value={formData.jobPosting.상세설명} onChange={(e) => handleJobInputChange('상세설명', e.target.value)} rows={5} placeholder="자유롭게 구인 공고를 설명해주세요." className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl"></textarea>
                       </div>
                     </div>
                   )}

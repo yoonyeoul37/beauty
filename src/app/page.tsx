@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HeroSection from './components/HeroSection';
 import FloatingCategoryMenu from './components/FloatingCategoryMenu';
 import Link from 'next/link';
@@ -12,15 +12,41 @@ import FeatureManage from './components/FeatureManage';
 import FeatureReview from './components/FeatureReview';
 import RecommendedArticlesSection from './components/RecommendedArticlesSection';
 import { timeSpecialReviews } from '@/app/data/reviews';
+import StickyHeader from './components/StickyHeader';
 
 export default function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const timeSpecialSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (timeSpecialSectionRef.current) {
+        const { top } = timeSpecialSectionRef.current.getBoundingClientRect();
+        // 헤더 높이(70px)를 고려하여, 섹션 상단이 뷰포트 상단에 닿기 전에 헤더가 나타나도록 합니다.
+        if (window.scrollY > timeSpecialSectionRef.current.offsetTop - 70) {
+          setIsHeaderVisible(true);
+        } else {
+          setIsHeaderVisible(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // 초기 로드 시 스크롤 위치 확인
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   
   return (
-    <main className="min-h-screen bg-white text-gray-800 pt-20">
+    <main className="min-h-screen bg-white text-gray-800">
+      <StickyHeader isVisible={isHeaderVisible} />
       <HeroSection showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
       
-      <div id="time-special-section">
+      <div id="time-special-section" ref={timeSpecialSectionRef}>
         <TimeSpecialSection reviews={timeSpecialReviews} />
       </div>
       

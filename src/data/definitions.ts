@@ -94,10 +94,14 @@ export interface BusinessProfile {
   // 타임스페셜
   timeSpecial?: {
     active: boolean;
-    service: string;
-    discountRate: number;
-    startDate: string;
-    endDate: string;
+    services: Array<{
+      service: string;
+      discountRate: number;
+      startDate: string;
+      endDate: string;
+      startTime: string;
+      endTime: string;
+    }>;
     description: string;
   };
   

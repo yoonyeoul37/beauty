@@ -117,17 +117,30 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
   };
 
   const formatTimeSpecial = (business: BusinessProfile) => {
-    if (!business.timeSpecial?.active) return null;
+    if (!business.timeSpecial?.active || !business.timeSpecial.services || business.timeSpecial.services.length === 0) return null;
     
-    const originalPrice = business.services[business.timeSpecial.service];
-    const discountedPrice = Math.round(originalPrice * (1 - business.timeSpecial.discountRate / 100));
+    // 현재 시간에 해당하는 서비스 찾기
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    
+    // 현재 시간에 해당하는 서비스 찾기
+    const currentService = business.timeSpecial.services.find(service => {
+      return currentTime >= service.startTime && currentTime <= service.endTime;
+    });
+    
+    // 현재 시간에 해당하는 서비스가 없으면 첫 번째 서비스 사용
+    const service = currentService || business.timeSpecial.services[0];
+    
+    const originalPrice = business.services[service.service];
+    const discountedPrice = Math.round(originalPrice * (1 - service.discountRate / 100));
     
     return {
-      service: business.timeSpecial.service,
+      service: service.service,
       originalPrice,
       discountedPrice,
-      discountRate: business.timeSpecial.discountRate,
-      description: business.timeSpecial.description
+      discountRate: service.discountRate,
+      description: business.timeSpecial.description,
+      timeRange: `${service.startTime}-${service.endTime}`
     };
   };
 
@@ -136,26 +149,63 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
     const timeSpecial = formatTimeSpecial(business);
     
     if (timeSpecial) {
-      // 타임스페셜 서비스와 다른 서비스 1개 선택
-      const otherServices = services.filter(([serviceName]) => serviceName !== timeSpecial.service);
-      const secondService = otherServices[Math.floor(Math.random() * otherServices.length)];
+      // 타임스페셜이 있는 경우
+      const timeSpecialServices = business.timeSpecial?.services || [];
+      const result = [];
       
-      return [
-        {
-          name: timeSpecial.service,
-          price: timeSpecial.discountedPrice,
-          originalPrice: timeSpecial.originalPrice,
-          discount: `${timeSpecial.discountRate}%`,
+      // 현재 시간에 해당하는 서비스들 찾기
+      const now = new Date();
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      
+      const currentServices = timeSpecialServices.filter(service => {
+        return currentTime >= service.startTime && currentTime <= service.endTime;
+      });
+      
+      // 현재 시간에 해당하는 서비스가 있으면 그 중 2개까지 표시
+      if (currentServices.length > 0) {
+        const servicesToShow = currentServices.slice(0, 2);
+        servicesToShow.forEach(service => {
+          const originalPrice = business.services[service.service];
+          const discountedPrice = Math.round(originalPrice * (1 - service.discountRate / 100));
+          result.push({
+            name: service.service,
+            price: discountedPrice,
+            originalPrice: originalPrice,
+            discount: `${service.discountRate}%`,
+            isTimeSpecial: true
+          });
+        });
+      } else {
+        // 현재 시간에 해당하는 서비스가 없으면 첫 번째 서비스 표시
+        const firstService = timeSpecialServices[0];
+        const originalPrice = business.services[firstService.service];
+        const discountedPrice = Math.round(originalPrice * (1 - firstService.discountRate / 100));
+        result.push({
+          name: firstService.service,
+          price: discountedPrice,
+          originalPrice: originalPrice,
+          discount: `${firstService.discountRate}%`,
           isTimeSpecial: true
-        },
-        {
-          name: secondService[0],
-          price: secondService[1],
-          originalPrice: secondService[1],
-          discount: null,
-          isTimeSpecial: false
+        });
+      }
+      
+      // 2개가 되지 않으면 일반 서비스로 채우기
+      if (result.length < 2) {
+        const usedServices = result.map(r => r.name);
+        const otherServices = services.filter(([serviceName]) => !usedServices.includes(serviceName));
+        if (otherServices.length > 0) {
+          const additionalService = otherServices[Math.floor(Math.random() * otherServices.length)];
+          result.push({
+            name: additionalService[0],
+            price: additionalService[1],
+            originalPrice: additionalService[1],
+            discount: null,
+            isTimeSpecial: false
+          });
         }
-      ];
+      }
+      
+      return result;
     } else {
       // 타임스페셜이 없으면 2개 서비스 랜덤 선택
       const shuffled = services.sort(() => 0.5 - Math.random());
@@ -315,7 +365,7 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
                   {timeSpecial && (
                     <div className="flex items-center gap-2 text-xs text-amber-600 font-medium mb-2">
                       <FontAwesomeIcon icon={faClock} className="text-xs" />
-                      <span>오늘 14:00-16:00 한정</span>
+                      <span>{timeSpecial.timeRange}</span>
                     </div>
                   )}
                   

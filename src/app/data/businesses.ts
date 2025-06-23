@@ -50,11 +50,33 @@ export const sampleBusinesses: BusinessProfile[] = [
     },
     timeSpecial: {
       active: true,
-      service: "남성컷",
-      discountRate: 20,
-      startDate: "2024-01-15",
-      endDate: "2024-01-31",
-      description: "신년 맞이 특별 할인! 남성컷 20% 할인"
+      services: [
+        {
+          service: "남성컷",
+          discountRate: 20,
+          startDate: "2024-01-15",
+          endDate: "2024-01-31",
+          startTime: "14:00",
+          endTime: "16:00"
+        },
+        {
+          service: "다운펌",
+          discountRate: 15,
+          startDate: "2024-01-15",
+          endDate: "2024-01-31",
+          startTime: "18:00",
+          endTime: "20:00"
+        },
+        {
+          service: "염색",
+          discountRate: 25,
+          startDate: "2024-01-15",
+          endDate: "2024-01-31",
+          startTime: "20:00",
+          endTime: "22:00"
+        }
+      ],
+      description: "신년 맞이 특별 할인! 시간대별 다양한 서비스 할인"
     },
     stats: {
       totalReviews: 120,
@@ -115,10 +137,16 @@ export const sampleBusinesses: BusinessProfile[] = [
     },
     timeSpecial: {
       active: true,
-      service: "전체염색",
-      discountRate: 30,
-      startDate: "2024-01-10",
-      endDate: "2024-01-25",
+      services: [
+        {
+          service: "전체염색",
+          discountRate: 30,
+          startDate: "2024-01-10",
+          endDate: "2024-01-25",
+          startTime: "15:00",
+          endTime: "17:00"
+        }
+      ],
       description: "겨울 시즌 특별 할인! 전체염색 30% 할인"
     },
     stats: {
@@ -180,10 +208,16 @@ export const sampleBusinesses: BusinessProfile[] = [
     },
     timeSpecial: {
       active: true,
-      service: "일반펌",
-      discountRate: 30,
-      startDate: "2024-01-12",
-      endDate: "2024-01-28",
+      services: [
+        {
+          service: "일반펌",
+          discountRate: 30,
+          startDate: "2024-01-12",
+          endDate: "2024-01-28",
+          startTime: "16:00",
+          endTime: "18:00"
+        }
+      ],
       description: "봄 준비 특별 할인! 일반펌 30% 할인"
     },
     stats: {

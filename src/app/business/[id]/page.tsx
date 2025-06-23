@@ -266,20 +266,28 @@ export default function BusinessDetailPage({ params }: BusinessDetailPageProps) 
                     {business.timeSpecial?.active && (
                       <div className="p-6 bg-amber-50 rounded-xl border border-amber-200">
                         <h3 className="text-lg font-semibold text-amber-800 mb-4">타임스페셜</h3>
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-amber-800 font-medium">{business.timeSpecial.service}</span>
-                            <span className="text-2xl font-bold text-amber-600">
-                              {business.timeSpecial.discountRate}% 할인
-                            </span>
-                          </div>
+                        <div className="space-y-4">
+                          {business.timeSpecial.services.map((service, serviceIndex) => (
+                            <div key={serviceIndex} className="p-4 bg-white rounded-lg border border-amber-200">
+                              <div className="flex justify-between items-center mb-3">
+                                <span className="text-amber-800 font-medium text-lg">{service.service}</span>
+                                <span className="text-2xl font-bold text-amber-600">
+                                  {service.discountRate}% 할인
+                                </span>
+                              </div>
+                              <div className="space-y-2 text-sm text-amber-600">
+                                <div className="flex items-center gap-2">
+                                  <FontAwesomeIcon icon={faCalendarAlt} className="text-xs" />
+                                  <span>{service.startDate} ~ {service.endDate}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <FontAwesomeIcon icon={faClock} className="text-xs" />
+                                  <span>{service.startTime} ~ {service.endTime}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                           <p className="text-amber-700 text-sm">{business.timeSpecial.description}</p>
-                          <div className="flex items-center gap-2 text-sm text-amber-600">
-                            <FontAwesomeIcon icon={faCalendarAlt} />
-                            <span>
-                              {business.timeSpecial.startDate} ~ {business.timeSpecial.endDate}
-                            </span>
-                          </div>
                         </div>
                       </div>
                     )}

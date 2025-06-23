@@ -1,13 +1,15 @@
+'use client';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
-export default function StickyHeader() {
+export default function StickyHeader({ isVisible }: { isVisible: boolean }) {
   return (
     <div 
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 sticky-header"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'}`}
       style={{ 
-        background: '#1D1D1D',
+        background: 'rgba(29, 29, 29, 0.8)',
         boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(255,255,255,0.1)',

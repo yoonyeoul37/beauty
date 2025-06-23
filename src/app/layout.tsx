@@ -11,7 +11,6 @@ import Footer from "./components/Footer";
 import localFont from 'next/font/local';
 import { Analytics } from "@vercel/analytics/react"
 import BackgroundMusic from './components/BackgroundMusic';
-import StickyHeader from "./components/StickyHeader";
 config.autoAddCss = false;
 
 const geistSans = Geist({
@@ -50,7 +49,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased ${inter.className} ${pretendard.className}`}
       >
-        <StickyHeader />
         {children}
         <Footer />
         <Analytics />
