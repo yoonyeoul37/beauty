@@ -503,10 +503,16 @@ export const sampleBusinesses: BusinessProfile[] = [
     ],
     timeSpecial: {
       active: true,
-      service: "이달의 아트",
-      discountRate: 30,
-      startDate: "2024-01-08",
-      endDate: "2024-01-22",
+      services: [
+        {
+          service: "이달의 아트",
+          discountRate: 30,
+          startDate: "2024-01-08",
+          endDate: "2024-01-22",
+          startTime: "10:00",
+          endTime: "12:00"
+        }
+      ],
       description: "신년 특별 할인! 이달의 아트 30% 할인"
     },
     stats: {
@@ -627,10 +633,16 @@ export const sampleBusinesses: BusinessProfile[] = [
     ],
     timeSpecial: {
       active: true,
-      service: "데일리 메이크업",
-      discountRate: 25,
-      startDate: "2024-01-05",
-      endDate: "2024-01-20",
+      services: [
+        {
+          service: "데일리 메이크업",
+          discountRate: 25,
+          startDate: "2024-01-05",
+          endDate: "2024-01-20",
+          startTime: "10:00",
+          endTime: "12:00"
+        }
+      ],
       description: "새해 특별 할인! 데일리 메이크업 25% 할인"
     },
     stats: {
@@ -692,10 +704,16 @@ export const sampleBusinesses: BusinessProfile[] = [
     },
     timeSpecial: {
       active: true,
-      service: "기본 케어",
-      discountRate: 35,
-      startDate: "2024-01-15",
-      endDate: "2024-01-30",
+      services: [
+        {
+          service: "기본 케어",
+          discountRate: 35,
+          startDate: "2024-01-15",
+          endDate: "2024-01-30",
+          startTime: "14:00",
+          endTime: "16:00"
+        }
+      ],
       description: "겨울 피부 케어 특별 할인! 기본 케어 35% 할인"
     },
     stats: {
@@ -757,10 +775,16 @@ export const sampleBusinesses: BusinessProfile[] = [
     },
     timeSpecial: {
       active: true,
-      service: "자연스러운 연장",
-      discountRate: 25,
-      startDate: "2024-01-10",
-      endDate: "2024-01-25",
+      services: [
+        {
+          service: "자연스러운 연장",
+          discountRate: 25,
+          startDate: "2024-01-10",
+          endDate: "2024-01-25",
+          startTime: "10:00",
+          endTime: "12:00"
+        }
+      ],
       description: "신년 특별 할인! 자연스러운 연장 25% 할인"
     },
     stats: {
@@ -822,10 +846,16 @@ export const sampleBusinesses: BusinessProfile[] = [
     },
     timeSpecial: {
       active: true,
-      service: "브라질리언 왁싱",
-      discountRate: 30,
-      startDate: "2024-01-12",
-      endDate: "2024-01-27",
+      services: [
+        {
+          service: "브라질리언 왁싱",
+          discountRate: 30,
+          startDate: "2024-01-12",
+          endDate: "2024-01-27",
+          startTime: "11:00",
+          endTime: "13:00"
+        }
+      ],
       description: "겨울 시즌 특별 할인! 브라질리언 왁싱 30% 할인"
     },
     stats: {
