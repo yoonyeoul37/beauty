@@ -667,50 +667,56 @@ export default function SignupPage() {
             )}
 
             {/* 버튼 영역 */}
-            <div className="flex justify-between pt-6">
+            <div className="flex gap-4 pt-4">
               {step > 1 && (
                 <button
                   type="button"
                   onClick={prevStep}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors duration-200"
+                  className="w-full bg-gray-200 text-gray-700 py-3 rounded-2xl font-semibold hover:bg-gray-300 transition-colors duration-300"
                 >
+                  <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                   이전
                 </button>
               )}
               
-              <div className="flex-1"></div>
-              
-              {step < (userType === 'business' ? 4 : 1) ? (
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white rounded-xl hover:from-amber-600 hover:to-yellow-700 transition-all duration-300 transform hover:scale-105"
-                >
-                  다음
-                </button>
+              {userType === 'business' ? (
+                <>
+                  {step < 4 && (
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      className="w-full bg-amber-500 text-white py-3 rounded-2xl font-semibold hover:bg-amber-600 transition-colors duration-300"
+                    >
+                      다음
+                    </button>
+                  )}
+                  {step === 4 && (
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full bg-green-500 text-white py-3 rounded-2xl font-semibold hover:bg-green-600 transition-colors duration-300 flex items-center justify-center disabled:bg-green-300"
+                    >
+                      {isLoading ? (
+                        <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
+                      ) : (
+                        <FontAwesomeIcon icon={faCheckCircle} className="mr-2" />
+                      )}
+                      회원가입 완료
+                    </button>
+                  )}
+                </>
               ) : (
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`px-8 py-3 rounded-xl font-medium text-white transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    isSuccess 
-                      ? 'bg-emerald-600 hover:bg-emerald-700' 
-                      : 'bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700'
-                  }`}
+                  className="w-full bg-green-500 text-white py-3 rounded-2xl font-semibold hover:bg-green-600 transition-colors duration-300 flex items-center justify-center disabled:bg-green-300"
                 >
                   {isLoading ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-                      회원가입 중...
-                    </div>
-                  ) : isSuccess ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <FontAwesomeIcon icon={faCheckCircle} />
-                      회원가입 완료!
-                    </div>
+                    <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
                   ) : (
-                    '회원가입 완료'
+                    <FontAwesomeIcon icon={faCheckCircle} className="mr-2" />
                   )}
+                  회원가입
                 </button>
               )}
             </div>
