@@ -17,7 +17,8 @@ import {
   faStore,
   faCalendarAlt,
   faPercent,
-  faTag
+  faTag,
+  faBriefcase
 } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
@@ -68,6 +69,7 @@ export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [hasTimeSpecial, setHasTimeSpecial] = useState(false);
+  const [wantsToPostJob, setWantsToPostJob] = useState(false);
   
   const [formData, setFormData] = useState({
     // 기본 정보
@@ -101,11 +103,31 @@ export default function SignupPage() {
     parkingAvailable: false,
     wifiAvailable: false,
     cardPayment: true,
-    cashPayment: true
+    cashPayment: true,
+
+    // 구인 정보 (선택사항)
+    jobPosition: '',
+    employmentType: 'full-time',
+    salary: '',
+    jobDescription: '',
+    qualifications: ''
   });
 
-  const handleInputChange = (field: string, value: string | object) => {
+  const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleBusinessHoursChange = (day: string, field: 'open' | 'close' | 'closed', value: string | boolean) => {
+    const newBusinessHours = { ...formData.businessHours };
+    const dayKey = day as keyof typeof formData.businessHours;
+    const updatedDay = { ...newBusinessHours[dayKey] };
+    if (field === 'closed') {
+        updatedDay.closed = value as boolean;
+    } else {
+        updatedDay[field] = value as string;
+    }
+    newBusinessHours[dayKey] = updatedDay;
+    handleInputChange('businessHours', newBusinessHours);
   };
 
   const handleServicePriceChange = (service: string, price: string) => {
@@ -522,146 +544,110 @@ export default function SignupPage() {
               </div>
             )}
 
-            {/* 4단계: 업체 프로필 정보 (사업자만) */}
+            {/* 4단계: 업체 프로필 */}
             {step === 4 && userType === 'business' && (
               <div className="space-y-6">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-800">업체 프로필 정보</h3>
-                  <p className="text-sm text-gray-600">업체 소개와 기본 정보를 입력해주세요. 나중에 언제든 수정할 수 있습니다.</p>
-                  
-                  {/* 업체 소개 */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">업체 소개</label>
-                    <textarea
-                      value={formData.businessDescription}
-                      onChange={(e) => handleInputChange('businessDescription', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm resize-none"
-                      rows={4}
-                      placeholder="업체에 대한 소개를 입력하세요 (예: 저희는 10년 경력의 전문가들이 운영하는 헤어샵입니다...)"
-                    />
-                  </div>
+                <h3 className="text-lg font-semibold text-gray-800">업체 프로필 설정</h3>
+                
+                {/* 업체 설명 */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">업체 설명</label>
+                  <textarea
+                    value={formData.businessDescription}
+                    onChange={(e) => handleInputChange('businessDescription', e.target.value)}
+                    rows={4}
+                    placeholder="고객에게 보여줄 업체 소개글을 입력해주세요."
+                    className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400"
+                  />
+                </div>
 
-                  {/* 영업시간 */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-gray-700">영업시간</label>
-                    <div className="space-y-2">
-                      {Object.entries({
-                        monday: '월요일',
-                        tuesday: '화요일', 
-                        wednesday: '수요일',
-                        thursday: '목요일',
-                        friday: '금요일',
-                        saturday: '토요일',
-                        sunday: '일요일'
-                      }).map(([day, label]) => (
-                        <div key={day} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <div className="w-16 text-sm font-medium text-gray-700">{label}</div>
-                          <input
-                            type="checkbox"
-                            checked={!formData.businessHours[day as keyof typeof formData.businessHours].closed}
-                            onChange={(e) => {
-                              const newHours = { ...formData.businessHours };
-                              newHours[day as keyof typeof formData.businessHours].closed = !e.target.checked;
-                              handleInputChange('businessHours', newHours);
-                            }}
-                            className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-                          />
-                          <span className="text-sm text-gray-600">영업</span>
-                          {!formData.businessHours[day as keyof typeof formData.businessHours].closed && (
-                            <>
-                              <input
-                                type="time"
-                                value={formData.businessHours[day as keyof typeof formData.businessHours].open}
-                                onChange={(e) => {
-                                  const newHours = { ...formData.businessHours };
-                                  newHours[day as keyof typeof formData.businessHours].open = e.target.value;
-                                  handleInputChange('businessHours', newHours);
-                                }}
-                                className="px-2 py-1 border border-gray-200 rounded text-sm"
-                              />
-                              <span className="text-gray-500">~</span>
-                              <input
-                                type="time"
-                                value={formData.businessHours[day as keyof typeof formData.businessHours].close}
-                                onChange={(e) => {
-                                  const newHours = { ...formData.businessHours };
-                                  newHours[day as keyof typeof formData.businessHours].close = e.target.value;
-                                  handleInputChange('businessHours', newHours);
-                                }}
-                                className="px-2 py-1 border border-gray-200 rounded text-sm"
-                              />
-                            </>
-                          )}
-                        </div>
-                      ))}
+                {/* 영업 시간 */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-gray-700">영업시간</label>
+                  {Object.entries(formData.businessHours).map(([day, { open, close, closed }]) => (
+                    <div key={day} className="grid grid-cols-4 items-center gap-2">
+                      <span className="capitalize text-sm">{day}</span>
+                      <input type="time" value={open} disabled={closed} onChange={(e) => handleBusinessHoursChange(day, 'open', e.target.value)} className="w-full px-2 py-1 border rounded-lg disabled:opacity-50" />
+                      <input type="time" value={close} disabled={closed} onChange={(e) => handleBusinessHoursChange(day, 'close', e.target.value)} className="w-full px-2 py-1 border rounded-lg disabled:opacity-50" />
+                      <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={closed} onChange={(e) => handleBusinessHoursChange(day, 'closed', e.target.checked)} /> 휴무</label>
                     </div>
+                  ))}
+                </div>
+
+                {/* 편의시설 */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-gray-700">편의시설</label>
+                   <div className="grid grid-cols-2 gap-3">
+                    <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                      <input type="checkbox" checked={formData.parkingAvailable} onChange={(e) => handleInputChange('parkingAvailable', e.target.checked)} />
+                      <span>주차 가능</span>
+                    </label>
+                     <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                      <input type="checkbox" checked={formData.wifiAvailable} onChange={(e) => handleInputChange('wifiAvailable', e.target.checked)} />
+                       <span>WiFi 제공</span>
+                    </label>
+                  </div>
+                </div>
+                
+                {/* 구인 공고 등록 (선택사항) */}
+                <div className="space-y-4 pt-6 border-t border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                      <FontAwesomeIcon icon={faBriefcase} className="text-amber-500" />
+                      바로 직원을 구하시겠어요? (선택사항)
+                    </h3>
+                    <label htmlFor="job-post-toggle" className="flex items-center cursor-pointer">
+                      <div className="relative">
+                        <input 
+                          type="checkbox" 
+                          id="job-post-toggle" 
+                          className="sr-only" 
+                          checked={wantsToPostJob}
+                          onChange={() => setWantsToPostJob(!wantsToPostJob)}
+                        />
+                        <div className={`block w-14 h-8 rounded-full ${wantsToPostJob ? 'bg-amber-500' : 'bg-gray-300'}`}></div>
+                        <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${wantsToPostJob ? 'transform translate-x-6' : ''}`}></div>
+                      </div>
+                    </label>
                   </div>
 
-                  {/* 편의시설 */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-gray-700">편의시설</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={formData.parkingAvailable}
-                          onChange={(e) => handleInputChange('parkingAvailable', e.target.checked)}
-                          className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-                        />
-                        <span className="text-sm">주차 가능</span>
-                      </label>
-                      <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={formData.wifiAvailable}
-                          onChange={(e) => handleInputChange('wifiAvailable', e.target.checked)}
-                          className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-                        />
-                        <span className="text-sm">Wi-Fi</span>
-                      </label>
+                  {wantsToPostJob && (
+                    <div className="space-y-4 p-4 bg-gray-50 rounded-2xl">
+                      {/* 모집 분야 */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">모집 분야</label>
+                        <input type="text" value={formData.jobPosition} onChange={(e) => handleInputChange('jobPosition', e.target.value)} placeholder="예: 헤어 디자이너" className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400" />
+                      </div>
+
+                      {/* 고용 형태 */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">고용 형태</label>
+                        <select value={formData.employmentType} onChange={(e) => handleInputChange('employmentType', e.target.value)} className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400">
+                          <option value="full-time">정규직</option>
+                          <option value="part-time">파트타임</option>
+                          <option value="contract">계약직</option>
+                        </select>
+                      </div>
+
+                      {/* 급여 조건 */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">급여 조건</label>
+                        <input type="text" value={formData.salary} onChange={(e) => handleInputChange('salary', e.target.value)} placeholder="예: 월급 300만원 / 협의 후 결정" className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400" />
+                      </div>
+
+                      {/* 주요 업무 */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">주요 업무</label>
+                        <textarea value={formData.jobDescription} onChange={(e) => handleInputChange('jobDescription', e.target.value)} rows={3} placeholder="담당할 주요 업무에 대해 설명해주세요." className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400"></textarea>
+                      </div>
+
+                      {/* 자격 요건 */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">자격 요건</label>
+                        <textarea value={formData.qualifications} onChange={(e) => handleInputChange('qualifications', e.target.value)} rows={3} placeholder="필요한 자격 요건이나 우대사항을 입력해주세요." className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-400"></textarea>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* 결제 방법 */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-gray-700">결제 방법</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={formData.cardPayment}
-                          onChange={(e) => handleInputChange('cardPayment', e.target.checked)}
-                          className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-                        />
-                        <span className="text-sm">카드 결제</span>
-                      </label>
-                      <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={formData.cashPayment}
-                          onChange={(e) => handleInputChange('cashPayment', e.target.checked)}
-                          className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-                        />
-                        <span className="text-sm">현금 결제</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* 이미지 업로드 안내 */}
-                  <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-                    <h4 className="text-sm font-medium text-blue-800 mb-2">📸 이미지 업로드</h4>
-                    <p className="text-sm text-blue-700">
-                      회원가입 완료 후 업체 관리 페이지에서 업체 사진, 작업 사진, 인테리어 사진 등을 업로드할 수 있습니다.
-                    </p>
-                  </div>
-
-                  {/* 위치 정보 안내 */}
-                  <div className="p-4 bg-green-50 rounded-xl border border-green-200">
-                    <h4 className="text-sm font-medium text-green-800 mb-2">📍 위치 정보</h4>
-                    <p className="text-sm text-green-700">
-                      정확한 위치는 회원가입 완료 후 업체 관리 페이지에서 지도 API를 통해 설정할 수 있습니다.
-                    </p>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
