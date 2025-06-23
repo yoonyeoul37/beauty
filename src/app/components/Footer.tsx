@@ -48,7 +48,11 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between gap-8">
           {/* 로고 및 기본 정보 */}
           <div className={`space-y-4 transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-            <h3 className="text-2xl font-bold text-white mb-4">스타일로그</h3>
+            <Link href="/" className="block">
+              <h3 className="text-2xl font-bold text-white mb-4 hover:text-amber-400 transition-colors duration-300 cursor-pointer">
+                스타일로그
+              </h3>
+            </Link>
             <div className="space-y-2">
               {companyInfo.map((info, index) => (
                 <div 
