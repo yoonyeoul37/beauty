@@ -13,6 +13,8 @@ import FeatureReview from './components/FeatureReview';
 import RecommendedArticlesSection from './components/RecommendedArticlesSection';
 import { timeSpecialReviews } from '@/app/data/reviews';
 import StickyHeader from './components/StickyHeader';
+import BeautyTrendSection from './components/BeautyTrendSection';
+import PromoCardBanner from './components/PromoCardBanner';
 
 export default function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -74,6 +76,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <BeautyTrendSection />
+      <PromoCardBanner />
       
       <section className="w-full py-20 bg-gray-50">
         <div className="max-w-[1240px] mx-auto text-center">

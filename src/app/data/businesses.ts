@@ -571,4 +571,27 @@ export const getBusinessesByCategory = (category: string) => {
 // 업체 ID로 업체 찾기
 export const getBusinessById = (id: string) => {
   return sampleBusinesses.find(business => business.id === id);
+};
+
+// 위치 기반으로 가까운 업체 찾기 (하버사인 공식 사용)
+export const getNearbyBusinesses = (userLat: number, userLng: number, radiusKm: number = 5, limit: number = 3) => {
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371; // 지구의 반지름 (km)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
+  return sampleBusinesses
+    .map(business => ({
+      ...business,
+      distance: calculateDistance(userLat, userLng, business.location.lat, business.location.lng)
+    }))
+    .filter(business => business.distance <= radiusKm)
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, limit);
 }; 
