@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt, faClock, faChevronDown, faHeart as faHeartSolid, faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faChevronDown, faHeart as faHeartSolid, faBolt, faStar, faFire, faClock as faClockIcon, faGem, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import StarRating from './StarRating';
 import ReviewModal from './ReviewModal';
 import SortByModal from './SortByModal';
-import { Salon, Service } from '@/data/definitions';
+import { Salon, Service, BusinessProfile } from '@/data/definitions';
+import { getActiveTimeSpecialBusinesses } from '@/app/data/businesses';
 
 // 임시 타입 정의. 실제 Salon 타입은 더 복잡할 수 있음.
 // TimeSpecialSection에서 전달되는 props에 맞게 확장
@@ -23,266 +24,234 @@ function classNames(...classes: string[]) {
 }
 
 interface TimeSpecialGridProps {
-  initialSalons: DisplaySalon[];
-  reviews: Record<string, { nickname: string; text: string }[]>;
+  reviews?: Record<string, { nickname: string; text: string }[]>;
+  initialSalons?: any[];
 }
 
-export default function TimeSpecialGrid({ initialSalons, reviews }: TimeSpecialGridProps) {
-  const [isReviewModalOpen, setReviewModalOpen] = useState(false);
-  const [isSortByModalOpen, setSortByModalOpen] = useState(false);
-  const [selectedSalon, setSelectedSalon] = useState<DisplaySalon | null>(null);
-  const [showAll, setShowAll] = useState(false);
-  const [showViewDropdown, setShowViewDropdown] = useState(false);
-  const [showSortDropdown, setShowSortDropdown] = useState(false);
-  const [sortType, setSortType] = useState<'distance' | 'review' | 'price'>('distance');
-  const [likedSalons, setLikedSalons] = useState<string[]>([]);
-
-  const handleOpenReviewModal = (salon: DisplaySalon) => {
-    setSelectedSalon(salon);
-    setReviewModalOpen(true);
-  };
-  
-  const handleLikeClick = (e: React.MouseEvent, salonId: string) => {
-    e.stopPropagation();
-    setLikedSalons(prev =>
-      prev.includes(salonId)
-        ? prev.filter(id => id !== salonId)
-        : [...prev, salonId]
-    );
-  };
-  
-  const salonsToShow = showAll ? initialSalons : initialSalons.slice(0, 6);
+const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
+  const [businesses, setBusinesses] = useState<BusinessProfile[]>([]);
+  const [visibleCount, setVisibleCount] = useState(8);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (showViewDropdown || showSortDropdown) {
-        const dropdown = document.querySelector('.dropdown');
-        if (dropdown && !dropdown.contains(e.target as Node)) {
-          setShowViewDropdown(false);
-          setShowSortDropdown(false);
-        }
-      }
-    };
-
-    document.addEventListener('click', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
+    // 실제 업체 데이터 사용
+    const activeBusinesses = getActiveTimeSpecialBusinesses();
+    setBusinesses(activeBusinesses);
   }, []);
 
+  const toggleFavorite = (businessId: string) => {
+    const newFavorites = new Set(favorites);
+    if (newFavorites.has(businessId)) {
+      newFavorites.delete(businessId);
+    } else {
+      newFavorites.add(businessId);
+    }
+    setFavorites(newFavorites);
+  };
+
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <FontAwesomeIcon
+        key={i}
+        icon={faStar}
+        className={`text-sm ${i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+      />
+    ));
+  };
+
+  const formatTimeSpecial = (business: BusinessProfile) => {
+    if (!business.timeSpecial?.active) return null;
+    
+    const originalPrice = business.services[business.timeSpecial.service];
+    const discountedPrice = Math.round(originalPrice * (1 - business.timeSpecial.discountRate / 100));
+    
+    return {
+      service: business.timeSpecial.service,
+      originalPrice,
+      discountedPrice,
+      discountRate: business.timeSpecial.discountRate,
+      description: business.timeSpecial.description
+    };
+  };
+
+  const getTwoServices = (business: BusinessProfile) => {
+    const services = Object.entries(business.services);
+    const timeSpecial = formatTimeSpecial(business);
+    
+    if (timeSpecial) {
+      // 타임스페셜 서비스와 다른 서비스 1개 선택
+      const otherServices = services.filter(([serviceName]) => serviceName !== timeSpecial.service);
+      const secondService = otherServices[Math.floor(Math.random() * otherServices.length)];
+      
+      return [
+        {
+          name: timeSpecial.service,
+          price: timeSpecial.discountedPrice,
+          originalPrice: timeSpecial.originalPrice,
+          discount: `${timeSpecial.discountRate}%`,
+          isTimeSpecial: true
+        },
+        {
+          name: secondService[0],
+          price: secondService[1],
+          originalPrice: secondService[1],
+          discount: null,
+          isTimeSpecial: false
+        }
+      ];
+    } else {
+      // 타임스페셜이 없으면 2개 서비스 랜덤 선택
+      const shuffled = services.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, 2).map(([serviceName, price]) => ({
+        name: serviceName,
+        price,
+        originalPrice: price,
+        discount: null,
+        isTimeSpecial: false
+      }));
+    }
+  };
+
+  const visibleBusinesses = businesses.slice(0, visibleCount);
+
   return (
-    <>
-      <div className="flex justify-between items-center mb-12 text-center flex-col">
-        <div className="relative mb-4">
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight time-special-title">
-            <FontAwesomeIcon icon={faBolt} className="mr-3 text-yellow-400" />
+    <div>
+      {/* 제목 섹션 */}
+      <div className="text-center mb-12">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+            <FontAwesomeIcon icon={faBolt} className="text-white text-xl" />
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             타임스페셜
           </h2>
-          <div className="time-special-glow"></div>
         </div>
-        <p className="text-lg text-gray-600 time-special-subtitle">
-          놓치면 후회하는 한정 특가! 지금 바로 확인하세요.
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          지금 바로 예약하면 특별한 할인 혜택을 받을 수 있어요!
         </p>
       </div>
 
-      <div className="flex justify-end items-center mb-6 space-x-4">
-        <div className="relative">
-          <button
-            onClick={() => setShowViewDropdown(!showViewDropdown)}
-            className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-          >
-            <span>{showAll ? '간단히 보기' : '전체보기'}</span>
-            <FontAwesomeIcon icon={faChevronDown} className="ml-2 -mr-1 h-5 w-5" />
-          </button>
-          {showViewDropdown && (
-            <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
-              <div className="py-1">
-                <button
-                  onClick={() => {
-                    setShowAll(false);
-                    setShowViewDropdown(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  간단히 보기
-                </button>
-                <button
-                  onClick={() => {
-                    setShowAll(true);
-                    setShowViewDropdown(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  전체보기
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        <div className="relative">
-          <button
-            onClick={() => setShowSortDropdown(!showSortDropdown)}
-            className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-          >
-            <span>정렬 기준</span>
-            <FontAwesomeIcon icon={faChevronDown} className="ml-2 -mr-1 h-5 w-5" />
-          </button>
-          {showSortDropdown && (
-            <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
-              <div className="py-1">
-                <button
-                  onClick={() => {
-                    setSortType('distance');
-                    setShowSortDropdown(false);
-                  }}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                    sortType === 'distance' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
-                  }`}
-                >
-                  거리순
-                </button>
-                <button
-                  onClick={() => {
-                    setSortType('review');
-                    setShowSortDropdown(false);
-                  }}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                    sortType === 'review' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
-                  }`}
-                >
-                  리뷰순
-                </button>
-                <button
-                  onClick={() => {
-                    setSortType('price');
-                    setShowSortDropdown(false);
-                  }}
-                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                    sortType === 'price' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
-                  }`}
-                >
-                  가격순
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {salonsToShow.map((salon, idx) => (
-          <div
-            key={salon.id}
-            className="bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 hover:-translate-y-2"
-            onClick={() => handleOpenReviewModal(salon)}
-          >
-            <div className="block relative w-full pt-[75%]">
-              <div className="absolute inset-0">
+      {/* 업체 그리드 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        {visibleBusinesses.map((business) => {
+          const timeSpecial = formatTimeSpecial(business);
+          
+          return (
+            <div key={business.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              {/* 이미지 */}
+              <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src={salon.images[0]}
-                  alt={salon.name}
+                  src={business.images.profile}
+                  alt={business.businessName}
                   fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  quality={90}
-                  priority={idx < 3}
+                  className="object-cover transition-transform duration-300 hover:scale-105"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                
+                {/* 타임스페셜 배지 */}
+                {timeSpecial && (
+                  <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                    {timeSpecial.discountRate}% 할인
+                  </div>
+                )}
+                
+                {/* 찜하기 버튼 */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavorite(business.id);
+                  }}
+                  className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+                    favorites.has(business.id)
+                      ? 'bg-red-500 text-white'
+                      : 'bg-white/80 text-gray-600 hover:bg-white'
+                  }`}
+                >
+                  <FontAwesomeIcon icon={faHeartSolid} className="text-sm" />
+                </button>
               </div>
-              <button
-                onClick={(e) => handleLikeClick(e, salon.id)}
-                className="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-40 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-60 transition-colors z-10"
-                aria-label="찜하기"
-              >
-                <FontAwesomeIcon
-                  icon={likedSalons.includes(salon.id) ? faHeartSolid : faHeartRegular}
-                  className={likedSalons.includes(salon.id) ? "text-red-500" : "text-white"}
-                />
-              </button>
-            </div>
-            {/* Card content below image */}
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold mb-2 truncate">{salon.name}</h3>
-                  <div className="flex items-center gap-2 text-gray-500 text-sm">
-                    <FontAwesomeIcon icon={faMapMarkerAlt} />
-                    <span>{salon.address}</span>
+
+              {/* 콘텐츠 */}
+              <div className="p-4">
+                {/* 업체 정보 */}
+                <div className="mb-3">
+                  <h3 className="font-bold text-gray-900 mb-1 line-clamp-1">
+                    {business.businessName}
+                  </h3>
+                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-amber-500" />
+                    <span className="line-clamp-1">{business.address}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {renderStars(business.stats.averageRating)}
+                    <span className="text-sm text-gray-600">
+                      {business.stats.averageRating} ({business.stats.totalReviews})
+                    </span>
                   </div>
                 </div>
-                <div className="flex flex-col items-end">
-                  <StarRating rating={salon.rating} />
-                  <button 
-                    className="text-sm text-gray-500 mt-1 hover:text-pink-500 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenReviewModal(salon);
-                    }}
-                  >
-                    {salon.reviewCount} 리뷰
-                  </button>
-                </div>
-              </div>
 
-              {/* 타임 스페셜 정보 */}
-              <div className="bg-gray-50 rounded-xl p-4 mb-4 space-y-2">
-                <div className="flex items-center gap-2 text-gray-600 text-sm">
-                  <FontAwesomeIcon icon={faClock} className="text-gray-400" />
-                  <span>{salon.time}</span>
-                </div>
-                
-                {(salon.shuffledServices || salon.services).map((service, serviceIdx) => {
-                  if (service.type !== 'simple') return null;
-                  return (
-                    <div key={serviceIdx} className="text-sm">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-gray-800">{service.name}</span>
-                        <div className="flex items-center gap-2">
-                          {service.originalPrice && (
-                            <span className="text-gray-400 line-through">
-                              ₩{service.originalPrice.toLocaleString()}
+                {/* 서비스 정보 */}
+                <div className="bg-gray-50 rounded-lg p-3 mb-3 space-y-2">
+                  {/* 타임스페셜 시간 표시 */}
+                  {timeSpecial && (
+                    <div className="flex items-center gap-2 text-xs text-amber-600 font-medium mb-2">
+                      <FontAwesomeIcon icon={faClock} className="text-xs" />
+                      <span>오늘 14:00-16:00 한정</span>
+                    </div>
+                  )}
+                  
+                  {getTwoServices(business).map((service, index) => (
+                    <div key={index} className="text-sm">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-gray-800 truncate flex-shrink-0 min-w-0">
+                          {service.name}
+                        </span>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          {service.originalPrice !== service.price && (
+                            <span className="text-gray-400 line-through text-xs whitespace-nowrap">
+                              {service.originalPrice.toLocaleString()}원
                             </span>
                           )}
-                          <span className="text-lg font-bold text-red-500">
-                            ₩{typeof service.price === 'number' ? service.price.toLocaleString() : service.price}
+                          <span className={`font-bold ${service.isTimeSpecial ? 'text-red-500' : 'text-gray-900'} text-sm whitespace-nowrap`}>
+                            {service.price.toLocaleString()}원
                           </span>
                           {service.discount && (
-                            <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded-md">
+                            <span className="bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded flex-shrink-0 whitespace-nowrap">
                               {service.discount}
                             </span>
                           )}
                         </div>
                       </div>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+
+                {/* 예약 버튼 */}
+                <Link
+                  href={`/business/${business.id}`}
+                  className="block w-full bg-black text-white text-center py-3 rounded-lg font-medium hover:bg-gray-800 transition-all duration-300 transform hover:scale-105"
+                >
+                  예약하기
+                </Link>
               </div>
-
-              <button className="w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-gray-900 transition-colors">
-                예약하기
-              </button>
             </div>
-          </div>
-        ))}
-      </div>
-      <div className="mt-8 text-center sm:hidden">
-        <button
-          onClick={() => setShowAll(!showAll)}
-          className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-        >
-          {showAll ? '간단히 보기' : '전체보기'}
-        </button>
+          );
+        })}
       </div>
 
-      {selectedSalon && (
-        <ReviewModal
-          isOpen={!!selectedSalon}
-          salonName={selectedSalon.name}
-          reviews={reviews[selectedSalon.name] || []}
-          onClose={() => setSelectedSalon(null)}
-        />
+      {/* 더보기 버튼 */}
+      {visibleCount < businesses.length && (
+        <div className="text-center">
+          <button
+            onClick={() => setVisibleCount(prev => prev + 8)}
+            className="px-8 py-3 bg-white border-2 border-amber-500 text-amber-600 rounded-lg font-medium hover:bg-amber-50 transition-colors duration-200"
+          >
+            더 많은 타임스페셜 보기
+          </button>
+        </div>
       )}
-    </>
+    </div>
   );
-} 
+};
+
+export default TimeSpecialGrid; 

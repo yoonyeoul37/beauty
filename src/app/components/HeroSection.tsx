@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faComments, faBuilding, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import TestDropdown from './TestDropdown';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -123,8 +123,8 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
         </div>
       </div>
 
-      {/* 커뮤니티 & 잡스 링크 - 오른쪽 상단 */}
-      <div style={{ position: 'absolute', top: '20px', right: '40px',  zIndex: 10 }}>
+      {/* 커뮤니티 & 회원가입 링크 - 오른쪽 상단 */}
+      <div style={{ position: 'absolute', top: '20px', right: '40px',  zIndex: 10, display: 'flex', gap: '12px' }}>
         <Link 
           href="/community"
           className="community-link group flex items-center gap-2 transition-all duration-300 px-4 py-2 rounded-full hover:bg-white/20"
@@ -148,6 +148,32 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
               fontFamily: "'Gmarket Sans', sans-serif",
             }}>
               커뮤니티
+            </span>
+        </Link>
+        
+        <Link 
+          href="/signup"
+          className="signup-link group flex items-center gap-2 transition-all duration-300 px-4 py-2 rounded-full hover:bg-white/20"
+          style={{
+            ...textStyle,
+            animation: 'fadeInRight 1s ease-out 1.2s both',
+            opacity: 0,
+            transform: 'translateX(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(5px)',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+          }}
+        >
+            <FontAwesomeIcon 
+              icon={faBuilding} 
+              className="transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" 
+            />
+            <span style={{
+              fontSize: '14px', 
+              fontWeight: 600,
+              fontFamily: "'Gmarket Sans', sans-serif",
+            }}>
+              회원가입
             </span>
         </Link>
       </div>
