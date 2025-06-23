@@ -313,20 +313,6 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
                   </div>
                 )}
                 
-                {/* 상품 판매 배지 */}
-                {business.products && business.products.length > 0 && (
-                  <div className="absolute top-3 left-3 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-bold hover:scale-110 transition-transform duration-200 z-10">
-                    🛍️ 상품판매
-                  </div>
-                )}
-                
-                {/* 타임스페셜과 상품 판매가 모두 있는 경우 */}
-                {timeSpecial && business.products && business.products.length > 0 && (
-                  <div className="absolute top-12 left-3 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-bold hover:scale-110 transition-transform duration-200 z-10">
-                    🛍️ 상품판매
-                  </div>
-                )}
-                
                 {/* 찜하기 버튼 */}
                 <button
                   onClick={(e) => {
