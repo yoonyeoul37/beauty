@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/24/solid';
@@ -89,6 +89,81 @@ const sampleReviews = [
   }
 ];
 
+// 추천업체 카드 문구 리스트
+const cardCopyList = [
+  "고객 만족도 1위, 믿고 맡기는 전문가",
+  "실력과 친절을 모두 갖춘 프리미엄 살롱",
+  "트렌디한 스타일, 꼼꼼한 시술",
+  "당신만을 위한 1:1 맞춤 시술",
+  "소중한 하루, 아름다움으로 채워드려요",
+  "편안한 분위기, 정성 가득한 서비스",
+  "첫 방문 고객 20% 할인 이벤트 중!",
+  "지금 예약하면 무료 스타일링 서비스",
+  "리뷰 작성 시 홈케어 샘플 증정"
+];
+
+function getRandomCopy() {
+  return cardCopyList[Math.floor(Math.random() * cardCopyList.length)];
+}
+
+function SalonCard({ salon, liked, onLike, onReview }) {
+  const [copy, setCopy] = useState(cardCopyList[0]);
+  useEffect(() => {
+    setCopy(getRandomCopy());
+  }, []);
+  return (
+    <div
+      className="group block flex-shrink-0 w-72 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 outline-none focus:outline-none border border-gray-200"
+      tabIndex={0}
+    >
+      <Link href="#" className="block">
+        <div className="relative h-40 overflow-hidden rounded-t-lg">
+          <Image
+            src={salon.imageUrl}
+            alt={salon.name}
+            fill
+            style={{ objectFit: 'cover' }}
+            className="group-hover:scale-105 transition-transform duration-300"
+          />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onReview(salon);
+            }}
+            className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs font-bold py-1 px-2 rounded-full flex items-center hover:bg-opacity-70 transition-all cursor-pointer"
+          >
+            <StarIcon className="h-3 w-3 text-yellow-300 mr-1" />
+            <span>{salon.rating.toFixed(1)}</span>
+            <span className="ml-1">({salon.reviewCount})</span>
+          </button>
+        </div>
+        <div className="relative p-4 h-40 flex flex-col justify-center items-center text-center">
+          <button
+            onClick={(e) => onLike(e, salon.id)}
+            className="absolute -top-1 right-0 p-2 text-gray-400 hover:text-red-500 transition-colors z-10"
+            aria-label="찜하기"
+          >
+            <FontAwesomeIcon
+              icon={liked ? faHeartSolid : faHeartRegular}
+              className={liked ? "text-red-500" : ""}
+              size="lg"
+            />
+          </button>
+          <div className="transform -translate-y-[30px]">
+            <p className="text-xl text-teal-600 font-semibold">{salon.category}</p>
+            <h3 className="mt-1 text-lg font-bold text-gray-900">
+              {salon.name}
+            </h3>
+          </div>
+          {/* 랜덤 카피 문구 */}
+          <div className="italic text-gray-700 text-sm mt-2 mb-2 min-h-[32px] flex items-center justify-center">{copy}</div>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
 const FeaturedSalons = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [selectedSalon, setSelectedSalon] = useState<any>(null);
@@ -150,55 +225,17 @@ const FeaturedSalons = () => {
             className="flex gap-x-6 overflow-x-auto scroll-smooth scrollbar-hide pb-4"
           >
             {featuredSalons.map((salon) => (
-              <div key={salon.id} className="group block flex-shrink-0 w-72 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                <Link href="#" className="block">
-                  <div className="relative h-40 overflow-hidden rounded-t-lg">
-                    <Image
-                      src={salon.imageUrl}
-                      alt={salon.name}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      className="group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleReviewClick(salon);
-                      }}
-                      className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs font-bold py-1 px-2 rounded-full flex items-center hover:bg-opacity-70 transition-all cursor-pointer"
-                    >
-                      <StarIcon className="h-3 w-3 text-yellow-300 mr-1" />
-                      <span>{salon.rating.toFixed(1)}</span>
-                      <span className="ml-1">({salon.reviewCount})</span>
-                    </button>
-                  </div>
-                  <div className="relative p-4 h-40 flex flex-col justify-center items-center text-center">
-                    <button
-                      onClick={(e) => handleLikeClick(e, salon.id)}
-                      className="absolute -top-1 right-0 p-2 text-gray-400 hover:text-red-500 transition-colors z-10"
-                      aria-label="찜하기"
-                    >
-                      <FontAwesomeIcon
-                        icon={likedSalons.includes(salon.id) ? faHeartSolid : faHeartRegular}
-                        className={likedSalons.includes(salon.id) ? "text-red-500" : ""}
-                        size="lg"
-                      />
-                    </button>
-                    <div className="transform -translate-y-[30px]">
-                      <p className="text-xl text-teal-600 font-semibold">{salon.category}</p>
-                      <h3 className="mt-1 text-lg font-bold text-gray-900">
-                        {salon.name}
-                      </h3>
-                    </div>
-                  </div>
-                </Link>
-              </div>
+              <SalonCard
+                key={salon.id}
+                salon={salon}
+                liked={likedSalons.includes(salon.id)}
+                onLike={handleLikeClick}
+                onReview={handleReviewClick}
+              />
             ))}
           </div>
         </div>
       </div>
-
       {selectedSalon && (
         <ReviewModal
           isOpen={isModalOpen}
