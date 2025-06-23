@@ -59,7 +59,7 @@ export default function Footer() {
   return (
     <footer 
       ref={footerRef}
-      className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 border-t border-white/10 mt-16 overflow-hidden"
+      className="relative bg-gradient-to-br from-black via-gray-900 to-black border-t border-white/10 mt-16 overflow-hidden"
     >
       {/* 배경 패턴 */}
       <div className="absolute inset-0 opacity-5">
