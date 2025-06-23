@@ -42,11 +42,11 @@ export default function Footer() {
   };
 
   const companyInfo = [
-    { icon: faBuilding, label: '회사명', value: '태가나주식회사' },
-    { icon: faUser, label: '대표', value: '윤여울' },
-    { icon: faMapMarkerAlt, label: '주소', value: '서울특별시 서초구 마방로6길 13 4층' },
-    { icon: faPhoneAlt, label: '고객센터', value: '1533-8237 (평일 10:00 - 18:00)' },
-    { icon: faEnvelope, label: '이메일', value: 'contact@tegana.com' },
+    { icon: faBuilding, label: 'Company', value: '태가나주식회사' },
+    { icon: faUser, label: 'CEO', value: '윤여울' },
+    { icon: faMapMarkerAlt, label: 'Address', value: '서울특별시 서초구 마방로6길 13 4층' },
+    { icon: faPhoneAlt, label: 'Customer Service', value: '1533-8237 (평일 10:00 - 18:00)' },
+    { icon: faEnvelope, label: 'Email', value: 'contact@tegana.com' },
   ];
 
   const socialLinks = [
@@ -141,6 +141,7 @@ export default function Footer() {
                 <li><Link href="/about" className="text-slate-300 hover:text-amber-400 transition-colors duration-200">태가나 팀</Link></li>
                 <li><Link href="/careers" className="text-slate-300 hover:text-amber-400 transition-colors duration-200">채용</Link></li>
                 <li><Link href="/business" className="text-slate-300 hover:text-amber-400 transition-colors duration-200">비즈니스</Link></li>
+                <li><Link href="/partnership" className="text-slate-300 hover:text-amber-400 transition-colors duration-200">파트너십</Link></li>
               </ul>
             </div>
           </div>
