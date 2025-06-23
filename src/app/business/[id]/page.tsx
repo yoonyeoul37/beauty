@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faMapMarkerAlt, 
@@ -23,9 +23,9 @@ import Link from 'next/link';
 import { getBusinessById } from '@/app/data/businesses';
 
 interface BusinessDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function BusinessDetailPage({ params }: BusinessDetailPageProps) {
@@ -33,7 +33,8 @@ export default function BusinessDetailPage({ params }: BusinessDetailPageProps) 
   const [isFavorite, setIsFavorite] = useState(false);
   const [activeTab, setActiveTab] = useState('info');
   
-  const business = getBusinessById(params.id);
+  const resolvedParams = use(params);
+  const business = getBusinessById(resolvedParams.id);
   
   if (!business) {
     return (
