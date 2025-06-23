@@ -1,9 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBullhorn, faStar, faMapMarkerAlt, faStore, faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, usePathname } from 'next/navigation';
+import StickyHeader from '../components/StickyHeader';
 
 // 타입 정의 추가
 interface Post {
@@ -162,7 +163,17 @@ export default function CommunityMain() {
   const [experience, setExperience] = useState('경력');
   const [detailCondition, setDetailCondition] = useState('상세조건');
   const [activeJobTab, setActiveJobTab] = useState<'employer' | 'seeker'>('employer');
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsHeaderVisible(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const banners = [...bannerData, locationAd];
 
@@ -173,44 +184,49 @@ export default function CommunityMain() {
 
   return (
     <main style={{ minHeight: '100vh', background: '#F7FAFC', paddingBottom: '5rem' }}>
-      {/* 상단 여백만 남기고 헤더 완전 삭제 */}
-      <div className="h-6" />
+      {/* Sticky Header */}
+      <StickyHeader isVisible={isHeaderVisible} />
       
-      {/* 홈으로 가기 버튼 */}
-      <div className="max-w-5xl mx-auto px-4 py-4">
-        <Link 
-          href="/"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          홈으로 돌아가기
-        </Link>
-      </div>
+      {/* 상단 여백 */}
+      <div className="h-6" />
       
       {/* 광고형 배너 3칸 복구 */}
       <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-6">
         {banners.map((banner, i) => (
-          <Link href={banner.link || '#'} key={i} className="group">
-            <div className={`rounded-2xl shadow-md ${banner.bg} p-7 flex flex-col items-center text-gray-800 relative overflow-hidden group-hover:scale-105 transition-transform duration-300`}>
-              <span className={`mb-3 text-3xl drop-shadow-lg ${banner.iconColor}`}>
-                <FontAwesomeIcon icon={banner.icon} />
-              </span>
-              <div className="font-bold text-xl mb-1 tracking-tight flex items-center gap-2">
-                {banner.title}
+          <div key={i} className="relative group">
+            {/* 홈 아이콘 - 6월 신규회원 혜택 카드에만 표시 */}
+            {banner.title === '6월 신규회원 혜택!' && (
+              <Link 
+                href="/"
+                className="absolute -left-2 z-10 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-gray-600 hover:text-amber-500 hover:scale-110 transition-all duration-200"
+                style={{ top: '-50px' }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </Link>
+            )}
+            
+            <Link href={banner.link || '#'} className="block">
+              <div className={`rounded-2xl shadow-md ${banner.bg} p-7 flex flex-col items-center text-gray-800 relative overflow-hidden group-hover:scale-105 transition-transform duration-300`}>
+                <span className={`mb-3 text-3xl drop-shadow-lg ${banner.iconColor}`}>
+                  <FontAwesomeIcon icon={banner.icon} />
+                </span>
+                <div className="font-bold text-xl mb-1 tracking-tight flex items-center gap-2">
+                  {banner.title}
+                  {banner.ad && (
+                    <span className="ml-1 px-2 py-0.5 text-xs font-bold bg-yellow-300 text-white rounded shadow">AD</span>
+                  )}
+                </div>
+                <div className={`text-sm ${banner.ad ? 'text-yellow-700' : 'opacity-80'}`}>{banner.desc}</div>
                 {banner.ad && (
-                  <span className="ml-1 px-2 py-0.5 text-xs font-bold bg-yellow-300 text-white rounded shadow">AD</span>
+                  <div className="absolute top-3 right-3 flex items-center gap-1 text-yellow-500 text-xs font-semibold">
+                    <FontAwesomeIcon icon={faMapMarkerAlt} /> 내 위치 기반
+                  </div>
                 )}
               </div>
-              <div className={`text-sm ${banner.ad ? 'text-yellow-700' : 'opacity-80'}`}>{banner.desc}</div>
-              {banner.ad && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 text-yellow-500 text-xs font-semibold">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} /> 내 위치 기반
-                </div>
-              )}
-            </div>
-          </Link>
+            </Link>
+          </div>
         ))}
       </div>
       {/* 게시판 탭 + 글쓰기 버튼 */}
