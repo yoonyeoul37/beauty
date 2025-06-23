@@ -468,6 +468,24 @@ export default function SignupPage() {
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-gray-800">타임스페셜 설정</h3>
                   
+                  {/* 타임스페셜 설명 */}
+                  <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
+                    <div className="flex items-start gap-3">
+                      <div className="text-blue-500 text-lg">💡</div>
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-blue-800">타임스페셜이란?</h4>
+                        <p className="text-sm text-blue-700 leading-relaxed">
+                          특정 시간대에만 적용되는 할인 서비스입니다. 예를 들어, 오후 2-4시 사이에 헤어컷 20% 할인, 
+                          평일 오전 10-12시에 네일아트 30% 할인 등을 설정할 수 있어요. 
+                          고객들이 특정 시간대에 더 많이 방문하도록 유도하고, 한가한 시간대의 매출을 높일 수 있습니다.
+                        </p>
+                        <div className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-lg inline-block">
+                          💰 매출 증대 • 🕐 시간대별 마케팅 • 🎯 고객 유입 증가
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
                   {/* 타임스페셜 등록 여부 */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">타임스페셜 등록</label>
@@ -500,6 +518,17 @@ export default function SignupPage() {
                   {/* 타임스페셜 상세 설정 */}
                   {hasTimeSpecial && selectedCategory && (
                     <div className="space-y-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                      {/* 설정 팁 */}
+                      <div className="p-3 bg-amber-100 rounded-lg border border-amber-300">
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-600 text-sm">💡</span>
+                          <div className="text-xs text-amber-800">
+                            <strong>설정 팁:</strong> 한가한 시간대(오전 10-12시, 오후 2-4시)나 특별한 날(생일, 기념일)에 할인을 설정하면 
+                            고객 유입이 늘어날 수 있어요. 할인율은 10-30% 정도가 적당합니다.
+                          </div>
+                        </div>
+                      </div>
+                      
                       {/* 서비스별 타임스페셜 설정 */}
                       <div className="space-y-6">
                         {formData.timeSpecial.services.map((service, serviceIndex) => (
@@ -668,13 +697,29 @@ export default function SignupPage() {
                       {/* 설명 */}
                       <div>
                         <label className="text-sm font-medium text-gray-700">타임스페셜 설명</label>
+                        <div className="mb-2">
+                          <p className="text-xs text-gray-600 mb-2">
+                            고객에게 보여질 할인 혜택 설명을 입력해주세요. 매력적인 문구로 고객의 관심을 끌어보세요!
+                          </p>
+                        </div>
                         <textarea
                           value={formData.timeSpecial.description}
                           onChange={(e) => handleInputChange('timeSpecial', { ...formData.timeSpecial, description: e.target.value })}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white/70 backdrop-blur-sm resize-none"
                           rows={3}
-                          placeholder="예: 신년 맞이 특별 할인! 다양한 서비스 할인 혜택"
+                          placeholder="예시: 
+• 신년 맞이 특별 할인! 다양한 서비스 할인 혜택
+• 오후 타임 특가! 2-4시 방문 시 20% 할인
+• 평일 오전 할인! 10-12시 방문 고객 특별 혜택"
                         />
+                        <div className="mt-2 p-2 bg-gray-50 rounded-lg">
+                          <p className="text-xs text-gray-600">
+                            <strong>💡 좋은 설명 예시:</strong><br/>
+                            • "오후 타임 특가! 한가한 시간대에 방문하시면 20% 할인"<br/>
+                            • "평일 오전 할인! 10-12시 방문 고객 특별 혜택"<br/>
+                            • "신규 고객 특별 할인! 첫 방문 시 30% 할인"
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}
