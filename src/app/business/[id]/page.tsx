@@ -254,13 +254,12 @@ export default function BusinessDetailPage({ params }: BusinessDetailPageProps) 
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">서비스 목록</h3>
                       <div className="space-y-4">
-                        {business.services.map((service, index) => (
+                        {Object.entries(business.services).map(([serviceName, price], index) => (
                           <div key={index} className="border border-gray-200 rounded-lg p-4">
                             <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-medium text-gray-900">{service.name}</h4>
-                              <span className="text-amber-600 font-semibold">{service.price.toLocaleString()}원</span>
+                              <h4 className="font-medium text-gray-900">{serviceName}</h4>
+                              <span className="text-amber-600 font-semibold">{price.toLocaleString()}원</span>
                             </div>
-                            <p className="text-gray-600 text-sm">{service.description}</p>
                           </div>
                         ))}
                       </div>
