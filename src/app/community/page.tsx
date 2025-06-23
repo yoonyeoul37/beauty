@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBullhorn, faStar, faMapMarkerAlt, faStore, faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faBullhorn, faStar, faMapMarkerAlt, faStore, faHeart as faSolidHeart, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useRouter, usePathname } from 'next/navigation';
 import StickyHeader from '../components/StickyHeader';
 
@@ -284,77 +284,90 @@ export default function CommunityMain() {
               >구직자</button>
             </div>
             {/* 필터 바 + 등록 버튼 */}
-            <div className="flex flex-wrap gap-3 md:gap-6 items-center mb-6 p-4 bg-white/70 rounded-xl shadow-sm">
+            <div className="flex flex-wrap gap-4 items-center mb-6 p-4 bg-white rounded-xl shadow-sm border border-slate-200">
               {/* 지역 드롭다운 */}
-              <select
-                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
-                style={{ textAlignLast: 'center' }}
-                value={city}
-                onChange={e => {
-                  setCity(e.target.value);
-                  setDistrict('구');
-                }}
-              >
-                {cityOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
-              </select>
+              <div className="relative w-32">
+                <select
+                  className="w-full appearance-none bg-white border border-slate-300 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  value={city}
+                  onChange={e => {
+                    setCity(e.target.value);
+                    setDistrict('구');
+                  }}
+                >
+                  {cityOptions.map((opt, idx) => <option key={opt + idx} value={opt}>{opt}</option>)}
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+              </div>
               {/* 구/군 드롭다운 */}
-              <select
-                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
-                style={{ textAlignLast: 'center' }}
-                value={district}
-                onChange={e => setDistrict(e.target.value)}
-              >
-                {(districtOptions[city] || ['구']).map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
-              </select>
+              <div className="relative w-32">
+                <select
+                  className="w-full appearance-none bg-white border border-slate-300 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  value={district}
+                  onChange={e => setDistrict(e.target.value)}
+                >
+                  {(districtOptions[city] || ['구']).map((opt, idx) => <option key={opt + idx} value={opt}>{opt}</option>)}
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+              </div>
               {/* 직종 드롭다운 */}
-              <select
-                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
-                style={{ textAlignLast: 'center' }}
-                value={jobType}
-                onChange={e => setJobType(e.target.value)}
-              >
-                {jobTypeOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
-              </select>
+              <div className="relative w-32">
+                <select
+                  className="w-full appearance-none bg-white border border-slate-300 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  value={jobType}
+                  onChange={e => setJobType(e.target.value)}
+                >
+                  {jobTypeOptions.map((opt, idx) => <option key={opt + idx} value={opt}>{opt}</option>)}
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+              </div>
               {/* 근무기간 드롭다운 */}
-              <select
-                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
-                style={{ textAlignLast: 'center' }}
-                value={workPeriod}
-                onChange={e => setWorkPeriod(e.target.value)}
-              >
-                {workPeriodOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
-              </select>
+              <div className="relative w-32">
+                <select
+                  className="w-full appearance-none bg-white border border-slate-300 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  value={workPeriod}
+                  onChange={e => setWorkPeriod(e.target.value)}
+                >
+                  {workPeriodOptions.map((opt, idx) => <option key={opt + idx} value={opt}>{opt}</option>)}
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+              </div>
               {/* 고용형태 드롭다운 */}
-              <select
-                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
-                style={{ textAlignLast: 'center' }}
-                value={employmentType}
-                onChange={e => setEmploymentType(e.target.value)}
-              >
-                {employmentTypeOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
-              </select>
+              <div className="relative w-32">
+                <select
+                  className="w-full appearance-none bg-white border border-slate-300 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  value={employmentType}
+                  onChange={e => setEmploymentType(e.target.value)}
+                >
+                  {employmentTypeOptions.map((opt, idx) => <option key={opt + idx} value={opt}>{opt}</option>)}
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+              </div>
               {/* 경력 드롭다운 */}
-              <select
-                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
-                style={{ textAlignLast: 'center' }}
-                value={experience}
-                onChange={e => setExperience(e.target.value)}
-              >
-                {experienceOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
-              </select>
+              <div className="relative w-32">
+                <select
+                  className="w-full appearance-none bg-white border border-slate-300 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  value={experience}
+                  onChange={e => setExperience(e.target.value)}
+                >
+                  {experienceOptions.map((opt, idx) => <option key={opt + idx} value={opt}>{opt}</option>)}
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+              </div>
               {/* 상세조건 드롭다운 */}
-              <select
-                className="w-20 md:w-24 px-2 py-2 rounded-full border border-gray-200 bg-white text-gray-700 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-200 text-xs text-center"
-                style={{ textAlignLast: 'center' }}
-                value={detailCondition}
-                onChange={e => setDetailCondition(e.target.value)}
-              >
-                {detailConditionOptions.map((opt, idx) => <option key={opt + idx} value={opt} className="text-center" style={{textAlign: 'center'}}>{opt}</option>)}
-              </select>
+              <div className="relative flex-1 min-w-[128px]">
+                <select
+                  className="w-full appearance-none bg-white border border-slate-300 rounded-lg py-2 pl-3 pr-8 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
+                  value={detailCondition}
+                  onChange={e => setDetailCondition(e.target.value)}
+                >
+                  {detailConditionOptions.map((opt, idx) => <option key={opt + idx} value={opt}>{opt}</option>)}
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+              </div>
               {/* 등록 버튼 */}
               <button
-                className="ml-auto px-5 py-2 rounded-full font-bold shadow hover:opacity-90 transition text-sm"
-                style={{background: '#334155', color: '#fff'}}
+                className="ml-auto px-5 py-2 rounded-lg font-bold shadow-sm hover:bg-slate-900 transition text-sm bg-slate-800 text-white"
                 onClick={() => {
                   if (activeJobTab === 'employer') {
                     router.push('/community/job/write');
@@ -368,46 +381,60 @@ export default function CommunityMain() {
             </div>
             {/* 구인/구직 리스트 */}
             {activeJobTab === 'employer' ? (
-              <div className="flex flex-col gap-6">
+              <div className="space-y-6">
                 {jobPosts.filter(job =>
                   (city === '지역' || job.location.includes(city)) &&
                   (district === '구' || job.location.includes(district)) &&
                   (jobType === '직종' || job.position === jobType) &&
                   (employmentType === '고용형태' || job.type === employmentType)
                 ).map(job => (
-                  <div key={job.id} className="rounded-2xl bg-white shadow-md hover:shadow-lg border border-[#334155]/20 hover:border-[#334155] p-6 flex flex-col md:flex-row items-center gap-6 transition-all duration-200 group-hover:scale-[1.01] relative h-[120px] min-h-[120px]">
+                  <div key={job.id} className="rounded-2xl bg-white shadow-md hover:shadow-xl p-6 flex flex-col md:flex-row items-start md:items-center gap-6 transition-all duration-300 border hover:border-amber-400">
                     {/* 이미지 or 이니셜 */}
-                    {job.image ? (
-                      <img
-                        src={job.image}
-                        alt={job.name}
-                        className="w-16 h-16 object-cover rounded-xl shadow-inner"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 flex items-center justify-center text-2xl font-bold text-[#111827] bg-[#F3F4F6] rounded-xl shadow-inner select-none">
-                        {job.name[0]}
+                    <div className="flex-shrink-0">
+                      {job.image ? (
+                        <img
+                          src={job.image}
+                          alt={job.name}
+                          className="w-20 h-20 object-cover rounded-full shadow-lg"
+                        />
+                      ) : (
+                        <div className="w-20 h-20 flex items-center justify-center text-3xl font-bold text-slate-700 bg-slate-100 rounded-full shadow-inner select-none">
+                          {job.name[0]}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 메인 정보 */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-extrabold text-slate-800">{job.name}</h3>
+                        {job.premium && <span className="px-3 py-1 text-xs font-bold bg-amber-400 text-white rounded-full shadow-sm">프리미엄</span>}
                       </div>
-                    )}
-                    <div className="flex-1 flex flex-col gap-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-lg font-extrabold text-gray-800">{job.name}</span>
-                        {job.premium && <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-yellow-100 text-yellow-700 rounded">프리미엄</span>}
+                      <div className="flex flex-wrap items-center divide-x divide-slate-200 text-sm text-slate-500 mb-3">
+                        <span className="pr-3 font-medium text-slate-700">{job.location}</span>
+                        <span className="px-3">{job.position}</span>
+                        <span className="px-3">{job.career}</span>
+                        <span className="px-3">{job.type}</span>
                       </div>
-                      <div className="flex flex-wrap gap-2 text-sm text-gray-500 mb-1">
-                        <span key={job.id + '-location'} className="bg-gray-50 rounded px-2 py-0.5">{job.location}</span>
-                        <span key={job.id + '-position'} className="bg-gray-50 rounded px-2 py-0.5">{job.position}</span>
-                        <span key={job.id + '-career'} className="bg-gray-50 rounded px-2 py-0.5">{job.career}</span>
-                        <span key={job.id + '-type'} className="bg-gray-50 rounded px-2 py-0.5">{job.type}</span>
-                        <span key={job.id + '-period'} className="bg-gray-50 rounded px-2 py-0.5">{job.period}</span>
-                      </div>
-                      <div className="flex gap-4 text-sm">
-                        <span style={{color: '#111827', fontWeight: 700}}>급여: {job.salary}</span>
-                        <span className="text-gray-400">복지: {job.benefit}</span>
+                      <div className="flex flex-col gap-1.5 text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-slate-800">💰 급여: {job.salary}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-slate-600">✨ 복지: {job.benefit}</span>
+                        </div>
                       </div>
                     </div>
-                    <Link href={`/community/job/${job.id}`} className="px-5 py-2 rounded-full bg-[#334155] text-white font-bold shadow hover:bg-gray-800 transition text-sm self-center cursor-pointer">
-                      상세보기
-                    </Link>
+
+                    {/* 상세보기 버튼 */}
+                    <div className="w-full md:w-auto mt-4 md:mt-0 self-center">
+                      <Link 
+                        href={`/community/job/${job.id}`} 
+                        className="w-full block text-center px-6 py-3 rounded-xl bg-slate-800 text-white font-bold shadow-md hover:bg-slate-900 transition-colors text-sm cursor-pointer transform hover:-translate-y-0.5"
+                      >
+                        상세보기
+                      </Link>
+                    </div>
                   </div>
                 ))}
               </div>
