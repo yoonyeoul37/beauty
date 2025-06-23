@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { sampleBusinesses } from '../data/businesses';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingBag, faSearch, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import StickyHeader from '../components/StickyHeader';
 
 interface Product {
   id: string;
@@ -25,6 +28,20 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [sortBy, setSortBy] = useState<string>('최신순');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isClient, setIsClient] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    
+    // 스크롤 이벤트 리스너 추가
+    const handleScroll = () => {
+      setIsHeaderVisible(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     // 모든 업체의 상품을 수집
@@ -85,170 +102,140 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 헤더 */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">상품 둘러보기</h1>
-              <p className="text-gray-600 mt-2">전문가가 추천하는 뷰티 상품을 만나보세요</p>
-            </div>
-            <Link 
-              href="/"
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              ← 홈으로 돌아가기
-            </Link>
-          </div>
+      {/* Sticky Header */}
+      <StickyHeader isVisible={isHeaderVisible} />
+      
+      {/* Header */}
+      <div className="bg-white pt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center transition-all duration-500"
+             style={{ opacity: isClient ? 1 : 0, transform: isClient ? 'translateY(0)' : 'translateY(10px)' }}>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+            <span className="block">전문가가 추천하는</span>
+            <span className="block text-amber-500 mt-2">엄선된 뷰티 상품</span>
+          </h1>
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-gray-600">
+            시술 후에도 완벽한 스타일을 유지할 수 있도록, 최고의 제품들만 모았습니다.
+          </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 필터 및 검색 */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* 검색 */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">검색</label>
-              <input
-                type="text"
-                placeholder="상품명, 설명, 업체명으로 검색"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* 카테고리 */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">카테고리</label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* 정렬 */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">정렬</label>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="최신순">최신순</option>
-                <option value="가격낮은순">가격낮은순</option>
-                <option value="가격높은순">가격높은순</option>
-                <option value="인기순">인기순</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* 상품 목록 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
-              {/* 상품 이미지 */}
-              <div className="aspect-square bg-gray-100 relative">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
+        {/* Filters and Search */}
+        <div className="sticky top-20 bg-gray-50/80 backdrop-blur-md z-10 py-4 mb-8 transition-all duration-500 delay-100"
+             style={{ opacity: isClient ? 1 : 0, transform: isClient ? 'translateY(0)' : 'translateY(10px)' }}>
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Search Bar */}
+              <div className="relative flex-grow">
+                <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="상품명, 설명, 업체명으로 검색"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500 transition-shadow"
                 />
-                {product.isNew && (
-                  <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
-                    NEW
-                  </div>
-                )}
-                {product.originalPrice && (
-                  <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
-                    {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% 할인
-                  </div>
-                )}
               </div>
-
-              {/* 상품 정보 */}
-              <div className="p-4">
-                <div className="mb-2">
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                    {product.category}
-                  </span>
-                </div>
-                
-                <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">
-                  {product.name}
-                </h3>
-                
-                <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                  {product.description}
-                </p>
-
-                <div className="mb-3">
-                  <span className="text-xs text-gray-500">
-                    {product.businessName}
-                  </span>
-                </div>
-
-                {/* 가격 */}
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-lg font-bold text-gray-900">
-                    {product.price.toLocaleString()}원
-                  </span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-gray-500 line-through">
-                      {product.originalPrice.toLocaleString()}원
-                    </span>
-                  )}
-                </div>
-
-                {/* 태그 */}
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {product.tags.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* 버튼 */}
-                <div className="flex gap-2">
-                  <Link
-                    href={`/business/${product.businessId}`}
-                    className="flex-1 bg-gray-100 text-gray-700 py-2 px-3 rounded text-sm font-medium hover:bg-gray-200 transition-colors text-center"
-                  >
-                    업체 보기
-                  </Link>
-                  <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-blue-700 transition-colors">
-                    구매하기
-                  </button>
-                </div>
+              {/* Sort Dropdown */}
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full md:w-auto appearance-none bg-white border border-gray-200 rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-shadow"
+                >
+                  <option value="최신순">최신순</option>
+                  <option value="인기순">인기순</option>
+                  <option value="가격낮은순">가격 낮은 순</option>
+                  <option value="가격높은순">가격 높은 순</option>
+                </select>
+                <FontAwesomeIcon icon={faChevronDown} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
             </div>
-          ))}
+            {/* Category Filters */}
+            <div className="mt-4 flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+              {categories.map(category => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 flex-shrink-0 ${
+                    selectedCategory === category
+                      ? 'bg-amber-500 text-white shadow'
+                      : 'bg-white text-gray-700 hover:bg-amber-50'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
         </div>
 
-        {/* 상품이 없을 때 */}
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">상품을 찾을 수 없습니다</h3>
-            <p className="text-gray-600 mb-4">검색 조건을 변경해보세요</p>
-            <button
-              onClick={() => {
-                setSelectedCategory('전체');
-                setSearchTerm('');
-                setSortBy('최신순');
-              }}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              필터 초기화
-            </button>
+        {/* Product List */}
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredProducts.map((product, index) => (
+              <Link href={`/business/${product.businessId}?product=${product.id}`} key={product.id}>
+                <div
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-full flex flex-col group cursor-pointer transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+                  style={{
+                    opacity: isClient ? 1 : 0,
+                    transform: isClient ? 'translateY(0)' : 'translateY(10px)',
+                    transitionDelay: `${index * 50}ms, ${index * 50}ms`
+                  }}
+                >
+                  {/* Product Image */}
+                  <div className="aspect-square bg-gray-50 relative overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    {product.isNew && (
+                      <div className="absolute top-3 left-3 bg-rose-500 text-white px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide">
+                        NEW
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="p-5 flex flex-col flex-grow">
+                    <p className="text-amber-600 text-xs font-semibold mb-1">{product.category}</p>
+                    <h3 className="font-bold text-gray-800 mb-2 leading-snug group-hover:text-amber-600 transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-4 flex-grow line-clamp-2">
+                      {product.description}
+                    </p>
+                    
+                    <div className="mt-auto">
+                      <p className="text-xs text-gray-400 mb-2">판매업체: {product.businessName}</p>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-xl font-bold text-gray-900">
+                            {product.price.toLocaleString()}원
+                          </span>
+                          {product.originalPrice && (
+                            <span className="text-sm text-gray-400 line-through">
+                              {product.originalPrice.toLocaleString()}원
+                            </span>
+                          )}
+                        </div>
+                        {product.originalPrice && (
+                          <div className="bg-rose-100 text-rose-600 px-2 py-0.5 rounded text-xs font-bold">
+                            {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-24 transition-opacity duration-500" style={{ opacity: isClient ? 1 : 0 }}>
+            <FontAwesomeIcon icon={faShoppingBag} className="text-5xl text-gray-300 mb-4" />
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">검색 결과가 없습니다</h3>
+            <p className="text-gray-500">다른 검색어나 필터를 사용해보세요.</p>
           </div>
         )}
       </div>
