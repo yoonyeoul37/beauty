@@ -2,16 +2,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
-interface StickyHeaderProps {
-  isScrolled: boolean;
-}
-
-export default function StickyHeader({ isScrolled }: StickyHeaderProps) {
+export default function StickyHeader() {
   return (
     <div 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 sticky-header ${
-        isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full hidden'
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 sticky-header"
       style={{ 
         background: '#1D1D1D',
         boxShadow: '0 4px 20px rgba(0,0,0,0.4)',

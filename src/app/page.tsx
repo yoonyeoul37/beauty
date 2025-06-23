@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import HeroSection from './components/HeroSection';
-import StickyHeader from './components/StickyHeader';
 import FloatingCategoryMenu from './components/FloatingCategoryMenu';
 import Link from 'next/link';
 import CitySearchSection from "./components/CitySearchSection";
@@ -15,26 +14,10 @@ import RecommendedArticlesSection from './components/RecommendedArticlesSection'
 import { timeSpecialReviews } from '@/app/data/reviews';
 
 export default function Home() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   
-  useEffect(() => {
-    function handleScroll() {
-      const timeSpecialSection = document.querySelector('#time-special-section');
-      if (timeSpecialSection) {
-        const rect = timeSpecialSection.getBoundingClientRect();
-        setIsScrolled(rect.top <= 100);
-      }
-    }
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <main className="min-h-screen bg-white text-gray-800">
-      <StickyHeader isScrolled={isScrolled} />
-      <FloatingCategoryMenu isVisible={isScrolled} />
+    <main className="min-h-screen bg-white text-gray-800 pt-20">
       <HeroSection showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
       
       <div id="time-special-section">
