@@ -319,30 +319,36 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
                     </div>
                   )}
                   
-                  {getTwoServices(business).map((service, index) => (
-                    <div key={index} className="text-sm">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-bold text-gray-800 truncate flex-shrink-0 min-w-0">
+                  <div className="space-y-2">
+                    {getTwoServices(business).map((service, index) => (
+                      <div key={index} className="flex justify-between items-start gap-4">
+                        <span className="text-sm font-medium text-gray-700 truncate">
                           {service.name}
                         </span>
-                        <div className="flex items-center gap-1 flex-shrink-0">
-                          {service.originalPrice !== service.price && (
-                            <span className="text-gray-400 line-through text-xs whitespace-nowrap">
-                              {service.originalPrice.toLocaleString()}원
-                            </span>
-                          )}
-                          <span className={`font-bold ${service.isTimeSpecial ? 'text-red-500' : 'text-gray-900'} text-sm whitespace-nowrap`}>
-                            {service.price.toLocaleString()}원
-                          </span>
-                          {service.discount && (
-                            <span className="bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded flex-shrink-0 whitespace-nowrap">
-                              {service.discount}
-                            </span>
+                        <div className="text-right flex-shrink-0">
+                          {service.isTimeSpecial ? (
+                            <>
+                              <div className="flex items-baseline justify-end gap-x-2">
+                                <span className="text-red-500 font-bold text-base whitespace-nowrap">
+                                  {service.price.toLocaleString()}원
+                                </span>
+                                <span className="bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
+                                  {service.discount}
+                                </span>
+                              </div>
+                              <div className="text-gray-400 line-through text-xs whitespace-nowrap">
+                                {service.originalPrice.toLocaleString()}원
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-sm font-semibold text-gray-800 whitespace-nowrap">
+                              {service.price.toLocaleString()}원
+                            </div>
                           )}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
 
                 {/* 예약 버튼 */}
