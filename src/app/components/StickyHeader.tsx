@@ -20,9 +20,9 @@ export default function StickyHeader({ isVisible }: { isVisible: boolean }) {
         <div className="flex items-center justify-between h-full" style={{ height: '70px' }}>
           {/* 로고 */}
           <div className="flex items-center" style={{ height: '70px' }}>
-            <div className="text-white font-bold text-xl" style={{ fontFamily: 'Pretendard, Arial, sans-serif' }}>
-            tegana
-            </div>
+            <Link href="/" className="text-white font-bold text-xl hover:text-gray-300 transition-colors duration-200" style={{ fontFamily: 'Pretendard, Arial, sans-serif' }}>
+              tegana
+            </Link>
           </div>
 
           {/* Booksy 스타일 3분할 검색창 */}
