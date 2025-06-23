@@ -590,3 +590,74 @@ body {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+/* 히어로 텍스트 캐릭터 애니메이션 */
+.animated-char-title, .animated-char-subtitle {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+  animation: character-reveal 1s forwards, character-glow 3s infinite alternate;
+}
+
+@keyframes character-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes character-glow {
+  0%, 100% {
+    text-shadow: 
+      0 2px 5px rgba(0,0,0,0.5),
+      0 0 5px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    text-shadow: 
+      0 2px 5px rgba(0,0,0,0.5),
+      0 0 15px rgba(255, 255, 255, 0.7);
+  }
+}
+
+/* 커뮤니티 버튼 애니메이션 */
+@keyframes communityPulse {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 0 0 rgba(255,255,255,0.2);
+  }
+  50% {
+    transform: translateX(0) scale(1.03);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3), 0 0 0 7px rgba(255,255,255,0);
+  }
+}
+
+/* Style Logs 글씨 샤인 효과 */
+.style-logs-shine-effect {
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  letter-spacing: inherit;
+  background: linear-gradient(
+    90deg, 
+    rgba(255,255,255,0.7) 0%, 
+    #FFFFFF 50%, 
+    rgba(255,255,255,0.7) 100%
+  );
+  background-size: 200% auto;
+  color: #fff; /* Fallback */
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: style-logs-shine-move 4s ease-in-out infinite 2.5s;
+}
+
+@keyframes style-logs-shine-move {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}

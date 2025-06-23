@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faComments } from '@fortawesome/free-solid-svg-icons';
 import TestDropdown from './TestDropdown';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -44,6 +44,9 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
     "메이크업샵을 찾아보세요",
     "피부관리를 검색해보세요"
   ];
+
+  const animatedTitle = "가격부터 서비스까지, 모든 것을 비교하세요";
+  const animatedSubtitle = "누구보다 나에게 어울리는 곳을 찾는 방법";
 
   useEffect(() => {
     // 로고 애니메이션 시작
@@ -107,38 +110,42 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
               opacity: logoLoaded ? '0.9' : '0',
               background: 'transparent !important',
               marginLeft: '150px',
-              animation: logoLoaded ? 'fadeInUp 2s ease-out 0.5s both, textShimmer 3s ease-in-out infinite' : 'none',
+              animation: logoLoaded ? 'fadeInUp 2s ease-out 0.5s both' : 'none',
               transform: logoLoaded ? 'translateY(0)' : 'translateY(10px)',
               transition: 'all 0.8s ease-out 0.5s'
             }}
           >
-            Style Logs
+            <span className="style-logs-shine-effect">Style Logs</span>
           </div>
         </div>
       </div>
 
       {/* 커뮤니티 & 잡스 링크 - 오른쪽 상단 */}
-      <div style={{ position: 'absolute', top: '15px', right: '70px',  zIndex: 10, display: 'flex', gap: '20px', alignItems: 'center' }}>
+      <div style={{ position: 'absolute', top: '20px', right: '40px',  zIndex: 10 }}>
         <Link 
           href="/community"
-          className="community-link hover:text-gray-200 transition-all duration-300 px-3 py-1 rounded-lg hover:bg-white/10 hover:scale-105"
+          className="community-link group flex items-center gap-2 transition-all duration-300 px-4 py-2 rounded-full hover:bg-white/20"
           style={{
             ...textStyle,
-            animation: 'fadeInRight 1s ease-out 1s both',
+            animation: 'fadeInRight 1s ease-out 1s both, communityPulse 3s ease-in-out infinite 2s',
             opacity: 0,
-            transform: 'translateX(20px)'
+            transform: 'translateX(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(5px)',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ 
+            <FontAwesomeIcon 
+              icon={faComments} 
+              className="transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12" 
+            />
+            <span style={{
               fontSize: '14px', 
               fontWeight: 600,
               fontFamily: "'Gmarket Sans', sans-serif",
-              marginBottom: '1px'
             }}>
               커뮤니티
-            </div>
-          </div>
+            </span>
         </Link>
       </div>
 
@@ -155,8 +162,9 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
         width: '100%',
         maxWidth: 600
       }}>
-        <div 
+        <h2 
           className="hero-title"
+          aria-label={animatedTitle}
           style={{
             ...textStyle,
             fontSize: '32px',
@@ -165,15 +173,21 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
             textAlign: 'center',
             marginBottom: '2px',
             whiteSpace: 'nowrap',
-            animation: 'heroTitleSlideIn 1.5s ease-out 0.8s both',
-            opacity: 0,
-            transform: 'translateY(30px)'
           }}
         >
-          가격부터 서비스까지, 모든 것을 비교하세요
-        </div>
-        <div 
+          {animatedTitle.split('').map((char, index) => (
+            <span
+              key={index}
+              className="animated-char-title"
+              style={{ animationDelay: `${0.8 + index * 0.04}s` }}
+            >
+              {char}
+            </span>
+          ))}
+        </h2>
+        <p 
           className="hero-subtitle"
+          aria-label={animatedSubtitle}
           style={{
             ...textStyle,
             fontSize: '20px',
@@ -182,13 +196,18 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
             textAlign: 'center',
             marginBottom: '28px',
             marginTop: '-10px',
-            animation: 'heroSubtitleSlideIn 1.5s ease-out 1.2s both',
-            opacity: 0,
-            transform: 'translateY(30px)'
           }}
         >
-          누구보다 나에게 어울리는 곳을 찾는 방법
-        </div>
+          {animatedSubtitle.split('').map((char, index) => (
+            <span
+              key={index}
+              className="animated-char-subtitle"
+              style={{ animationDelay: `${1.2 + index * 0.05}s` }}
+            >
+              {char}
+            </span>
+          ))}
+        </p>
         
         {/* 검색창 - 생동감 있는 애니메이션 */}
         <div 
