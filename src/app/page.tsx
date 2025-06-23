@@ -79,115 +79,141 @@ export default function Home() {
 
       <BeautyTrendSection />
       
-      {/* 상품 구매 배너 */}
-      <section className="w-full py-16 bg-gradient-to-br from-slate-50 to-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-              <div className="p-8 lg:p-12 flex flex-col justify-center">
-                {/* 메인 콘텐츠 */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-                      <span className="text-2xl">🛍️</span>
-                    </div>
-                    <div>
-                      <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
-                        전문가가 추천하는 제품을 만나보세요
-                      </h2>
-                      <p className="text-sm text-gray-600 mt-1">업체 추천 제품으로 더 오래 지속되는 효과</p>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    시술 후 <span className="font-semibold text-blue-600">홈케어 제품</span>을 구매하시면 
-                    더 오래 지속되는 효과를 경험하실 수 있습니다. 
-                    업체에서 직접 추천하는 제품으로 더 좋은 결과를 만들어보세요.
-                  </p>
-                  
-                  {/* 장점 리스트 */}
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-green-600 text-sm font-bold">✓</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-900">홈케어로 더 오래 지속</span>
-                        <p className="text-sm text-gray-600 mt-1">시술 효과를 오래 유지할 수 있습니다</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-blue-600 text-sm font-bold">⭐</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-900">전문가 추천 제품</span>
-                        <p className="text-sm text-gray-600 mt-1">업체에서 직접 추천하는 제품입니다</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-purple-600 text-sm font-bold">🚀</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-900">온라인으로 편리하게</span>
-                        <p className="text-sm text-gray-600 mt-1">언제든지 간편하게 구매하실 수 있습니다</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* CTA 버튼 */}
-                  <div className="pt-4">
-                    <Link 
-                      href="/products" 
-                      className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-sm"
-                    >
-                      <span>상품 둘러보기</span>
-                      <span className="text-sm">→</span>
-                    </Link>
-                  </div>
+      {/* 상품 구매 섹션 - 세련된 디자인 */}
+      <section className="w-full py-24 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+        {/* 배경 패턴 */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2 mb-6">
+              <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+              <span className="text-white/90 text-sm font-medium">전문가 엄선</span>
+            </div>
+            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              시술 후에도
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
+                완벽한 스타일
+              </span>
+            </h2>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">
+              전문가가 직접 추천하는 홈케어 제품으로<br />
+              시술 효과를 더 오래, 더 아름답게 유지하세요
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {/* 카드 1 */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+              <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 h-full hover:bg-white/15 transition-all duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">✨</span>
                 </div>
-              </div>
-              
-              {/* 우측 이미지/아이콘 영역 */}
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-8">
-                <div className="text-center">
-                  <div className="text-6xl mb-6">💄</div>
-                  <div className="space-y-3">
-                    <p className="text-gray-800 font-semibold text-lg">
-                      헤어케어 · 스타일링 · 네일케어
-                    </p>
-                    <p className="text-gray-600">
-                      다양한 뷰티 상품을 만나보세요
-                    </p>
-                    <div className="flex justify-center gap-3 mt-4">
-                      <span className="bg-white/70 text-gray-700 px-3 py-1 rounded-md text-sm font-medium shadow-sm">샴푸</span>
-                      <span className="bg-white/70 text-gray-700 px-3 py-1 rounded-md text-sm font-medium shadow-sm">왁스</span>
-                      <span className="bg-white/70 text-gray-700 px-3 py-1 rounded-md text-sm font-medium shadow-sm">브러시</span>
-                    </div>
-                  </div>
-                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">전문가 검증</h3>
+                <p className="text-white/70 leading-relaxed">
+                  실제 미용사들이 사용하고 추천하는 제품만 엄선하여 제공합니다
+                </p>
               </div>
             </div>
+
+            {/* 카드 2 */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+              <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 h-full hover:bg-white/15 transition-all duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">맞춤 추천</h3>
+                <p className="text-white/70 leading-relaxed">
+                  시술 종류와 모발 상태에 맞는 최적의 제품을 추천해드립니다
+                </p>
+              </div>
+            </div>
+
+            {/* 카드 3 */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+              <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 h-full hover:bg-white/15 transition-all duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">🚀</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">편리한 구매</h3>
+                <p className="text-white/70 leading-relaxed">
+                  시술 후 바로 구매하거나 언제든지 온라인으로 편리하게 주문하세요
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA 섹션 */}
+          <div className="text-center">
+            <Link 
+              href="/products" 
+              className="group inline-flex items-center gap-4 bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-2xl hover:shadow-white/20"
+            >
+              <span>상품 둘러보기</span>
+              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+            </Link>
+            <p className="text-white/60 text-sm mt-4">
+              헤어케어 · 스타일링 · 네일케어 · 메이크업
+            </p>
           </div>
         </div>
       </section>
       
       <PromoCardBanner />
       
-      <section className="w-full py-20 bg-gray-50">
-        <div className="max-w-[1240px] mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            지금 가입하고 특별한 혜택을 받으세요
-          </h2>
-          <p className="text-gray-600 mb-8">
-            신규 회원을 위한 다양한 할인 혜택과 이벤트가 준비되어 있습니다
-          </p>
-          <button className="button-hover bg-black text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-900 transition-colors">
-            무료 회원가입
-          </button>
+      {/* 회원가입 섹션 - 세련된 디자인 */}
+      <section className="w-full py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+        {/* 배경 장식 */}
+        <div className="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-br from-blue-200/30 to-purple-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-indigo-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm border border-white/40 rounded-full px-4 py-2 mb-6">
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+              <span className="text-slate-700 text-sm font-medium">새로운 시작</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6 leading-tight">
+              더 나은 뷰티 경험을
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                시작해보세요
+              </span>
+            </h2>
+            
+            <p className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              전문가 추천 상품 할인, 시술 예약 혜택, 커뮤니티 참여 등<br />
+              다양한 혜택을 누려보세요
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link 
+                href="/signup" 
+                className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              >
+                <span>시작하기</span>
+                <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+              </Link>
+              
+              <div className="flex items-center gap-6 text-sm text-slate-500">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                  <span>무료 가입</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                  <span>즉시 혜택</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       
