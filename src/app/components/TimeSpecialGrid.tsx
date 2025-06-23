@@ -32,6 +32,9 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
   const [businesses, setBusinesses] = useState<BusinessProfile[]>([]);
   const [visibleCount, setVisibleCount] = useState(8);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [heartAnimations, setHeartAnimations] = useState<Set<string>>(new Set());
+  const [sortBy, setSortBy] = useState('distance');
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
 
   useEffect(() => {
     // 실제 업체 데이터 사용
@@ -39,14 +42,68 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
     setBusinesses(activeBusinesses);
   }, []);
 
+  // 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.sort-dropdown')) {
+        setShowSortDropdown(false);
+      }
+    };
+
+    if (showSortDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSortDropdown]);
+
   const toggleFavorite = (businessId: string) => {
     const newFavorites = new Set(favorites);
     if (newFavorites.has(businessId)) {
       newFavorites.delete(businessId);
     } else {
       newFavorites.add(businessId);
+      // 하트 애니메이션 시작
+      setHeartAnimations(prev => new Set(prev).add(businessId));
+      // 1초 후 애니메이션 제거
+      setTimeout(() => {
+        setHeartAnimations(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(businessId);
+          return newSet;
+        });
+      }, 1000);
     }
     setFavorites(newFavorites);
+  };
+
+  const handleSort = (sortType: string) => {
+    setSortBy(sortType);
+    setShowSortDropdown(false);
+  };
+
+  const getSortedBusinesses = () => {
+    const sorted = [...businesses];
+    switch (sortBy) {
+      case 'distance':
+        // 거리순 (임시로 랜덤)
+        return sorted.sort(() => Math.random() - 0.5);
+      case 'price':
+        // 가격순 (타임스페셜 할인율 기준)
+        return sorted.sort((a, b) => {
+          const aDiscount = a.timeSpecial?.discountRate || 0;
+          const bDiscount = b.timeSpecial?.discountRate || 0;
+          return bDiscount - aDiscount; // 할인율 높은 순
+        });
+      case 'rating':
+        // 리뷰순
+        return sorted.sort((a, b) => b.stats.averageRating - a.stats.averageRating);
+      default:
+        return sorted;
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -112,7 +169,7 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
     }
   };
 
-  const visibleBusinesses = businesses.slice(0, visibleCount);
+  const visibleBusinesses = getSortedBusinesses().slice(0, visibleCount);
 
   return (
     <div>
@@ -126,9 +183,60 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
             타임스페셜
           </h2>
         </div>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
           지금 바로 예약하면 특별한 할인 혜택을 받을 수 있어요!
         </p>
+        
+        {/* 정렬 드롭다운 */}
+        <div className="flex justify-end mb-6">
+          <div className="relative sort-dropdown">
+            <button
+              onClick={() => setShowSortDropdown(!showSortDropdown)}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 shadow-sm"
+            >
+              <span className="text-sm font-medium text-gray-700">
+                {sortBy === 'distance' && '거리순'}
+                {sortBy === 'price' && '가격순'}
+                {sortBy === 'rating' && '리뷰순'}
+              </span>
+              <FontAwesomeIcon 
+                icon={faChevronDown} 
+                className={`text-gray-500 text-xs transition-transform duration-200 ${
+                  showSortDropdown ? 'rotate-180' : ''
+                }`} 
+              />
+            </button>
+            
+            {showSortDropdown && (
+              <div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 min-w-[120px]">
+                <div
+                  className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                    sortBy === 'distance' ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                  }`}
+                  onClick={() => handleSort('distance')}
+                >
+                  거리순
+                </div>
+                <div
+                  className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                    sortBy === 'price' ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                  }`}
+                  onClick={() => handleSort('price')}
+                >
+                  가격순
+                </div>
+                <div
+                  className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                    sortBy === 'rating' ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                  }`}
+                  onClick={() => handleSort('rating')}
+                >
+                  리뷰순
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* 업체 그리드 */}
@@ -137,20 +245,20 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
           const timeSpecial = formatTimeSpecial(business);
           
           return (
-            <div key={business.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div key={business.id} className="card-hover bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               {/* 이미지 */}
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
                   src={business.images.profile}
                   alt={business.businessName}
                   fill
-                  className="object-cover transition-transform duration-300 hover:scale-105"
+                  className="object-cover transition-transform duration-500 hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 
                 {/* 타임스페셜 배지 */}
                 {timeSpecial && (
-                  <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                  <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse hover:scale-110 transition-transform duration-200 z-10 max-w-[120px] truncate">
                     {timeSpecial.discountRate}% 할인
                   </div>
                 )}
@@ -161,13 +269,24 @@ const TimeSpecialGrid: React.FC<TimeSpecialGridProps> = ({ reviews = {} }) => {
                     e.preventDefault();
                     toggleFavorite(business.id);
                   }}
-                  className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+                  className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ripple z-30 ${
                     favorites.has(business.id)
-                      ? 'bg-red-500 text-white'
-                      : 'bg-white/80 text-gray-600 hover:bg-white'
+                      ? 'bg-red-500 text-white hover:bg-red-600'
+                      : 'bg-white/80 text-gray-600 hover:bg-white hover:text-red-500'
                   }`}
+                  style={{
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px'
+                  }}
                 >
-                  <FontAwesomeIcon icon={faHeartSolid} className="text-sm" />
+                  <FontAwesomeIcon 
+                    icon={faHeartSolid} 
+                    className={`text-sm transition-all duration-300 ${
+                      heartAnimations.has(business.id) ? 'heart-animation' : ''
+                    }`} 
+                  />
                 </button>
               </div>
 
