@@ -78,6 +78,59 @@ export default function Home() {
       </section>
 
       <BeautyTrendSection />
+      
+      {/* 상품 구매 배너 */}
+      <section className="w-full py-16 bg-gradient-to-r from-purple-50 to-pink-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="p-8 lg:p-12 flex flex-col justify-center">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">🛍️</span>
+                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+                    업체에서 상품도 판매해요!
+                  </h2>
+                </div>
+                <p className="text-gray-600 mb-6 text-lg leading-relaxed">
+                  시술 후 홈케어 제품을 구매하면 더 오래 지속되는 효과를 경험할 수 있어요. 
+                  업체에서 직접 추천하는 제품으로 더 좋은 결과를 만들어보세요.
+                </p>
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-center gap-3">
+                    <span className="text-green-500 text-xl">✓</span>
+                    <span className="text-gray-700">시술 후 홈케어로 더 오래 지속</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-green-500 text-xl">✓</span>
+                    <span className="text-gray-700">업체에서 직접 추천하는 제품</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-green-500 text-xl">✓</span>
+                    <span className="text-gray-700">온라인으로 편리하게 구매</span>
+                  </div>
+                </div>
+                <Link 
+                  href="/search" 
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  상품 구매하기
+                  <span className="text-lg">→</span>
+                </Link>
+              </div>
+              <div className="relative h-64 lg:h-auto bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                <div className="text-center p-8">
+                  <div className="text-6xl mb-4">💄</div>
+                  <p className="text-gray-600 font-medium">
+                    헤어케어 · 스타일링 · 네일케어<br/>
+                    다양한 뷰티 상품을 만나보세요
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       <PromoCardBanner />
       
       <section className="w-full py-20 bg-gray-50">

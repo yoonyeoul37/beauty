@@ -48,6 +48,42 @@ export const sampleBusinesses: BusinessProfile[] = [
       "클리닉": 120000,
       "스타일링": 30000
     },
+    products: [
+      {
+        id: "prod_1",
+        name: "프리미엄 샴푸",
+        description: "두피 건강을 위한 프리미엄 샴푸입니다. 탈모 예방과 모발 강화에 도움을 줍니다.",
+        price: 35000,
+        originalPrice: 45000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: true,
+        inStock: true,
+        tags: ["샴푸", "탈모예방", "모발강화"]
+      },
+      {
+        id: "prod_2",
+        name: "헤어 왁스",
+        description: "자연스러운 스타일링을 위한 프리미엄 헤어 왁스입니다. 끈적임 없이 오래 지속됩니다.",
+        price: 25000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "스타일링",
+        isNew: false,
+        inStock: true,
+        tags: ["왁스", "스타일링", "자연스러움"]
+      },
+      {
+        id: "prod_3",
+        name: "헤어 브러시",
+        description: "고급스러운 헤어 브러시입니다. 모발 손상을 최소화하며 스타일링을 도와줍니다.",
+        price: 18000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "도구",
+        isNew: false,
+        inStock: true,
+        tags: ["브러시", "도구", "모발보호"]
+      }
+    ],
     timeSpecial: {
       active: true,
       services: [
@@ -135,6 +171,31 @@ export const sampleBusinesses: BusinessProfile[] = [
       "펌": 100000,
       "클리닉": 150000
     },
+    products: [
+      {
+        id: "prod_4",
+        name: "염색 전용 샴푸",
+        description: "염색 후 모발을 보호하는 전용 샴푸입니다. 색상 유지와 모발 건강에 특화되어 있습니다.",
+        price: 28000,
+        originalPrice: 35000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: true,
+        inStock: true,
+        tags: ["염색", "색상유지", "모발보호"]
+      },
+      {
+        id: "prod_5",
+        name: "컬러 트리트먼트",
+        description: "염색 후 색상 보정과 모발 회복을 위한 트리트먼트입니다.",
+        price: 42000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: false,
+        inStock: true,
+        tags: ["트리트먼트", "색상보정", "모발회복"]
+      }
+    ],
     timeSpecial: {
       active: true,
       services: [

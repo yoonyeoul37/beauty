@@ -47,6 +47,20 @@ export interface Salon {
   tags: string[]; // Overall tags for the salon itself
 }
 
+// 상품 데이터 타입
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice?: number;
+  image?: string;
+  category: string;
+  isNew?: boolean;
+  inStock: boolean;
+  tags: string[];
+}
+
 // 업체 프로필 데이터 타입
 export interface BusinessProfile {
   id: string;
@@ -90,6 +104,9 @@ export interface BusinessProfile {
   services: {
     [serviceName: string]: number;
   };
+  
+  // 상품 목록
+  products?: Product[];
   
   // 타임스페셜
   timeSpecial?: {

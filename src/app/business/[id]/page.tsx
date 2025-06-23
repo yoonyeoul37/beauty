@@ -170,6 +170,7 @@ export default function BusinessDetailPage({ params }: BusinessDetailPageProps) 
                   {[
                     { id: 'info', label: '업체 정보' },
                     { id: 'services', label: '서비스' },
+                    { id: 'products', label: '🛍️ 상품' },
                     { id: 'reviews', label: '리뷰' }
                   ].map((tab) => (
                     <button
@@ -250,47 +251,108 @@ export default function BusinessDetailPage({ params }: BusinessDetailPageProps) 
                 {activeTab === 'services' && (
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">서비스 및 가격</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">서비스 목록</h3>
                       <div className="space-y-4">
-                        {Object.entries(business.services).map(([service, price]) => (
-                          <div key={service} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                            <span className="font-medium text-gray-900">{service}</span>
-                            <span className="text-lg font-semibold text-amber-600">
-                              {price.toLocaleString()}원
-                            </span>
+                        {business.services.map((service, index) => (
+                          <div key={index} className="border border-gray-200 rounded-lg p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-medium text-gray-900">{service.name}</h4>
+                              <span className="text-amber-600 font-semibold">{service.price.toLocaleString()}원</span>
+                            </div>
+                            <p className="text-gray-600 text-sm">{service.description}</p>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    {business.timeSpecial?.active && (
-                      <div className="p-6 bg-amber-50 rounded-xl border border-amber-200">
-                        <h3 className="text-lg font-semibold text-amber-800 mb-4">타임스페셜</h3>
-                        <div className="space-y-4">
-                          {business.timeSpecial.services.map((service, serviceIndex) => (
-                            <div key={serviceIndex} className="p-4 bg-white rounded-lg border border-amber-200">
-                              <div className="flex justify-between items-center mb-3">
-                                <span className="text-amber-800 font-medium text-lg">{service.service}</span>
-                                <span className="text-2xl font-bold text-amber-600">
-                                  {service.discountRate}% 할인
-                                </span>
+                    {/* 타임스페셜 */}
+                    {business.timeSpecial && (
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">타임스페셜</h3>
+                        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-amber-600 text-lg">⏰</span>
+                            <span className="font-semibold text-amber-800">특별 할인</span>
+                          </div>
+                          <p className="text-amber-700 mb-2">{business.timeSpecial.description}</p>
+                          <div className="flex items-center gap-4 text-sm text-amber-600">
+                            <span>할인율: {business.timeSpecial.discountRate}%</span>
+                            <span>기간: {business.timeSpecial.startDate} ~ {business.timeSpecial.endDate}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 상품 탭 */}
+                {activeTab === 'products' && (
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">업체 상품</h3>
+                      
+                      {/* 상품이 없는 경우 */}
+                      {(!business.products || business.products.length === 0) && (
+                        <div className="text-center py-12">
+                          <div className="text-gray-400 text-6xl mb-4">🛍️</div>
+                          <h4 className="text-lg font-medium text-gray-900 mb-2">아직 등록된 상품이 없어요</h4>
+                          <p className="text-gray-600 mb-4">이 업체에서 판매하는 상품이 곧 등록될 예정입니다.</p>
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div className="flex items-start gap-3">
+                              <span className="text-blue-500 text-lg">💡</span>
+                              <div className="text-sm text-blue-700">
+                                <p className="font-medium mb-1">상품 구매의 장점:</p>
+                                <ul className="space-y-1">
+                                  <li>• 시술 후 홈케어로 더 오래 지속</li>
+                                  <li>• 업체에서 직접 추천하는 제품</li>
+                                  <li>• 온라인으로 편리하게 구매</li>
+                                </ul>
                               </div>
-                              <div className="space-y-2 text-sm text-amber-600">
-                                <div className="flex items-center gap-2">
-                                  <FontAwesomeIcon icon={faCalendarAlt} className="text-xs" />
-                                  <span>{service.startDate} ~ {service.endDate}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <FontAwesomeIcon icon={faClock} className="text-xs" />
-                                  <span>{service.startTime} ~ {service.endTime}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 상품 목록 */}
+                      {business.products && business.products.length > 0 && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {business.products.map((product, index) => (
+                            <div key={index} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200">
+                              <div className="aspect-square bg-gray-100 relative">
+                                <Image
+                                  src={product.image || '/images/cosmetics-9086984_640.jpg'}
+                                  alt={product.name}
+                                  fill
+                                  className="object-cover"
+                                />
+                                {product.isNew && (
+                                  <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                                    NEW
+                                  </div>
+                                )}
+                              </div>
+                              <div className="p-4">
+                                <h4 className="font-medium text-gray-900 mb-2">{product.name}</h4>
+                                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-amber-600 font-semibold text-lg">
+                                    {product.price.toLocaleString()}원
+                                  </span>
+                                  <div className="flex gap-2">
+                                    <button className="px-3 py-1 text-sm border border-amber-500 text-amber-600 rounded-md hover:bg-amber-50 transition-colors duration-200">
+                                      장바구니
+                                    </button>
+                                    <button className="px-3 py-1 text-sm bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors duration-200">
+                                      구매하기
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           ))}
-                          <p className="text-amber-700 text-sm">{business.timeSpecial.description}</p>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 )}
 
