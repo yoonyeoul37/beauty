@@ -76,6 +76,9 @@ export default function HeroSection({ showDropdown, setShowDropdown }: HeroSecti
         src="/미용영상.mp4"
       />
       
+      {/* 반투명 검정 오버레이 */}
+      <div className="absolute inset-0 bg-black/40 z-[1]"></div>
+      
       {/* 사이트명 - 왼쪽 상단 고급진 애니메이션 */}
       <div style={{ position: 'absolute', top: '20px', left: '40px', zIndex: 10, background: 'transparent' }}>
         <div style={{ display: 'flex', flexDirection: 'column', background: 'transparent' }}>

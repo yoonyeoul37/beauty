@@ -77,9 +77,9 @@ export default function StickyHeader({ isScrolled }: StickyHeaderProps) {
             <Link href="/community" className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
               커뮤니티
             </Link>
-            <button className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
+            <Link href="/login" className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
               로그인
-            </button>
+            </Link>
           </div>
         </div>
       </div>

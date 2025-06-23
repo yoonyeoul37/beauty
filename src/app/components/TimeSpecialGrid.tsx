@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt, faClock, faChevronDown, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faChevronDown, faHeart as faHeartSolid, faBolt } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import StarRating from './StarRating';
 import ReviewModal from './ReviewModal';
@@ -73,93 +73,101 @@ export default function TimeSpecialGrid({ initialSalons, reviews }: TimeSpecialG
 
   return (
     <>
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          타임스페셜
-        </h2>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <button
-              onClick={() => setShowViewDropdown(!showViewDropdown)}
-              className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-            >
-              <span>{showAll ? '간단히 보기' : '전체보기'}</span>
-              <FontAwesomeIcon icon={faChevronDown} className="ml-2 -mr-1 h-5 w-5" />
-            </button>
-            {showViewDropdown && (
-              <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
-                <div className="py-1">
-                  <button
-                    onClick={() => {
-                      setShowAll(false);
-                      setShowViewDropdown(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    간단히 보기
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowAll(true);
-                      setShowViewDropdown(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    전체보기
-                  </button>
-                </div>
+      <div className="flex justify-between items-center mb-12 text-center flex-col">
+        <div className="relative mb-4">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight time-special-title">
+            <FontAwesomeIcon icon={faBolt} className="mr-3 text-yellow-400" />
+            타임스페셜
+          </h2>
+          <div className="time-special-glow"></div>
+        </div>
+        <p className="text-lg text-gray-600 time-special-subtitle">
+          놓치면 후회하는 한정 특가! 지금 바로 확인하세요.
+        </p>
+      </div>
+
+      <div className="flex justify-end items-center mb-6 space-x-4">
+        <div className="relative">
+          <button
+            onClick={() => setShowViewDropdown(!showViewDropdown)}
+            className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          >
+            <span>{showAll ? '간단히 보기' : '전체보기'}</span>
+            <FontAwesomeIcon icon={faChevronDown} className="ml-2 -mr-1 h-5 w-5" />
+          </button>
+          {showViewDropdown && (
+            <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
+              <div className="py-1">
+                <button
+                  onClick={() => {
+                    setShowAll(false);
+                    setShowViewDropdown(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  간단히 보기
+                </button>
+                <button
+                  onClick={() => {
+                    setShowAll(true);
+                    setShowViewDropdown(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  전체보기
+                </button>
               </div>
-            )}
-          </div>
-          
-          <div className="relative">
-            <button
-              onClick={() => setShowSortDropdown(!showSortDropdown)}
-              className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-            >
-              <span>정렬 기준</span>
-              <FontAwesomeIcon icon={faChevronDown} className="ml-2 -mr-1 h-5 w-5" />
-            </button>
-            {showSortDropdown && (
-              <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
-                <div className="py-1">
-                  <button
-                    onClick={() => {
-                      setSortType('distance');
-                      setShowSortDropdown(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                      sortType === 'distance' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
-                    }`}
-                  >
-                    거리순
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSortType('review');
-                      setShowSortDropdown(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                      sortType === 'review' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
-                    }`}
-                  >
-                    리뷰순
-                  </button>
-                  <button
-                    onClick={() => {
-                      setSortType('price');
-                      setShowSortDropdown(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                      sortType === 'price' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
-                    }`}
-                  >
-                    가격순
-                  </button>
-                </div>
+            </div>
+          )}
+        </div>
+        
+        <div className="relative">
+          <button
+            onClick={() => setShowSortDropdown(!showSortDropdown)}
+            className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          >
+            <span>정렬 기준</span>
+            <FontAwesomeIcon icon={faChevronDown} className="ml-2 -mr-1 h-5 w-5" />
+          </button>
+          {showSortDropdown && (
+            <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
+              <div className="py-1">
+                <button
+                  onClick={() => {
+                    setSortType('distance');
+                    setShowSortDropdown(false);
+                  }}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                    sortType === 'distance' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
+                  }`}
+                >
+                  거리순
+                </button>
+                <button
+                  onClick={() => {
+                    setSortType('review');
+                    setShowSortDropdown(false);
+                  }}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                    sortType === 'review' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
+                  }`}
+                >
+                  리뷰순
+                </button>
+                <button
+                  onClick={() => {
+                    setSortType('price');
+                    setShowSortDropdown(false);
+                  }}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                    sortType === 'price' ? 'text-indigo-600 font-semibold' : 'text-gray-700'
+                  }`}
+                >
+                  가격순
+                </button>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
