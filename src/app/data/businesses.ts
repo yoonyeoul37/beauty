@@ -82,6 +82,29 @@ export const sampleBusinesses: BusinessProfile[] = [
         isNew: false,
         inStock: true,
         tags: ["브러시", "도구", "모발보호"]
+      },
+      {
+        id: "prod_1_4",
+        name: "두피 마사지 오일",
+        description: "두피 혈액순환을 촉진하는 마사지 오일입니다. 스트레스 해소와 모발 성장에 도움을 줍니다.",
+        price: 32000,
+        originalPrice: 40000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: true,
+        inStock: true,
+        tags: ["마사지오일", "혈액순환", "모발성장"]
+      },
+      {
+        id: "prod_1_5",
+        name: "헤어 스프레이",
+        description: "강력한 홀드력을 자랑하는 헤어 스프레이입니다. 습기에도 강하며 하루 종일 스타일을 유지합니다.",
+        price: 22000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "스타일링",
+        isNew: false,
+        inStock: true,
+        tags: ["스프레이", "강력홀드", "습기방지"]
       }
     ],
     timeSpecial: {
@@ -194,6 +217,40 @@ export const sampleBusinesses: BusinessProfile[] = [
         isNew: false,
         inStock: true,
         tags: ["트리트먼트", "색상보정", "모발회복"]
+      },
+      {
+        id: "prod_2_3",
+        name: "염색 전용 컨디셔너",
+        description: "염색 모발을 부드럽게 가꿔주는 전용 컨디셔너입니다. 색상 유지와 윤기를 동시에 케어합니다.",
+        price: 25000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: false,
+        inStock: true,
+        tags: ["컨디셔너", "염색케어", "윤기"]
+      },
+      {
+        id: "prod_2_4",
+        name: "헤어 마스크",
+        description: "깊은 영양 공급을 위한 헤어 마스크입니다. 손상된 모발을 회복시켜줍니다.",
+        price: 38000,
+        originalPrice: 48000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: true,
+        inStock: true,
+        tags: ["마스크", "영양공급", "모발회복"]
+      },
+      {
+        id: "prod_2_5",
+        name: "컬러 프로텍터",
+        description: "염색 모발의 색상을 오래 유지시켜주는 프로텍터입니다. UV 차단 기능도 포함되어 있습니다.",
+        price: 30000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: false,
+        inStock: true,
+        tags: ["프로텍터", "색상유지", "UV차단"]
       }
     ],
     timeSpecial: {
@@ -267,6 +324,54 @@ export const sampleBusinesses: BusinessProfile[] = [
       "염색": 80000,
       "스타일링": 35000
     },
+    products: [
+      {
+        id: "prod_3_1",
+        name: "볼륨 펌 전용 샴푸",
+        description: "볼륨 펌 후 모발을 케어하는 전용 샴푸입니다. 볼륨감을 오래 유지시켜줍니다.",
+        price: 32000,
+        originalPrice: 40000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: true,
+        inStock: true,
+        tags: ["볼륨펌", "볼륨유지", "전용샴푸"]
+      },
+      {
+        id: "prod_3_2",
+        name: "헤어 세럼",
+        description: "모발 끝 부분을 케어하는 헤어 세럼입니다. 건조함을 해소하고 윤기를 더해줍니다.",
+        price: 28000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "헤어케어",
+        isNew: false,
+        inStock: true,
+        tags: ["세럼", "모발끝케어", "윤기"]
+      },
+      {
+        id: "prod_3_3",
+        name: "헤어 클립 세트",
+        description: "다양한 크기의 헤어 클립 세트입니다. 스타일링 시 편리하게 사용할 수 있습니다.",
+        price: 15000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "도구",
+        isNew: false,
+        inStock: true,
+        tags: ["클립", "스타일링도구", "세트"]
+      },
+      {
+        id: "prod_3_4",
+        name: "헤어 드라이어",
+        description: "프로페셔널 헤어 드라이어입니다. 강력한 바람과 이온 기능으로 빠른 건조를 도와줍니다.",
+        price: 85000,
+        originalPrice: 120000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "도구",
+        isNew: true,
+        inStock: true,
+        tags: ["드라이어", "프로페셔널", "이온기능"]
+      }
+    ],
     timeSpecial: {
       active: true,
       services: [
@@ -338,6 +443,64 @@ export const sampleBusinesses: BusinessProfile[] = [
       "네일아트": 80000,
       "패디큐어": 50000
     },
+    products: [
+      {
+        id: "prod_4_1",
+        name: "네일 케어 오일",
+        description: "네일과 큐티클을 케어하는 오일입니다. 건조함을 해소하고 건강한 네일을 유지시켜줍니다.",
+        price: 18000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "네일케어",
+        isNew: false,
+        inStock: true,
+        tags: ["네일오일", "큐티클케어", "건조함해소"]
+      },
+      {
+        id: "prod_4_2",
+        name: "젤 네일 세트",
+        description: "다양한 색상의 젤 네일 세트입니다. 집에서도 쉽게 사용할 수 있는 고품질 제품입니다.",
+        price: 45000,
+        originalPrice: 60000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "네일아트",
+        isNew: true,
+        inStock: true,
+        tags: ["젤네일", "색상세트", "홈케어"]
+      },
+      {
+        id: "prod_4_3",
+        name: "네일 아트 스티커",
+        description: "예쁜 네일 아트 스티커 세트입니다. 간단하게 아름다운 네일을 완성할 수 있습니다.",
+        price: 12000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "네일아트",
+        isNew: false,
+        inStock: true,
+        tags: ["스티커", "네일아트", "간편스타일링"]
+      },
+      {
+        id: "prod_4_4",
+        name: "네일 파일",
+        description: "고급스러운 네일 파일입니다. 네일 모양을 예쁘게 다듬어줍니다.",
+        price: 8000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "네일도구",
+        isNew: false,
+        inStock: true,
+        tags: ["네일파일", "도구", "모양다듬기"]
+      },
+      {
+        id: "prod_4_5",
+        name: "네일 리무버",
+        description: "젤 네일을 깔끔하게 제거하는 리무버입니다. 네일 손상을 최소화합니다.",
+        price: 15000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "네일케어",
+        isNew: false,
+        inStock: true,
+        tags: ["리무버", "젤제거", "손상방지"]
+      }
+    ],
     timeSpecial: {
       active: true,
       service: "이달의 아트",
@@ -403,6 +566,65 @@ export const sampleBusinesses: BusinessProfile[] = [
       "특수분장": 150000,
       "메이크업 클래스": 100000
     },
+    products: [
+      {
+        id: "prod_5_1",
+        name: "프리미엄 파운데이션",
+        description: "자연스러운 커버력을 자랑하는 프리미엄 파운데이션입니다. 오래 지속되며 피부에 부담이 적습니다.",
+        price: 65000,
+        originalPrice: 85000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "베이스메이크업",
+        isNew: true,
+        inStock: true,
+        tags: ["파운데이션", "자연스러움", "오래지속"]
+      },
+      {
+        id: "prod_5_2",
+        name: "아이라이너 펜",
+        description: "부드럽고 선명한 라인을 그려주는 아이라이너 펜입니다. 물에 강하며 하루 종일 유지됩니다.",
+        price: 28000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "아이메이크업",
+        isNew: false,
+        inStock: true,
+        tags: ["아이라이너", "선명한라인", "물에강함"]
+      },
+      {
+        id: "prod_5_3",
+        name: "립스틱 세트",
+        description: "다양한 색상의 립스틱 세트입니다. 보습력이 좋고 오래 지속되는 포뮬러입니다.",
+        price: 42000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "립메이크업",
+        isNew: false,
+        inStock: true,
+        tags: ["립스틱", "색상세트", "보습력"]
+      },
+      {
+        id: "prod_5_4",
+        name: "메이크업 브러시 세트",
+        description: "프로페셔널 메이크업 브러시 세트입니다. 부드러운 터치로 완벽한 메이크업을 완성합니다.",
+        price: 55000,
+        originalPrice: 75000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "메이크업도구",
+        isNew: true,
+        inStock: true,
+        tags: ["브러시세트", "프로페셔널", "부드러운터치"]
+      },
+      {
+        id: "prod_5_5",
+        name: "메이크업 리무버",
+        description: "깔끔하게 메이크업을 제거하는 리무버입니다. 피부에 자극이 적고 보습 효과도 있습니다.",
+        price: 32000,
+        image: "/images/cosmetics-9086984_640.jpg",
+        category: "스킨케어",
+        isNew: false,
+        inStock: true,
+        tags: ["리무버", "깔끔제거", "보습효과"]
+      }
+    ],
     timeSpecial: {
       active: true,
       service: "데일리 메이크업",
