@@ -1,7 +1,7 @@
 'use client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faMapMarkerAlt, faClock, faBuilding, faUsers, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export default function StickyHeader({ isVisible }: { isVisible: boolean }) {
@@ -67,14 +67,17 @@ export default function StickyHeader({ isVisible }: { isVisible: boolean }) {
 
           {/* 데스크톱 네비게이션 */}
           <div className="hidden md:flex items-center space-x-6" style={{ height: '70px' }}>
-            <button className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
-              비즈니스 목록
+            <button className="flex items-center gap-2 text-white text-sm hover:text-amber-400 transition-all duration-200 font-medium group">
+              <FontAwesomeIcon icon={faBuilding} className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
+              <span className="group-hover:translate-x-0.5 transition-transform duration-200">비즈니스 목록</span>
             </button>
-            <Link href="/community" className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
-              커뮤니티
+            <Link href="/community" className="flex items-center gap-2 text-white text-sm hover:text-amber-400 transition-all duration-200 font-medium group">
+              <FontAwesomeIcon icon={faUsers} className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
+              <span className="group-hover:translate-x-0.5 transition-transform duration-200">커뮤니티</span>
             </Link>
-            <Link href="/login" className="text-white text-sm hover:text-gray-300 transition-colors duration-200 font-medium">
-              로그인
+            <Link href="/login" className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm hover:bg-amber-500 hover:border-amber-500 transition-all duration-200 font-medium px-4 py-2 rounded-lg group">
+              <FontAwesomeIcon icon={faSignInAlt} className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
+              <span className="group-hover:translate-x-0.5 transition-transform duration-200">로그인</span>
             </Link>
           </div>
         </div>
