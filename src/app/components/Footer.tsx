@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBuilding, faUser, faMapMarkerAlt, faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function Footer() {
   const footerRef = useRef<HTMLDivElement>(null);
@@ -18,16 +20,24 @@ export default function Footer() {
       { threshold: 0.1 }
     );
 
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
+    const currentRef = footerRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (footerRef.current) {
-        observer.unobserve(footerRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
+
+  const companyInfo = [
+    { icon: faBuilding, label: '회사명', value: '태가나주식회사' },
+    { icon: faUser, label: '대표', value: '윤여울' },
+    { icon: faMapMarkerAlt, label: '주소', value: '서울특별시 서초구 마방로6길 13 4층' },
+    { icon: faPhoneAlt, label: '고객센터', value: '1533-8237 (평일 10:00 - 18:00)' },
+  ];
 
   return (
     <footer 
@@ -38,12 +48,24 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between gap-8">
           {/* 로고 및 기본 정보 */}
           <div className={`space-y-4 transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
-            <h3 className="text-2xl font-bold text-white">스타일로그</h3>
-            <div className="space-y-1">
-              <p><strong>회사명:</strong> 태가나주식회사</p>
-              <p><strong>대표:</strong> 윤여울</p>
-              <p><strong>주소:</strong> 서울특별시 서초구 마방로6길 13 4층</p>
-              <p><strong>고객센터:</strong> 1533-8237 (평일 10:00 - 18:00)</p>
+            <h3 className="text-2xl font-bold text-white mb-4">스타일로그</h3>
+            <div className="space-y-2">
+              {companyInfo.map((info, index) => (
+                <div 
+                  key={info.label}
+                  className="flex items-center transition-all duration-500 ease-out"
+                  style={{ 
+                    transform: isVisible ? 'translateX(0)' : 'translateX(-20px)',
+                    opacity: isVisible ? 1 : 0,
+                    transitionDelay: `${100 + index * 100}ms`
+                  }}
+                >
+                  <FontAwesomeIcon icon={info.icon} className="w-4 h-4 mr-3 text-zinc-500" />
+                  <p>
+                    <strong className="font-semibold text-zinc-300">{info.label}:</strong> {info.value}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
 
